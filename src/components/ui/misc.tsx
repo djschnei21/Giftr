@@ -61,7 +61,7 @@ function SwitchRow({
 }
 
 function Tabs({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Root>) {
-  return <TabsPrimitive.Root className={cn("flex flex-col gap-5", className)} {...props} />;
+  return <TabsPrimitive.Root className={cn("flex min-w-0 flex-col gap-5", className)} {...props} />;
 }
 
 function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.List>) {

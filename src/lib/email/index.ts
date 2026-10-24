@@ -8,12 +8,12 @@ import type { EmailContent } from "@/emails/templates";
 
 let resend: Resend | null = null;
 
-function useDevOutbox() {
+function shouldUseDevOutbox() {
   return !process.env.RESEND_API_KEY || process.env.GIFTR_DEV_OUTBOX === "1";
 }
 
 export function devOutboxEnabled() {
-  return useDevOutbox() && process.env.VERCEL_ENV !== "production";
+  return shouldUseDevOutbox() && process.env.VERCEL_ENV !== "production";
 }
 
 type SendOptions = {
@@ -27,7 +27,7 @@ type SendOptions = {
 
 export async function sendEmail({ to, content, kind, dedupeKey, unsubscribeUrl }: SendOptions) {
   const html = await render(content.react);
-  const dev = useDevOutbox();
+  const dev = shouldUseDevOutbox();
 
   const [logged] = await db
     .insert(emailLog)
