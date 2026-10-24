@@ -3,7 +3,7 @@ import { after } from "next/server";
 import { and, eq, inArray } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db, type Tx } from "@/db";
-import { assignment, event as eventTable, exclusion, participant, profile, user, type Event } from "@/db/schema";
+import { assignment, event as eventTable, exclusion, participant, user, type Event } from "@/db/schema";
 import { matchChangedEmail, namesDrawnEmail, redrawEmail } from "@/emails/templates";
 import { sendEmails } from "@/lib/email";
 import { addToDraw, drawNames, removeFromDraw, type Blocker, type DrawPerson, type DrawRules, type Pair } from "@/lib/draw";
@@ -168,10 +168,9 @@ export function notifyParticipants(ev: Event, participantIds: string[], kind: No
   if (participantIds.length === 0) return;
   after(async () => {
     const rows = await db
-      .select({ id: participant.id, email: user.email, token: profile.unsubscribeToken })
+      .select({ id: participant.id, email: user.email })
       .from(participant)
       .innerJoin(user, eq(user.id, participant.userId))
-      .leftJoin(profile, eq(profile.userId, user.id))
       .where(inArray(participant.id, participantIds));
     const url = appUrl(`/events/${ev.id}`);
     const stamp = ev.drawnAt?.getTime() ?? Date.now();
@@ -182,7 +181,7 @@ export function notifyParticipants(ev: Event, participantIds: string[], kind: No
         dedupeKey: kind === "changed" ? undefined : `${kind}:${ev.id}:${r.id}:${stamp}`,
         content:
           kind === "drawn"
-            ? namesDrawnEmail({ eventName: ev.name, url, unsubscribeUrl: appUrl(`/unsubscribe/${r.token ?? ""}`) })
+            ? namesDrawnEmail({ eventName: ev.name, url, organizerCanView: ev.organizerCanViewMatches })
             : kind === "redraw"
               ? redrawEmail({ eventName: ev.name, url })
               : matchChangedEmail({ eventName: ev.name, url }),

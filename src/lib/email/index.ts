@@ -5,6 +5,7 @@ import { Resend } from "resend";
 import { db } from "@/db";
 import { emailLog } from "@/db/schema";
 import type { EmailContent } from "@/emails/templates";
+import { oneClickUnsubscribeUrl, type UnsubscribeType } from "@/lib/unsubscribe";
 
 let resend: Resend | null = null;
 
@@ -22,10 +23,11 @@ type SendOptions = {
   kind: string;
   /** When set, the email is sent at most once for this key. */
   dedupeKey?: string;
-  unsubscribeUrl?: string;
+  unsubscribe?: { token: string; type: UnsubscribeType };
 };
 
-export async function sendEmail({ to, content, kind, dedupeKey, unsubscribeUrl }: SendOptions) {
+export async function sendEmail({ to, content, kind, dedupeKey, unsubscribe }: SendOptions) {
+  const unsubscribeUrl = unsubscribe ? oneClickUnsubscribeUrl(unsubscribe.token, unsubscribe.type) : null;
   const html = await render(content.react);
   const dev = shouldUseDevOutbox();
 
@@ -72,5 +74,6 @@ export async function sendEmail({ to, content, kind, dedupeKey, unsubscribeUrl }
 
 /** Fire-and-forget batch helper; one failure never blocks the rest. */
 export async function sendEmails(messages: SendOptions[]) {
-  await Promise.allSettled(messages.map((m) => sendEmail(m)));
+  const results = await Promise.allSettled(messages.map((m) => sendEmail(m)));
+  return results.filter((r) => r.status === "fulfilled" && r.value.sent).length;
 }

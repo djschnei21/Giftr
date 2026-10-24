@@ -4,6 +4,8 @@ import { db } from "@/db";
 import { profile } from "@/db/schema";
 import { ProfileForm } from "@/components/profile/profile-form";
 import { toProfileFormValue } from "@/components/profile/profile-value";
+import { NotificationPrefsForm } from "@/components/profile/notification-prefs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { requireUser } from "@/lib/authz";
 
 export const metadata: Metadata = { title: "Profile" };
@@ -21,6 +23,17 @@ export default async function ProfilePage() {
         </p>
       </header>
       <ProfileForm initial={toProfileFormValue(user.name, row ?? null)} />
+      <Card id="notifications" className="scroll-mt-24">
+        <CardHeader>
+          <CardTitle>Email notifications</CardTitle>
+          <CardDescription>Changes save right away.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <NotificationPrefsForm
+            initial={{ notifyReminders: row?.notifyReminders ?? true, notifyMessages: row?.notifyMessages ?? true }}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

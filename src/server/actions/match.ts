@@ -11,6 +11,7 @@ import { assertEventAccess } from "@/lib/authz";
 import { sendEmail } from "@/lib/email";
 import { newMessageEmail } from "@/emails/templates";
 import { appUrl } from "@/lib/utils";
+import { unsubscribePageUrl } from "@/lib/unsubscribe";
 import { findThreadAssignment, getThread, type ThreadRole } from "@/server/queries/match";
 
 const roleSchema = z.enum(["santa", "giftee"]);
@@ -103,18 +104,17 @@ async function notifyRecipient(
   }
 
   const bucket = Math.floor(Date.now() / EMAIL_WINDOW_MS);
-  const unsubscribeUrl = appUrl(`/unsubscribe/${to.token ?? ""}?type=messages`);
   await sendEmail({
     to: to.email,
     kind: "new_message",
     dedupeKey: `message:${a.id}:${from}:${bucket}`,
-    unsubscribeUrl,
+    unsubscribe: to.token ? { token: to.token, type: "messages" } : undefined,
     content: newMessageEmail({
       eventName,
       fromSanta: from === "santa",
       senderName,
       url: appUrl(from === "santa" ? `/events/${eventId}#santa` : `/events/${eventId}/match#chat`),
-      unsubscribeUrl,
+      unsubscribeUrl: to.token ? unsubscribePageUrl(to.token, "messages") : undefined,
     }),
   });
 }

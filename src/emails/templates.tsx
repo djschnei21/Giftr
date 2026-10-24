@@ -49,7 +49,11 @@ export function inviteEmail(p: {
   };
 }
 
-export function namesDrawnEmail(p: { eventName: string; url: string; unsubscribeUrl: string }): EmailContent {
+export function namesDrawnEmail(p: {
+  eventName: string;
+  url: string;
+  organizerCanView: boolean;
+}): EmailContent {
   return {
     subject: `Names are drawn for ${p.eventName}`,
     react: (
@@ -57,13 +61,16 @@ export function namesDrawnEmail(p: { eventName: string; url: string; unsubscribe
         preview="Find out who you're shopping for"
         heading="Names have been drawn"
         cta={{ label: "Reveal my match", href: p.url }}
-        footer={<Unsubscribe href={p.unsubscribeUrl} />}
       >
         <P>
           The draw for <strong>{p.eventName}</strong> is done. Your match is waiting for you — along with their wishlist
           and gift preferences.
         </P>
-        <Muted>Only you can see who you drew. Not even the organizer can peek.</Muted>
+        <Muted>
+          {p.organizerCanView
+            ? "Heads up: the organizer of this exchange has chosen to be able to see matches."
+            : "Only you can see who you drew. Not even the organizer can peek."}
+        </Muted>
       </EmailLayout>
     ),
   };
@@ -105,7 +112,7 @@ export function newMessageEmail(p: {
   fromSanta: boolean;
   senderName?: string;
   url: string;
-  unsubscribeUrl: string;
+  unsubscribeUrl?: string;
 }): EmailContent {
   const who = p.fromSanta ? "Your Secret Santa" : (p.senderName ?? "Your giftee");
   return {
@@ -115,7 +122,7 @@ export function newMessageEmail(p: {
         preview={`New message in ${p.eventName}`}
         heading={`${who} sent you a message`}
         cta={{ label: "Read and reply", href: p.url }}
-        footer={<Unsubscribe href={p.unsubscribeUrl} />}
+        footer={p.unsubscribeUrl ? <Unsubscribe href={p.unsubscribeUrl} /> : undefined}
       >
         <P>
           You have a new message in <strong>{p.eventName}</strong>.
