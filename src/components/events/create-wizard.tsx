@@ -189,7 +189,11 @@ export function CreateEventWizard({
                   value={emailDraft}
                   placeholder="sam@example.com, alex@example.com"
                   onChange={(e) => setEmailDraft(e.target.value)}
-                  onBlur={commitEmails}
+                  onBlur={(e) => {
+                    // Adding chips shifts the nav buttons, which would swallow the click that caused this blur.
+                    if (e.relatedTarget instanceof Element && e.relatedTarget.closest("[data-wizard-nav]")) return;
+                    commitEmails();
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === ",") {
                       e.preventDefault();
@@ -228,7 +232,7 @@ export function CreateEventWizard({
           </motion.div>
         </AnimatePresence>
 
-        <div className="mt-10 flex items-center justify-between gap-3">
+        <div className="mt-10 flex items-center justify-between gap-3" data-wizard-nav>
           {step > 0 ? (
             <Button variant="ghost" onClick={() => setStep((s) => s - 1)} disabled={pending}>
               <ArrowLeftIcon /> Back

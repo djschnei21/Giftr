@@ -81,7 +81,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
               <CardDescription>People in the same household never draw each other — perfect for couples and roommates.</CardDescription>
             </div>
             {!locked ? (
-              <Button variant="outline" size="sm" onClick={() => openHousehold("new")} disabled={people.length < 2}>
+              <Button variant="outline" size="sm" onClick={() => openHousehold("new")} disabled={people.length < 2} aria-label="Add household">
                 <PlusIcon /> Add
               </Button>
             ) : null}

@@ -10,7 +10,8 @@ export default defineConfig({
   workers: 1,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "github" : "list",
-  use: { baseURL, trace: "retain-on-failure" },
+  expect: { timeout: 10_000 },
+  use: { baseURL, trace: "retain-on-failure", actionTimeout: 15_000, navigationTimeout: 30_000 },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
     command: `pnpm exec next start -p ${port}`,

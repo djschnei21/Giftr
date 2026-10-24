@@ -39,7 +39,7 @@ export function ItemCard({
           <GiftIcon className="size-6 opacity-50" />
         )}
       </div>
-      <div className={cn("grid min-w-0 flex-1 gap-1", muted && "opacity-60")}>
+      <div className="grid min-w-0 flex-1 gap-1">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           {item.mostWanted ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-gold/15 px-2 py-0.5 text-[11px] font-medium text-[color-mix(in_oklch,var(--gold),black_35%)] dark:text-gold">
@@ -47,7 +47,9 @@ export function ItemCard({
             </span>
           ) : null}
         </div>
-        <p className="font-medium leading-snug break-words">{item.title}</p>
+        <p className={cn("font-medium leading-snug break-words", muted && "text-muted-foreground line-through decoration-1")}>
+          {item.title}
+        </p>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
           {item.price !== null ? <span className="font-medium text-foreground">{money(item.price, item.currency ?? fallbackCurrency)}</span> : null}
           {item.url && host ? (

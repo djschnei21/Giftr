@@ -16,7 +16,7 @@ export async function closeDb() {
   pool = null;
 }
 
-/** Finds the newest link of a given kind emailed to `email` via the dev outbox table. */
+/** Finds the newest link of a given kind emailed to `email` via the dev outbox table, as a path on the test server. */
 export async function latestEmailLink(email: string, match: RegExp, after?: Date): Promise<string> {
   for (let i = 0; i < 40; i++) {
     const { rows } = await testDb().query<{ html: string }>(
@@ -26,7 +26,10 @@ export async function latestEmailLink(email: string, match: RegExp, after?: Date
     for (const row of rows) {
       const links = [...row.html.matchAll(/href="([^"]+)"/g)].map((m) => m[1].replaceAll("&amp;", "&"));
       const found = links.find((l) => match.test(l));
-      if (found) return found;
+      if (found) {
+        const u = new URL(found);
+        return u.pathname + u.search;
+      }
     }
     await new Promise((r) => setTimeout(r, 250));
   }

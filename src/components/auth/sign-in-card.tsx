@@ -24,10 +24,17 @@ export function SignInCard({ next, providers, devOutbox, error, heading, subhead
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(error ? "That sign-in link didn't work. Please try again." : null);
 
+  const welcomeUrl = `/welcome?next=${encodeURIComponent(next)}`;
+
   async function social(provider: "google" | "facebook") {
     setPending(provider);
     setMessage(null);
-    const { error } = await authClient.signIn.social({ provider, callbackURL: next, errorCallbackURL: "/sign-in?error=oauth" });
+    const { error } = await authClient.signIn.social({
+      provider,
+      callbackURL: next,
+      newUserCallbackURL: welcomeUrl,
+      errorCallbackURL: "/sign-in?error=oauth",
+    });
     if (error) {
       setMessage(error.message ?? "Couldn't start sign-in.");
       setPending(null);
@@ -41,6 +48,7 @@ export function SignInCard({ next, providers, devOutbox, error, heading, subhead
     const { error } = await authClient.signIn.magicLink({
       email: email.trim(),
       callbackURL: next,
+      newUserCallbackURL: welcomeUrl,
       errorCallbackURL: `/sign-in?error=link&next=${encodeURIComponent(next)}`,
     });
     setPending(null);
