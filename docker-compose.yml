@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: giftr
+      POSTGRES_PASSWORD: giftr
+      POSTGRES_DB: giftr
+    ports:
+      - "5432:5432"
+    volumes:
+      - giftr-pg:/var/lib/postgresql/data
+      - ./scripts/create-test-db.sql:/docker-entrypoint-initdb.d/create-test-db.sql:ro
+
+volumes:
+  giftr-pg:
