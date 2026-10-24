@@ -83,7 +83,9 @@ function ResponsiveDialog({ open, onOpenChange, trigger, title, description, chi
 }
 
 type ConfirmProps = {
-  trigger: React.ReactNode;
+  trigger?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   title: React.ReactNode;
   description: React.ReactNode;
   confirmLabel: string;
@@ -91,10 +93,10 @@ type ConfirmProps = {
   onConfirm: () => void | Promise<void>;
 };
 
-function ConfirmDialog({ trigger, title, description, confirmLabel, destructive, onConfirm }: ConfirmProps) {
+function ConfirmDialog({ trigger, open, onOpenChange, title, description, confirmLabel, destructive, onConfirm }: ConfirmProps) {
   return (
-    <AlertDialogPrimitive.Root>
-      <AlertDialogPrimitive.Trigger asChild>{trigger}</AlertDialogPrimitive.Trigger>
+    <AlertDialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
+      {trigger ? <AlertDialogPrimitive.Trigger asChild>{trigger}</AlertDialogPrimitive.Trigger> : null}
       <AlertDialogPrimitive.Portal>
         <AlertDialogPrimitive.Overlay className={overlayClass} />
         <AlertDialogPrimitive.Content className={cn(contentClass, "max-w-md")}>

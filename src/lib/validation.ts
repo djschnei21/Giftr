@@ -87,3 +87,53 @@ export function updateEventSchema(today: string) {
 
 export type CreateEventInput = z.input<ReturnType<typeof createEventSchema>>;
 export type UpdateEventInput = z.input<ReturnType<typeof updateEventSchema>>;
+
+const httpUrl = z
+  .string()
+  .trim()
+  .max(2000, "That link is too long.")
+  .refine((v) => {
+    try {
+      const u = new URL(v);
+      return u.protocol === "http:" || u.protocol === "https:";
+    } catch {
+      return false;
+    }
+  }, "Links need to start with http:// or https://");
+const optionalUrl = z
+  .union([httpUrl, z.literal(""), z.null()])
+  .optional()
+  .transform((v) => v || null);
+
+export const wishlistNameSchema = z.string().trim().min(1, "Give it a name.").max(60, "Keep it under 60 characters.");
+
+export const wishlistItemSchema = z.object({
+  title: z.string().trim().min(1, "What's the gift?").max(200, "Keep it under 200 characters."),
+  url: optionalUrl,
+  imageUrl: optionalUrl,
+  price: optionalAmount,
+  currency: z.enum(currencies).nullable().optional().transform((v) => v ?? null),
+  notes: optionalText(1000),
+  mostWanted: z.boolean().optional().default(false),
+});
+export type WishlistItemInput = z.input<typeof wishlistItemSchema>;
+
+const shortText = optionalText(40);
+export const profileSchema = z.object({
+  name: z.string().trim().min(1, "Please enter your name.").max(60, "That's a bit long."),
+  aboutMe: optionalText(500),
+  likes: optionalText(500),
+  dislikes: optionalText(500),
+  favoriteColors: optionalText(200),
+  sizes: z.object({ top: shortText, bottom: shortText, shoe: shortText, ring: shortText, other: optionalText(200) }),
+  address: z.object({
+    name: optionalText(100),
+    line1: optionalText(200),
+    line2: optionalText(200),
+    city: optionalText(100),
+    region: optionalText(100),
+    postalCode: optionalText(20),
+    country: optionalText(60),
+  }),
+});
+export type ProfileInput = z.input<typeof profileSchema>;

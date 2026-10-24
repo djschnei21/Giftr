@@ -7,6 +7,8 @@ const eslintConfig = defineConfig([
   ...nextTs,
   {
     rules: {
+      // Wishlist images come from arbitrary shop domains, which next/image can't allow-list.
+      "@next/next/no-img-element": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_", destructuredArrayIgnorePattern: "^_", ignoreRestSiblings: true },
