@@ -93,7 +93,7 @@ export default async function JoinPage({ params, searchParams }: PageProps<"/joi
   );
 
   return (
-    <main className="relative flex flex-1 flex-col items-center px-4 py-10 sm:py-16">
+    <main id="main" className="relative flex flex-1 flex-col items-center px-4 py-10 sm:py-16">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-accent/60 to-transparent" />
       <Logo className="relative mb-8" />
       <div className="relative grid w-full max-w-4xl items-start gap-8 md:grid-cols-2">

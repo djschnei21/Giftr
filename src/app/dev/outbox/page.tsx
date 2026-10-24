@@ -17,7 +17,7 @@ export default async function DevOutboxPage() {
     .limit(30);
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-10">
+    <main id="main" className="mx-auto w-full max-w-3xl px-4 py-10">
       <h1 className="font-display text-3xl font-semibold">Dev outbox</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Emails sent while no RESEND_API_KEY is configured. Newest first. Only available outside production.

@@ -22,7 +22,7 @@ export default async function UnsubscribePage({ params, searchParams }: PageProp
   const found = await findByUnsubscribeToken(token);
 
   return (
-    <main className="relative flex flex-1 flex-col items-center justify-center px-4 py-12">
+    <main id="main" className="relative flex flex-1 flex-col items-center justify-center px-4 py-12">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-accent/60 to-transparent" />
       <div className="relative grid w-full max-w-md gap-6">
         <Logo className="justify-center" />

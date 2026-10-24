@@ -13,7 +13,7 @@ export default async function WelcomePage({ searchParams }: PageProps<"/welcome"
   if (user.name.trim()) redirect(next);
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center px-4 py-12">
+    <main id="main" className="flex flex-1 flex-col items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
         <Logo className="mb-10 justify-center" />
         <div className="rounded-3xl border bg-card p-6 shadow-[0_8px_30px_rgb(0_0_0/0.06)] sm:p-8">

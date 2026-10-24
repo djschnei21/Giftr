@@ -29,7 +29,7 @@ export default async function MarketingLayout({ children }: LayoutProps<"/">) {
           </nav>
         </div>
       </header>
-      <main className="flex-1">{children}</main>
+      <main id="main" className="flex-1">{children}</main>
       <footer className="border-t">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-8 text-sm text-muted-foreground sm:px-6">
           <span>© {new Date().getFullYear()} Giftr</span>

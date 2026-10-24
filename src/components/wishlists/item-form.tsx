@@ -126,7 +126,7 @@ export function ItemForm({
             ) : null}
             <Input
               id={`${idPrefix}-title`}
-              placeholder="Hand-thrown ceramic mug"
+              placeholder="e.g. Hand-thrown ceramic mug"
               value={state.title}
               onChange={(e) => set({ title: e.target.value })}
               maxLength={200}
@@ -156,7 +156,7 @@ export function ItemForm({
         <Textarea
           id={`${idPrefix}-notes`}
           rows={2}
-          placeholder="Size M, any color but orange"
+          placeholder="e.g. Size M, any color but orange"
           value={state.notes}
           onChange={(e) => set({ notes: e.target.value })}
           maxLength={1000}
