@@ -2,27 +2,34 @@ import { CalendarClockIcon, HourglassIcon } from "lucide-react";
 import type { Assignment, Event, Participant } from "@/db/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { dateLabel } from "@/lib/format";
+import { RevealCard } from "./reveal-card";
 
 export function MatchSection({
   event,
   me,
   assignment,
+  giftee,
 }: {
   event: Event;
   me: Participant;
   assignment: Assignment | null;
+  giftee: { name: string; image: string | null } | null;
 }) {
   if (!me.inDraw) {
     return (
       <Card>
         <CardContent className="text-sm text-muted-foreground">
-          You&apos;re organizing this one without taking part in the draw.
+          {me.role === "organizer"
+            ? "You're organizing this one without taking part in the draw."
+            : event.status === "open"
+              ? "The organizer has you sitting out of the draw this time."
+              : "You joined after the draw and couldn't be slotted in automatically. The organizer can redraw to include you — we'll email you."}
         </CardContent>
       </Card>
     );
   }
 
-  if (event.status === "open" || !assignment) {
+  if (event.status === "open" || !assignment || !giftee) {
     const scheduled = event.drawMode === "scheduled" && event.drawDate;
     return (
       <Card className="overflow-hidden">
@@ -43,5 +50,12 @@ export function MatchSection({
     );
   }
 
-  return null;
+  return (
+    <RevealCard
+      eventId={event.id}
+      giftee={giftee}
+      alreadyViewed={!!me.matchViewedAt}
+      changed={!!assignment.changedAt && !me.matchViewedAt}
+    />
+  );
 }

@@ -32,6 +32,8 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
     listMyWishlists(user.id),
   ]);
   const joinedPeople = people.filter((p) => p.status === "joined");
+  const gifteeRow = myAssignment ? people.find((p) => p.id === myAssignment.recipientId) : null;
+  const giftee = gifteeRow ? { name: gifteeRow.name, image: gifteeRow.image } : null;
   const budget = budgetLabel(event.budgetMin, event.budgetMax, event.currency);
   const canSeePeople = isOrganizer || event.showParticipants;
   const open = event.status === "open";
@@ -63,7 +65,7 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="grid content-start gap-6">
           {me && event.status !== "cancelled" ? (
-            <MatchSection event={event} me={me} assignment={myAssignment} />
+            <MatchSection event={event} me={me} assignment={myAssignment} giftee={giftee} />
           ) : null}
 
           {me && event.status !== "cancelled" ? (
