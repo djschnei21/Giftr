@@ -6,7 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function appUrl(path = "") {
+  const previewHost = process.env.VERCEL_ENV === "preview" ? (process.env.VERCEL_BRANCH_URL ?? process.env.VERCEL_URL) : undefined;
   const base =
+    (previewHost ? `https://${previewHost}` : undefined) ??
     process.env.NEXT_PUBLIC_APP_URL ??
     (process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`

@@ -1,4 +1,5 @@
 import { desc, eq } from "drizzle-orm";
+import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { db } from "@/db";
 import { emailLog } from "@/db/schema";
@@ -8,6 +9,7 @@ import { formatDistanceToNow } from "date-fns";
 export const metadata = { title: "Dev outbox", robots: { index: false } };
 
 export default async function DevOutboxPage() {
+  await connection();
   if (!devOutboxEnabled()) notFound();
   const emails = await db
     .select()
@@ -20,7 +22,7 @@ export default async function DevOutboxPage() {
     <main id="main" className="mx-auto w-full max-w-3xl px-4 py-10">
       <h1 className="font-display text-3xl font-semibold">Dev outbox</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        Emails sent while no RESEND_API_KEY is configured. Newest first. Only available outside production.
+        Emails sent while no RESEND_API_KEY is configured. Newest first. Only available when running outside Vercel.
       </p>
       <div className="mt-8 grid gap-6">
         {emails.length === 0 ? <p className="text-muted-foreground">Nothing yet.</p> : null}

@@ -14,7 +14,8 @@ function shouldUseDevOutbox() {
 }
 
 export function devOutboxEnabled() {
-  return shouldUseDevOutbox() && process.env.VERCEL_ENV !== "production";
+  // The outbox shows working sign-in links, so it must never be reachable on a public deployment.
+  return shouldUseDevOutbox() && !process.env.VERCEL;
 }
 
 type SendOptions = {
@@ -47,7 +48,8 @@ export async function sendEmail({ to, content, kind, dedupeKey, unsubscribe }: S
   if (!logged) return { sent: false as const, reason: "duplicate" };
 
   if (dev) {
-    if (process.env.NODE_ENV !== "test") console.info(`[email:dev] ${kind} → ${to}: ${content.subject}`);
+    if (process.env.VERCEL) console.error(`[email] RESEND_API_KEY is not set; ${kind} email to ${to} was not sent`);
+    else if (process.env.NODE_ENV !== "test") console.info(`[email:dev] ${kind} → ${to}: ${content.subject}`);
     return { sent: true as const };
   }
 
