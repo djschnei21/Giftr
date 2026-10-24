@@ -8,7 +8,8 @@ import { z } from "zod";
 import { db } from "@/db";
 import { participant, profile } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { runAction, type ActionResult } from "@/lib/action";
+import { runAction, UserError, type ActionResult } from "@/lib/action";
+import { deleteUserAccount } from "@/server/account";
 import { assertUser } from "@/lib/authz";
 import { safeNext } from "@/lib/safe-redirect";
 import { profileSchema, type ProfileInput } from "@/lib/validation";
@@ -40,4 +41,17 @@ export async function updateProfile(input: ProfileInput) {
     }
     revalidatePath("/", "layout");
   });
+}
+
+export async function deleteAccount(confirmation: string) {
+  const result = await runAction(async () => {
+    const user = await assertUser();
+    if (z.string().trim().toLowerCase().parse(confirmation) !== user.email.toLowerCase())
+      throw new UserError("Type your email address exactly to confirm.");
+    const requestHeaders = await headers();
+    await auth.api.signOut({ headers: requestHeaders });
+    await deleteUserAccount(user.id);
+  });
+  if (!result.ok) return result;
+  redirect("/?deleted=1");
 }

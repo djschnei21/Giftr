@@ -5,6 +5,7 @@ import { profile } from "@/db/schema";
 import { ProfileForm } from "@/components/profile/profile-form";
 import { toProfileFormValue } from "@/components/profile/profile-value";
 import { NotificationPrefsForm } from "@/components/profile/notification-prefs";
+import { DeleteAccount } from "@/components/profile/delete-account";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { requireUser } from "@/lib/authz";
 
@@ -32,6 +33,15 @@ export default async function ProfilePage() {
           <NotificationPrefsForm
             initial={{ notifyReminders: row?.notifyReminders ?? true, notifyMessages: row?.notifyMessages ?? true }}
           />
+        </CardContent>
+      </Card>
+      <Card id="delete-account" className="scroll-mt-24">
+        <CardHeader>
+          <CardTitle>Delete account</CardTitle>
+          <CardDescription>Permanently remove your account and everything in it.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DeleteAccount email={user.email} />
         </CardContent>
       </Card>
     </div>
