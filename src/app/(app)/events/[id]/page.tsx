@@ -8,6 +8,7 @@ import { Timeline } from "@/components/events/timeline";
 import { Countdown } from "@/components/events/countdown";
 import { ShareLink } from "@/components/events/share-link";
 import { MatchSection } from "@/components/draw/match-section";
+import { SantaThread } from "@/components/match/santa-thread";
 import { WishlistPicker } from "@/components/wishlists/wishlist-picker";
 import { LeaveEventButton } from "@/components/events/leave-event-button";
 import { requireEventAccess } from "@/lib/authz";
@@ -66,6 +67,10 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
         <div className="grid content-start gap-6">
           {me && event.status !== "cancelled" ? (
             <MatchSection event={event} me={me} assignment={myAssignment} giftee={giftee} />
+          ) : null}
+
+          {me && (event.status === "drawn" || event.status === "completed") ? (
+            <SantaThread eventId={event.id} participantId={me.id} open={event.status === "drawn"} />
           ) : null}
 
           {me && event.status !== "cancelled" ? (
