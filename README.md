@@ -2,6 +2,8 @@
 
 A calm, mobile-first Secret Santa app. Invite people with one link, share wishlists, set the rules, and let Giftr draw names. Everyone finds out who they're shopping for, and nobody else does.
 
+Production is [giftr.christmas](https://giftr.christmas). Pushes to `main` deploy there. Every other branch gets a preview deployment.
+
 - **One-tap joining.** Invite links preview the exchange (with a rich card in iMessage, WhatsApp and Slack), then "Continue with Google / Facebook / email".
 - **A smarter draw.** Households, one-way exclusions, "no two-person swaps" and "one big loop". If a draw is impossible, Giftr says why.
 - **Painless changes.** Late joiners and dropouts are patched into the chain, so only one person's match changes.
@@ -55,38 +57,38 @@ To run the daily job locally: `curl -H "Authorization: Bearer $CRON_SECRET" http
 
 1. **Import the repo** at [vercel.com/new](https://vercel.com/new). `vercel.ts` sets the build command (`pnpm db:migrate && pnpm build`, so every deploy applies pending migrations) and the daily cron.
 2. **Add Neon** from the Vercel Marketplace (Storage → Neon Postgres) and connect it to the project. It sets `DATABASE_URL` and `DATABASE_URL_UNPOOLED`. Turn on "Create a database branch for each preview deployment" so previews never touch production data.
-3. **Add Resend** from the Marketplace (or create an API key at [resend.com](https://resend.com)) and set `RESEND_API_KEY`. In Resend, verify the domain you'll send from, then set `EMAIL_FROM`, for example `Giftr <hello@yourdomain.com>`. Until a domain is verified, Resend only delivers to your own address.
+3. **Add Resend** from the Marketplace (or create an API key at [resend.com](https://resend.com)) and set `RESEND_API_KEY`. In Resend, verify the domain you'll send from, then set `EMAIL_FROM`, for example `Giftr <hello@giftr.christmas>`. Until a domain is verified, Resend only delivers to your own address.
 4. **Set the remaining environment variables** (Settings → Environment Variables):
 
    | Variable | Environments | Value |
    | --- | --- | --- |
    | `BETTER_AUTH_SECRET` | All | `openssl rand -base64 32` |
-   | `BETTER_AUTH_URL` | Production only | `https://yourdomain.com` |
-   | `NEXT_PUBLIC_APP_URL` | Production only | `https://yourdomain.com` |
+   | `BETTER_AUTH_URL` | Production only | `https://giftr.christmas` |
+   | `NEXT_PUBLIC_APP_URL` | Production only | `https://giftr.christmas` |
    | `CRON_SECRET` | All | `openssl rand -hex 32` (Vercel Cron sends it automatically) |
    | `CONTACT_EMAIL` | All | Shown on the privacy and terms pages |
    | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Production | See below |
    | `FACEBOOK_CLIENT_ID`, `FACEBOOK_CLIENT_SECRET` | Production | See below |
 
    Leave `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL` unset for previews; they use their own deployment URL automatically.
-5. **Deploy**, then smoke test: open the site, sign in with an email link, create an exchange, and check that the invite email arrives. In the project's Cron Jobs tab you can trigger `/api/cron/daily` manually.
+5. **Deploy from `main`.** That branch is production. Then smoke test: open the site, sign in with an email link, create an exchange, and check that the invite email arrives. In the project's Cron Jobs tab you can trigger `/api/cron/daily` manually.
 
-Optionally add a custom domain under Settings → Domains and use it everywhere `yourdomain.com` appears above.
+`giftr.christmas` is the production domain (`www.giftr.christmas` redirects to it). Use that host everywhere below.
 
 ### Google sign-in
 
 1. In the [Google Cloud console](https://console.cloud.google.com/), create or pick a project.
-2. Under **APIs & Services → OAuth consent screen**, choose "External", fill in the app name, support email, your domain, and the links `https://yourdomain.com/privacy` and `https://yourdomain.com/terms`. The `email`, `profile` and `openid` scopes are all Giftr needs. Publish the app when you're ready for anyone to sign in.
+2. Under **APIs & Services → OAuth consent screen**, choose "External", fill in the app name, support email, your domain, and the links `https://giftr.christmas/privacy` and `https://giftr.christmas/terms`. The `email`, `profile` and `openid` scopes are all Giftr needs. Publish the app when you're ready for anyone to sign in.
 3. Under **Credentials → Create credentials → OAuth client ID**, choose "Web application" and add:
-   - Authorized JavaScript origin: `https://yourdomain.com` (and `http://localhost:3000` for local testing)
-   - Authorized redirect URI: `https://yourdomain.com/api/auth/callback/google` (and `http://localhost:3000/api/auth/callback/google`)
+   - Authorized JavaScript origin: `https://giftr.christmas` (and `http://localhost:3000` for local testing)
+   - Authorized redirect URI: `https://giftr.christmas/api/auth/callback/google` (and `http://localhost:3000/api/auth/callback/google`)
 4. Copy the client ID and secret into `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 
 ### Facebook sign-in
 
 1. At [developers.facebook.com](https://developers.facebook.com/apps), create an app with the "Authenticate and request data from users with Facebook Login" use case.
-2. In **Use cases → Facebook Login → Settings**, add the valid OAuth redirect URI `https://yourdomain.com/api/auth/callback/facebook`. Make sure the `email` permission is enabled.
-3. In **App settings → Basic**, set the app domain to `yourdomain.com`, the privacy policy URL to `https://yourdomain.com/privacy`, the terms URL to `https://yourdomain.com/terms`, and the user data deletion instructions URL to `https://yourdomain.com/privacy#delete`.
+2. In **Use cases → Facebook Login → Settings**, add the valid OAuth redirect URI `https://giftr.christmas/api/auth/callback/facebook`. Make sure the `email` permission is enabled.
+3. In **App settings → Basic**, set the app domain to `giftr.christmas`, the privacy policy URL to `https://giftr.christmas/privacy`, the terms URL to `https://giftr.christmas/terms`, and the user data deletion instructions URL to `https://giftr.christmas/privacy#delete`.
 4. Copy the App ID and App Secret into `FACEBOOK_CLIENT_ID` and `FACEBOOK_CLIENT_SECRET`, then switch the app to **Live**.
 
 Accounts are linked by email, so someone invited by email who later signs in with Google or Facebook lands in the same account.
