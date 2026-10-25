@@ -175,6 +175,10 @@
   }
 }
 
+/* Clears the floating mobile tab bar, including the home indicator area. */
+@utility pb-nav {
+  padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+}
 @utility pb-safe {
   padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
 }
@@ -223,12 +227,28 @@
   }
 }
 
+/* Snow measures its own box (cqh) so it falls the full height of any section. */
+@utility snowfall {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: size;
+}
+@utility flake {
+  position: absolute;
+  top: 0;
+  border-radius: 9999px;
+  background: var(--flake);
+  animation: fall linear infinite;
+  will-change: transform;
+}
 @keyframes fall {
   from {
-    transform: translate3d(0, -10vh, 0);
+    transform: translate3d(0, -10cqh, 0);
   }
   to {
-    transform: translate3d(var(--drift, 24px), 110vh, 0);
+    transform: translate3d(var(--drift, 24px), 110cqh, 0);
   }
 }
 
@@ -250,5 +270,9 @@
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
     scroll-behavior: auto !important;
+  }
+  .flake {
+    animation: none !important;
+    transform: translate3d(0, var(--y, 50cqh), 0);
   }
 }

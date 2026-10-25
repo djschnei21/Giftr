@@ -9,16 +9,17 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
   if (!user.name.trim()) redirect("/welcome");
   return (
     <div className="flex min-h-dvh min-w-0 flex-col">
-      <header className="sticky top-0 z-40 border-b border-transparent bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/70">
-        <div className="mx-auto flex h-16 w-full max-w-5xl min-w-0 items-center gap-6 px-4 sm:px-6">
+      <header className="pointer-events-none sticky top-0 z-40 px-4 pt-4 sm:pt-6">
+        <div className="glass pointer-events-auto mx-auto flex w-max max-w-full items-center gap-4 rounded-full p-1 pl-4">
           <Logo href="/events" />
           <MainNav />
-          <div className="ml-auto">
-            <UserMenu user={user} />
-          </div>
+          <UserMenu user={user} />
         </div>
       </header>
-      <main id="main" className="mx-auto w-full max-w-5xl min-w-0 flex-1 px-4 pt-4 pb-28 sm:px-6 sm:pt-8 sm:pb-16">
+      <main
+        id="main"
+        className="page-enter mx-auto w-full max-w-5xl min-w-0 flex-1 px-4 pt-8 pb-nav sm:px-6 sm:pt-12 sm:pb-24"
+      >
         {children}
       </main>
       <MobileNav />
