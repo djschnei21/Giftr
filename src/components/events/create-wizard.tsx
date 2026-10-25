@@ -28,7 +28,16 @@ const steps = [
 
 const stepFields: Record<number, (keyof EventFormState)[]> = {
   0: ["name", "exchangeDate", "location", "description"],
-  1: ["drawFormat", "budgetMin", "budgetMax", "wildcardBudgetMin", "wildcardBudgetMax", "joinDeadline", "drawDate", "rules"],
+  1: [
+    "drawFormat",
+    "budgetMin",
+    "budgetMax",
+    "wildcardBudgetMin",
+    "wildcardBudgetMax",
+    "joinDeadline",
+    "drawDate",
+    "rules",
+  ],
 };
 
 export function CreateEventWizard({
@@ -117,13 +126,17 @@ export function CreateEventWizard({
       if (!res.ok) {
         setErrors(res.fieldErrors ?? {});
         const firstBad = Object.keys(res.fieldErrors ?? {})[0] as keyof EventFormState | undefined;
-        const badStep = firstBad ? Number(Object.entries(stepFields).find(([, f]) => f.includes(firstBad))?.[0] ?? step) : step;
+        const badStep = firstBad
+          ? Number(Object.entries(stepFields).find(([, f]) => f.includes(firstBad))?.[0] ?? step)
+          : step;
         setStep(badStep);
         toast.error(res.error);
         return;
       }
       toast.success(
-        res.data.invited ? `Exchange created — ${res.data.invited} invite${res.data.invited === 1 ? "" : "s"} on the way` : "Exchange created",
+        res.data.invited
+          ? `Exchange created — ${res.data.invited} invite${res.data.invited === 1 ? "" : "s"} on the way`
+          : "Exchange created",
       );
       router.push(`/events/${res.data.id}?created=1`);
     });
@@ -216,7 +229,10 @@ export function CreateEventWizard({
                 {emails.length ? (
                   <ul className="flex flex-wrap gap-2" aria-label="Invitees">
                     {emails.map((email) => (
-                      <li key={email} className="flex items-center gap-1 rounded-full bg-secondary py-1 pr-1 pl-3 text-sm">
+                      <li
+                        key={email}
+                        className="flex max-w-full items-center gap-1 rounded-full bg-secondary py-1 pr-1 pl-3 text-sm break-all"
+                      >
                         {email}
                         <button
                           type="button"
@@ -231,7 +247,8 @@ export function CreateEventWizard({
                   </ul>
                 ) : null}
                 <p className="rounded-2xl bg-accent/50 p-4 text-sm text-accent-foreground">
-                  You&apos;ll also get a link to share in your group chat. Anyone with it can join until names are drawn.
+                  You&apos;ll also get a link to share in your group chat. Anyone with it can join until names are
+                  drawn.
                 </p>
                 <div className="lg:hidden">
                   <p className="mb-3 text-sm font-medium">Preview</p>
@@ -242,7 +259,7 @@ export function CreateEventWizard({
           </motion.div>
         </AnimatePresence>
 
-        <div className="mt-10 flex items-center justify-between gap-3" data-wizard-nav>
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-3" data-wizard-nav>
           {step > 0 ? (
             <Button variant="ghost" onClick={() => setStep((s) => s - 1)} disabled={pending}>
               <ArrowLeftIcon /> Back

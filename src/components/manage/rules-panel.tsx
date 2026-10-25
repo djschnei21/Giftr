@@ -1,7 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRightIcon, ArrowLeftRightIcon, HomeIcon, LockIcon, PencilIcon, PlusIcon, Trash2Icon, XIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  ArrowLeftRightIcon,
+  HomeIcon,
+  LockIcon,
+  PencilIcon,
+  PlusIcon,
+  Trash2Icon,
+  XIcon,
+} from "lucide-react";
 import { addExclusion, deleteHousehold, removeExclusion, saveHousehold } from "@/server/actions/draw";
 import { useAction } from "@/components/use-action";
 import { Badge } from "@/components/ui/badge";
@@ -62,7 +71,9 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
       {locked ? (
         <div className="flex items-start gap-3 rounded-2xl border bg-secondary/60 p-4 text-sm">
           <LockIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-          <p>Names are drawn, so these rules are locked. To change them, undo the draw from the Draw tab and draw again.</p>
+          <p>
+            Names are drawn, so these rules are locked. To change them, undo the draw from the Draw tab and draw again.
+          </p>
         </div>
       ) : blockers.length ? (
         <div role="alert" className="grid gap-1 rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-sm">
@@ -78,10 +89,18 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
           <div className="flex items-start justify-between gap-3">
             <div className="grid gap-1.5">
               <CardTitle>Households</CardTitle>
-              <CardDescription>People in the same household never draw each other — perfect for couples and roommates.</CardDescription>
+              <CardDescription>
+                People in the same household never draw each other — perfect for couples and roommates.
+              </CardDescription>
             </div>
             {!locked ? (
-              <Button variant="outline" size="sm" onClick={() => openHousehold("new")} disabled={people.length < 2} aria-label="Add household">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => openHousehold("new")}
+                disabled={people.length < 2}
+                aria-label="Add household"
+              >
                 <PlusIcon /> Add
               </Button>
             ) : null}
@@ -95,17 +114,22 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
               {households.map((h) => {
                 const members = people.filter((p) => p.householdId === h.id);
                 return (
-                  <li key={h.id} className="flex items-center gap-3 rounded-xl border p-3">
+                  <li key={h.id} className="flex min-w-0 items-center gap-3 rounded-xl border p-3">
                     <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground">
                       <HomeIcon className="size-4" />
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium">{h.name}</p>
+                      <p className="truncate text-sm font-medium">{h.name}</p>
                       <p className="truncate text-sm text-muted-foreground">{members.map((m) => m.name).join(", ")}</p>
                     </div>
                     {!locked ? (
                       <>
-                        <Button variant="ghost" size="icon" aria-label={`Edit ${h.name}`} onClick={() => openHousehold(h)}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={`Edit ${h.name}`}
+                          onClick={() => openHousehold(h)}
+                        >
                           <PencilIcon />
                         </Button>
                         <Button
@@ -130,21 +154,27 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
       <Card>
         <CardHeader>
           <CardTitle>Exclusions</CardTitle>
-          <CardDescription>Keep specific people from drawing each other — like last year&apos;s pair, or the boss.</CardDescription>
+          <CardDescription>
+            Keep specific people from drawing each other — like last year&apos;s pair, or the boss.
+          </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-5">
           {rows.length ? (
             <ul className="grid gap-2" data-testid="exclusions">
               {rows.map((r) => (
-                <li key={r.ids.join()} className="flex items-center gap-2 rounded-xl border px-3 py-2 text-sm">
-                  <span className="font-medium">{r.a}</span>
-                  {r.mutual ? (
-                    <ArrowLeftRightIcon className="size-4 text-muted-foreground" aria-label="and" />
-                  ) : (
-                    <ArrowRightIcon className="size-4 text-muted-foreground" aria-label="won't draw" />
-                  )}
-                  <span className="font-medium">{r.b}</span>
-                  <span className="text-muted-foreground">{r.mutual ? "won't draw each other" : "won't be drawn"}</span>
+                <li key={r.ids.join()} className="flex min-w-0 items-start gap-2 rounded-xl border px-3 py-2 text-sm">
+                  <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1">
+                    <span className="font-medium break-words">{r.a}</span>
+                    {r.mutual ? (
+                      <ArrowLeftRightIcon className="size-4 shrink-0 text-muted-foreground" aria-label="and" />
+                    ) : (
+                      <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground" aria-label="won't draw" />
+                    )}
+                    <span className="font-medium break-words">{r.b}</span>
+                    <span className="text-muted-foreground">
+                      {r.mutual ? "won't draw each other" : "won't be drawn"}
+                    </span>
+                  </div>
                   {!locked ? (
                     <Button
                       variant="ghost"
@@ -203,8 +233,19 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
                   </NativeSelect>
                 </Field>
               </div>
-              <SwitchRow id="ex-both" label="Both ways" description="Neither can draw the other." checked={bothWays} onCheckedChange={setBothWays} />
-              <Button type="submit" variant="secondary" className="justify-self-end" disabled={pending || !giver || !recipient}>
+              <SwitchRow
+                id="ex-both"
+                label="Both ways"
+                description="Neither can draw the other."
+                checked={bothWays}
+                onCheckedChange={setBothWays}
+              />
+              <Button
+                type="submit"
+                variant="secondary"
+                className="justify-self-end"
+                disabled={pending || !giver || !recipient}
+              >
                 <PlusIcon /> Add exclusion
               </Button>
             </form>
@@ -222,14 +263,27 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
           className="grid gap-4 pb-5 sm:pb-0"
           onSubmit={(e) => {
             e.preventDefault();
-            run(() => saveHousehold(eventId, editing === "new" || !editing ? null : editing.id, { name: hhName, memberIds: [...hhMembers] }), {
-              success: "Household saved",
-              onSuccess: () => setEditing(null),
-            });
+            run(
+              () =>
+                saveHousehold(eventId, editing === "new" || !editing ? null : editing.id, {
+                  name: hhName,
+                  memberIds: [...hhMembers],
+                }),
+              {
+                success: "Household saved",
+                onSuccess: () => setEditing(null),
+              },
+            );
           }}
         >
           <Field label="Name" htmlFor="hh-name">
-            <Input id="hh-name" placeholder="The Hartleys" value={hhName} onChange={(e) => setHhName(e.target.value)} maxLength={60} />
+            <Input
+              id="hh-name"
+              placeholder="The Hartleys"
+              value={hhName}
+              onChange={(e) => setHhName(e.target.value)}
+              maxLength={60}
+            />
           </Field>
           <fieldset className="grid gap-2">
             <legend className="mb-2 text-sm font-medium">Members</legend>

@@ -104,9 +104,25 @@
   h2,
   h3 {
     text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+  p,
+  li,
+  dd {
+    overflow-wrap: break-word;
   }
   p {
     text-wrap: pretty;
+  }
+  /* A bare `grid` uses an `auto` column whose minimum is min-content.
+     One nowrap child (a long invite URL, a title) then stretches every
+     sibling past a Fold cover screen. Pin the default track so it can
+     shrink; explicit `grid-cols-*` utilities still override this. */
+  .grid:where(:not(.grid-flow-col)) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .grid > * {
+    min-width: 0;
   }
 }
 

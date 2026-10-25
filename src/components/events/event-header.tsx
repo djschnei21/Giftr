@@ -26,13 +26,15 @@ export function EventHeader({
       >
         <ChevronLeftIcon className="size-4" /> {back.label}
       </Link>
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="grid min-w-0 gap-2">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="grid w-full min-w-0 gap-2 sm:w-auto">
           <div className="flex flex-wrap gap-1.5">
             <Badge variant={badge.variant}>{badge.label}</Badge>
             {isOrganizer ? <Badge variant="outline">You&apos;re organizing</Badge> : null}
           </div>
-          <h1 className="font-display text-3xl leading-tight font-semibold break-words sm:text-4xl">{event.name}</h1>
+          <h1 className="max-w-full font-display text-3xl leading-tight font-semibold break-words sm:text-4xl">
+            {event.name.replaceAll("/", "/\u200b")}
+          </h1>
           <p className="text-muted-foreground">{longDateLabel(event.exchangeDate)}</p>
         </div>
         {isOrganizer && showManage && event.status !== "cancelled" ? (

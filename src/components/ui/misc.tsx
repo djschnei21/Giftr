@@ -45,7 +45,7 @@ function SwitchRow({
   const value = onCheckedChange ? (checked ?? false) : internal;
   return (
     <label htmlFor={id} className="flex cursor-pointer items-start justify-between gap-4 py-1">
-      <span className="grid gap-0.5">
+      <span className="grid min-w-0 gap-0.5">
         <span className="text-sm font-medium">{label}</span>
         {description ? <span className="text-[13px] text-muted-foreground">{description}</span> : null}
       </span>
@@ -68,7 +68,7 @@ function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimi
   return (
     <TabsPrimitive.List
       className={cn(
-        "-mx-4 flex gap-1 overflow-x-auto border-b px-4 [scrollbar-width:none] sm:mx-0 sm:px-0",
+        "-mx-4 flex min-w-0 [scrollbar-width:none] gap-1 overflow-x-auto border-b px-4 sm:mx-0 sm:px-0",
         className,
       )}
       {...props}
@@ -95,7 +95,11 @@ function TabsContent({ className, ...props }: React.ComponentProps<typeof TabsPr
 const DropdownMenu = DropdownPrimitive.Root;
 const DropdownMenuTrigger = DropdownPrimitive.Trigger;
 
-function DropdownMenuContent({ className, sideOffset = 6, ...props }: React.ComponentProps<typeof DropdownPrimitive.Content>) {
+function DropdownMenuContent({
+  className,
+  sideOffset = 6,
+  ...props
+}: React.ComponentProps<typeof DropdownPrimitive.Content>) {
   return (
     <DropdownPrimitive.Portal>
       <DropdownPrimitive.Content
@@ -138,7 +142,10 @@ function DropdownMenuSeparator({ className, ...props }: React.ComponentProps<typ
 function Separator({ className, ...props }: React.ComponentProps<typeof SeparatorPrimitive.Root>) {
   return (
     <SeparatorPrimitive.Root
-      className={cn("shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px", className)}
+      className={cn(
+        "shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px",
+        className,
+      )}
       {...props}
     />
   );

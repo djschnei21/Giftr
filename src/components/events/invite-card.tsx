@@ -22,7 +22,9 @@ export type InviteCardData = {
 export function InviteCard({ data, className }: { data: InviteCardData; className?: string }) {
   const budget = budgetLabel(data.budgetMin, data.budgetMax, data.currency);
   const wildcardBudget =
-    data.drawFormat === "wildcard" ? budgetLabel(data.wildcardBudgetMin ?? null, data.wildcardBudgetMax ?? null, data.currency) : null;
+    data.drawFormat === "wildcard"
+      ? budgetLabel(data.wildcardBudgetMin ?? null, data.wildcardBudgetMax ?? null, data.currency)
+      : null;
   return (
     <div
       className={cn(
@@ -58,31 +60,38 @@ export function InviteCard({ data, className }: { data: InviteCardData; classNam
           <p className="line-clamp-3 text-sm whitespace-pre-line text-muted-foreground">{data.description}</p>
         ) : null}
         <ul className="grid gap-2 text-left text-sm">
-          <li className="flex items-center gap-2.5">
-            <CalendarDaysIcon className="size-4 shrink-0 text-primary" />
-            {data.exchangeDate ? longDateLabel(data.exchangeDate) : "Pick a date"}
+          <li className="flex min-w-0 items-start gap-2.5">
+            <CalendarDaysIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+            <span className="min-w-0">{data.exchangeDate ? longDateLabel(data.exchangeDate) : "Pick a date"}</span>
           </li>
-          <li className="flex items-center gap-2.5">
+          <li className="flex min-w-0 items-start gap-2.5">
             {data.exchangeType === "shipped" ? (
               <>
-                <PackageIcon className="size-4 shrink-0 text-primary" /> Gifts are shipped
+                <PackageIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+                <span className="min-w-0">Gifts are shipped</span>
               </>
             ) : (
               <>
-                <MapPinIcon className="size-4 shrink-0 text-primary" /> {data.location || "In person"}
+                <MapPinIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+                <span className="min-w-0">{data.location || "In person"}</span>
               </>
             )}
           </li>
           {budget ? (
-            <li className="flex items-center gap-2.5">
-              <WalletIcon className="size-4 shrink-0 text-primary" /> {budget}
-              {data.drawFormat === "wildcard" ? " main gift" : ""}
+            <li className="flex min-w-0 items-start gap-2.5">
+              <WalletIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+              <span className="min-w-0">
+                {budget}
+                {data.drawFormat === "wildcard" ? " main gift" : ""}
+              </span>
             </li>
           ) : null}
           {data.drawFormat === "wildcard" ? (
-            <li className="flex items-center gap-2.5">
-              <SparklesIcon className="size-4 shrink-0 text-primary" />
-              {wildcardBudget ? `${wildcardBudget} wild card gift` : "Plus a surprise wild card gift"}
+            <li className="flex min-w-0 items-start gap-2.5">
+              <SparklesIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+              <span className="min-w-0">
+                {wildcardBudget ? `${wildcardBudget} wild card gift` : "Plus a surprise wild card gift"}
+              </span>
             </li>
           ) : null}
         </ul>

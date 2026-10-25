@@ -7,11 +7,11 @@ import { getCurrentUser } from "@/lib/authz";
 export default async function MarketingLayout({ children }: LayoutProps<"/">) {
   const user = await getCurrentUser();
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex min-h-dvh min-w-0 flex-col">
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/70">
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-4 px-4 sm:px-6">
+        <div className="mx-auto flex min-h-16 w-full max-w-6xl min-w-0 flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2 sm:px-6">
           <Logo />
-          <nav className="ml-auto flex items-center gap-2">
+          <nav className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-2">
             {user ? (
               <Button asChild size="sm">
                 <Link href="/events">Open Giftr</Link>
@@ -29,7 +29,9 @@ export default async function MarketingLayout({ children }: LayoutProps<"/">) {
           </nav>
         </div>
       </header>
-      <main id="main" className="flex-1">{children}</main>
+      <main id="main" className="flex-1">
+        {children}
+      </main>
       <footer className="border-t">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-8 text-sm text-muted-foreground sm:px-6">
           <span>© {new Date().getFullYear()} Giftr</span>

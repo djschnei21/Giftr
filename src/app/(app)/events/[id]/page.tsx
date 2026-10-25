@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
-import { EyeIcon, LockIcon, MapPinIcon, PackageIcon, RepeatIcon, ShuffleIcon, SparklesIcon, WalletIcon } from "lucide-react";
+import {
+  EyeIcon,
+  LockIcon,
+  MapPinIcon,
+  PackageIcon,
+  RepeatIcon,
+  ShuffleIcon,
+  SparklesIcon,
+  WalletIcon,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAvatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -47,7 +56,7 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
   const open = event.status === "open";
 
   return (
-    <div className="grid gap-8">
+    <div className="grid min-w-0 gap-8">
       <EventHeader event={event} isOrganizer={isOrganizer} />
 
       {event.status === "cancelled" ? (
@@ -108,33 +117,43 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
                   {event.exchangeType === "shipped" ? (
                     <>
                       <PackageIcon className="mt-0.5 size-4 shrink-0 text-primary" />
-                      <span>Gifts are shipped. Your Santa will see the address on your profile.</span>
+                      <span className="min-w-0">
+                        Gifts are shipped. Your Santa will see the address on your profile.
+                      </span>
                     </>
                   ) : (
                     <>
                       <MapPinIcon className="mt-0.5 size-4 shrink-0 text-primary" />
-                      <span>{event.location || "In person — location to be announced"}</span>
+                      <span className="min-w-0">{event.location || "In person — location to be announced"}</span>
                     </>
                   )}
                 </li>
                 <li className="flex items-start gap-3">
                   <WalletIcon className="mt-0.5 size-4 shrink-0 text-primary" />
-                  <span>{budget ? (event.drawFormat === "wildcard" ? `Main budget: ${budget}` : `Budget: ${budget}`) : "No set budget"}</span>
+                  <span className="min-w-0">
+                    {budget
+                      ? event.drawFormat === "wildcard"
+                        ? `Main budget: ${budget}`
+                        : `Budget: ${budget}`
+                      : "No set budget"}
+                  </span>
                 </li>
                 {event.drawFormat === "wildcard" ? (
                   <li className="flex items-start gap-3">
                     <SparklesIcon className="mt-0.5 size-4 shrink-0 text-primary" />
-                    <span>{wildcardBudget ? `Wildcard budget: ${wildcardBudget}` : "Wildcard budget not set"}</span>
+                    <span className="min-w-0">
+                      {wildcardBudget ? `Wildcard budget: ${wildcardBudget}` : "Wildcard budget not set"}
+                    </span>
                   </li>
                 ) : null}
               </ul>
               {event.description ? (
-                <p className="text-sm leading-relaxed whitespace-pre-line">{event.description}</p>
+                <p className="text-sm leading-relaxed break-words whitespace-pre-line">{event.description}</p>
               ) : null}
               {event.rules ? (
                 <div className="rounded-2xl bg-secondary/70 p-4">
                   <p className="mb-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">House rules</p>
-                  <p className="text-sm leading-relaxed whitespace-pre-line">{event.rules}</p>
+                  <p className="text-sm leading-relaxed break-words whitespace-pre-line">{event.rules}</p>
                 </div>
               ) : null}
               <div className="flex flex-wrap gap-2">
@@ -185,14 +204,16 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
               {canSeePeople ? (
                 <ul className="grid gap-3" aria-label="Participants">
                   {joinedPeople.map((p) => (
-                    <li key={p.id} className="flex items-center gap-3">
+                    <li key={p.id} className="flex min-w-0 items-center gap-3">
                       <UserAvatar name={p.name} image={p.image} className="size-8 text-xs" />
-                      <span className="min-w-0 flex-1 truncate text-sm">
-                        {p.name}
-                        {p.userId === user.id ? <span className="text-muted-foreground"> (you)</span> : null}
+                      <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                        <span className="min-w-0 break-words">
+                          {p.name}
+                          {p.userId === user.id ? <span className="text-muted-foreground"> (you)</span> : null}
+                        </span>
+                        {p.role === "organizer" ? <Badge variant="outline">Organizer</Badge> : null}
+                        {!p.inDraw ? <Badge variant="secondary">Not in draw</Badge> : null}
                       </span>
-                      {p.role === "organizer" ? <Badge variant="outline">Organizer</Badge> : null}
-                      {!p.inDraw ? <Badge variant="secondary">Not in draw</Badge> : null}
                     </li>
                   ))}
                 </ul>

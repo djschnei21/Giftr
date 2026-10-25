@@ -43,7 +43,10 @@ export function Timeline({ event, joined }: { event: Event; joined: number }) {
         <li key={s.title} className="relative flex gap-4 pb-6 last:pb-0">
           {i < steps.length - 1 ? (
             <span
-              className={cn("absolute top-7 bottom-0 left-[13px] w-px", s.state === "done" ? "bg-primary" : "bg-border")}
+              className={cn(
+                "absolute top-7 bottom-0 left-[13px] w-px",
+                s.state === "done" ? "bg-primary" : "bg-border",
+              )}
               aria-hidden
             />
           ) : null}
@@ -57,7 +60,7 @@ export function Timeline({ event, joined }: { event: Event; joined: number }) {
           >
             {s.state === "done" ? <CheckIcon className="size-3.5" /> : i + 1}
           </span>
-          <div className="grid gap-0.5 pt-0.5">
+          <div className="grid min-w-0 gap-0.5 pt-0.5">
             <p className={cn("text-sm font-medium", s.state === "upcoming" && "text-muted-foreground")}>
               {s.title}
               {s.state === "current" ? <span className="sr-only"> (current step)</span> : null}

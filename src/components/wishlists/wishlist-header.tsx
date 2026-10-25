@@ -27,12 +27,12 @@ export function WishlistHeader({
   const [deleting, setDeleting] = useState(false);
 
   return (
-    <header className="grid gap-3">
+    <header className="grid grid-cols-1 gap-3">
       <Link href="/wishlists" className="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ChevronLeftIcon className="size-4" /> All wishlists
       </Link>
       <div className="flex items-start justify-between gap-3">
-        <div className="grid gap-2">
+        <div className="grid min-w-0 gap-2">
           <h1 className="font-display text-3xl font-semibold break-words sm:text-4xl">{wishlist.name}</h1>
           <div className="flex flex-wrap gap-2">
             {wishlist.isDefault ? (
@@ -41,7 +41,9 @@ export function WishlistHeader({
               </Badge>
             ) : null}
             {sharedIn.length ? (
-              <Badge variant="secondary">Shared in {sharedIn.join(", ")}</Badge>
+              <Badge variant="secondary" className="max-w-full shrink text-left whitespace-normal">
+                Shared in {sharedIn.join(", ")}
+              </Badge>
             ) : (
               <Badge variant="outline">Not shared in any exchange</Badge>
             )}

@@ -76,16 +76,17 @@ function SortableItem({
           <>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon-sm"
+              className="sm:size-10"
               onClick={onStar}
               aria-label={item.mostWanted ? "Unmark most wanted" : "Mark most wanted"}
             >
               <StarIcon className={cn(item.mostWanted && "fill-gold text-gold")} />
             </Button>
-            <Button variant="ghost" size="icon" onClick={onEdit} aria-label={`Edit ${item.title}`}>
+            <Button variant="ghost" size="icon-sm" className="sm:size-10" onClick={onEdit} aria-label={`Edit ${item.title}`}>
               <PencilIcon />
             </Button>
-            <Button variant="ghost" size="icon" onClick={onDelete} aria-label={`Delete ${item.title}`}>
+            <Button variant="ghost" size="icon-sm" className="sm:size-10" onClick={onDelete} aria-label={`Delete ${item.title}`}>
               <Trash2Icon />
             </Button>
           </>
@@ -144,7 +145,7 @@ export function WishlistEditor({ wishlistId, items: serverItems }: { wishlistId:
   }
 
   return (
-    <div className="grid gap-6">
+    <div className="grid grid-cols-1 gap-6">
       {adding ? (
         <Card>
           <CardHeader>
@@ -179,7 +180,7 @@ export function WishlistEditor({ wishlistId, items: serverItems }: { wishlistId:
       {items.length ? (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
           <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
-            <ul className="grid gap-3" aria-label="Wishlist items" data-testid="wishlist-items">
+            <ul className="grid grid-cols-1 gap-3" aria-label="Wishlist items" data-testid="wishlist-items">
               {items.map((item) => (
                 <SortableItem
                   key={item.id}
