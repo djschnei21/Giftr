@@ -1,5 +1,6 @@
 import type { Icon, IconProps } from "@phosphor-icons/react";
 import {
+  AirplaneTiltIcon as PAirplaneTiltIcon,
   ArrowCounterClockwiseIcon as PArrowCounterClockwiseIcon,
   ArrowLeftIcon as PArrowLeftIcon,
   ArrowRightIcon as PArrowRightIcon,
@@ -9,6 +10,7 @@ import {
   ArrowsLeftRightIcon as PArrowsLeftRightIcon,
   BagSimpleIcon as PBagSimpleIcon,
   BellSlashIcon as PBellSlashIcon,
+  BuildingsIcon as PBuildingsIcon,
   CalendarBlankIcon as PCalendarBlankIcon,
   CalendarCheckIcon as PCalendarCheckIcon,
   CalendarDotsIcon as PCalendarDotsIcon,
@@ -20,10 +22,12 @@ import {
   CheckSquareIcon as PCheckSquareIcon,
   CircleNotchIcon as PCircleNotchIcon,
   ClockCounterClockwiseIcon as PClockCounterClockwiseIcon,
+  CoffeeIcon as PCoffeeIcon,
   ConfettiIcon as PConfettiIcon,
   CopyIcon as PCopyIcon,
   CrownIcon as PCrownIcon,
   DetectiveIcon as PDetectiveIcon,
+  DeviceMobileIcon as PDeviceMobileIcon,
   DotsSixVerticalIcon as PDotsSixVerticalIcon,
   DotsThreeIcon as PDotsThreeIcon,
   EnvelopeSimpleIcon as PEnvelopeSimpleIcon,
@@ -75,6 +79,7 @@ import {
   UserMinusIcon as PUserMinusIcon,
   UserPlusIcon as PUserPlusIcon,
   UsersIcon as PUsersIcon,
+  UsersThreeIcon as PUsersThreeIcon,
   WalletIcon as PWalletIcon,
   WarningIcon as PWarningIcon,
   XCircleIcon as PXCircleIcon,
@@ -93,6 +98,7 @@ function bold(Glyph: Icon) {
   return BoldIcon;
 }
 
+export const AirplaneTiltIcon = bold(PAirplaneTiltIcon);
 export const ArrowCounterClockwiseIcon = bold(PArrowCounterClockwiseIcon);
 export const ArrowLeftIcon = bold(PArrowLeftIcon);
 export const ArrowRightIcon = bold(PArrowRightIcon);
@@ -102,6 +108,7 @@ export const ArrowsClockwiseIcon = bold(PArrowsClockwiseIcon);
 export const ArrowsLeftRightIcon = bold(PArrowsLeftRightIcon);
 export const BagSimpleIcon = bold(PBagSimpleIcon);
 export const BellSlashIcon = bold(PBellSlashIcon);
+export const BuildingsIcon = bold(PBuildingsIcon);
 export const CalendarBlankIcon = bold(PCalendarBlankIcon);
 export const CalendarCheckIcon = bold(PCalendarCheckIcon);
 export const CalendarDotsIcon = bold(PCalendarDotsIcon);
@@ -113,10 +120,12 @@ export const CheckIcon = bold(PCheckIcon);
 export const CheckSquareIcon = bold(PCheckSquareIcon);
 export const CircleNotchIcon = bold(PCircleNotchIcon);
 export const ClockCounterClockwiseIcon = bold(PClockCounterClockwiseIcon);
+export const CoffeeIcon = bold(PCoffeeIcon);
 export const ConfettiIcon = bold(PConfettiIcon);
 export const CopyIcon = bold(PCopyIcon);
 export const CrownIcon = bold(PCrownIcon);
 export const DetectiveIcon = bold(PDetectiveIcon);
+export const DeviceMobileIcon = bold(PDeviceMobileIcon);
 export const DotsSixVerticalIcon = bold(PDotsSixVerticalIcon);
 export const DotsThreeIcon = bold(PDotsThreeIcon);
 export const EnvelopeSimpleIcon = bold(PEnvelopeSimpleIcon);
@@ -168,6 +177,7 @@ export const UserIcon = bold(PUserIcon);
 export const UserMinusIcon = bold(PUserMinusIcon);
 export const UserPlusIcon = bold(PUserPlusIcon);
 export const UsersIcon = bold(PUsersIcon);
+export const UsersThreeIcon = bold(PUsersThreeIcon);
 export const WalletIcon = bold(PWalletIcon);
 export const WarningIcon = bold(PWarningIcon);
 export const XCircleIcon = bold(PXCircleIcon);

@@ -31,7 +31,7 @@ export function SiteNav({ signedIn }: { signedIn: boolean }) {
   const close = () => setOpen(false);
   const cta = signedIn
     ? { href: "/events", label: "Open Giftr" }
-    : { href: "/sign-in?next=/events/new", label: "Start an exchange" };
+    : { href: "/sign-in?next=/events/new", label: "Start your exchange" };
   const menu = [...links, ...(signedIn ? [] : [{ href: "/sign-in", label: "Sign in" }])];
 
   return (
