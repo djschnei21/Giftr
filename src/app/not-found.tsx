@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 export default function NotFound() {
   return (
     <main id="main" className="relative isolate flex flex-1 flex-col">
-      <Snowfall count={36} seed={31} className="-z-10" />
+      <Snowfall count={54} seed={31} className="-z-10" />
       <div className="mx-auto grid w-full max-w-lg flex-1 content-center gap-12 px-4 py-16">
         <Logo className="justify-center" />
         <EmptyState

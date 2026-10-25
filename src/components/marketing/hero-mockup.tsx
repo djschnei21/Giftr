@@ -102,7 +102,7 @@ export function HeroMockup({ className }: { className?: string }) {
 
           <div className="relative isolate grid content-start gap-4 overflow-hidden rounded-xl bg-primary p-4 text-primary-foreground sm:p-6">
             <StarPattern id="hero-mockup-stars" className="-z-10 text-gold opacity-25" />
-            <Snowfall count={14} seed={23} className="-z-10 [--flake:rgb(255_255_255/0.45)]" />
+            <Snowfall count={14} seed={23} className="-z-10 [--flake:rgb(255_255_255/0.75)]" />
             <div className="m-up grid justify-items-center gap-2 text-center" style={at(1000)}>
               <span className="text-sm opacity-80">You&apos;re Secret Santa for</span>
               <UserAvatar name="Jordan Ellis" className="size-14 rounded-2xl text-lg ring-4 ring-gold/60" />

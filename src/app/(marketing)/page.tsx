@@ -116,7 +116,7 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
       ) : null}
 
       <section className="relative isolate overflow-hidden">
-        <Snowfall count={40} className="-z-10" />
+        <Snowfall count={60} className="-z-10" />
         <Ornament className="left-[4%] sm:left-[8%]" length={24} />
         <Ornament className="left-[18%] hidden lg:flex" tone="gold" length={88} style={{ animationDelay: "-2s" }} />
         <Ornament className="right-[18%] hidden lg:flex" length={56} style={{ animationDelay: "-3s" }} />
@@ -247,7 +247,7 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
       <section aria-labelledby="cta-title" className="px-4 pt-12 pb-24 sm:px-6">
         <InView className="reveal relative isolate mx-auto grid w-full max-w-6xl justify-items-center gap-6 overflow-hidden rounded-3xl bg-primary px-6 py-24 text-center text-primary-foreground shadow-xl">
           <StarPattern id="cta-stars" className="-z-10 text-gold opacity-25" />
-          <Snowfall count={28} seed={19} className="-z-10 [--flake:rgb(255_255_255/0.45)]" />
+          <Snowfall count={28} seed={19} className="-z-10 [--flake:rgb(255_255_255/0.75)]" />
           <Ornament className="left-[10%] hidden sm:flex" tone="gold" length={48} />
           <Ornament className="right-[12%] hidden sm:flex" tone="gold" length={72} style={{ animationDelay: "-2s" }} />
           <h2 id="cta-title" className="max-w-[680px] text-3xl font-bold tracking-tight sm:text-5xl">

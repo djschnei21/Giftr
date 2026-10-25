@@ -17,7 +17,7 @@ export default async function SignInPage({ searchParams }: PageProps<"/sign-in">
 
   return (
     <main id="main" className="relative isolate flex flex-1 flex-col items-center justify-center px-4 py-12">
-      <Snowfall count={40} seed={23} className="-z-10" />
+      <Snowfall count={60} seed={23} className="-z-10" />
       <Ornament className="left-[12%] hidden sm:flex" length={64} />
       <Ornament className="left-[22%] hidden sm:flex" tone="gold" length={112} style={{ animationDelay: "-2s" }} />
       <Ornament className="right-[16%] hidden sm:flex" length={88} style={{ animationDelay: "-1s" }} />

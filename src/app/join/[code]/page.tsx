@@ -98,7 +98,7 @@ export default async function JoinPage({ params, searchParams }: PageProps<"/joi
 
   return (
     <main id="main" className="relative isolate flex flex-1 flex-col items-center px-4 py-12 sm:py-16">
-      <Snowfall count={44} seed={19} className="-z-10" />
+      <Snowfall count={66} seed={19} className="-z-10" />
       <Logo className="mb-12" />
       <div className="page-enter w-full max-w-4xl">
       <div className="grid items-start gap-8 md:grid-cols-2">
