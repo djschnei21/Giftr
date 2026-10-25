@@ -45,6 +45,12 @@ function looksLikeUrl(v: string) {
   return /^https?:\/\/\S+\.\S+/i.test(v.trim());
 }
 
+/** Amazon's placeholder title. A real product name should replace it. */
+function isPlaceholderTitle(title: string) {
+  const v = title.trim().toLowerCase();
+  return !v || v === "amazon" || v === "amazon.com" || v === "amzn";
+}
+
 export function ItemForm({
   initial,
   submitLabel,
@@ -66,15 +72,19 @@ export function ItemForm({
   const set = (p: Partial<ItemFormState>) => setState((s) => ({ ...s, ...p }));
 
   function fetchPreview(url: string) {
-    if (!looksLikeUrl(url) || lastFetched.current === url) return;
+    if (!looksLikeUrl(url) || (lastFetched.current === url && !isPlaceholderTitle(state.title))) return;
     lastFetched.current = url;
     startFetch(async () => {
       const res = await previewLink(url.trim());
-      if (!res.ok || !res.data) return;
+      if (!res.ok || !res.data) {
+        if (lastFetched.current === url) lastFetched.current = null;
+        return;
+      }
       const p = res.data;
+      if (p.title && isPlaceholderTitle(p.title) && lastFetched.current === url) lastFetched.current = null;
       setState((s) => ({
         ...s,
-        title: s.title || p.title || "",
+        title: isPlaceholderTitle(s.title) ? p.title || s.title : s.title || p.title || "",
         imageUrl: s.imageUrl || p.imageUrl || "",
         price: s.price || (p.price !== null ? String(p.price) : ""),
         currency: p.currency && (currencies as readonly string[]).includes(p.currency) && !s.price ? p.currency : s.currency,
