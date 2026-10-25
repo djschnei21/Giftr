@@ -104,7 +104,7 @@ export function AnonymousChat({
         role="log"
         aria-live="polite"
         aria-label="Messages"
-        className="grid max-h-96 min-h-32 content-start gap-2 overflow-y-auto rounded-2xl bg-secondary p-3"
+        className="grid max-h-96 min-h-32 content-end-safe gap-2 overflow-y-auto rounded-2xl bg-secondary p-3"
       >
         {messages.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-6 text-center text-sm text-muted-foreground">

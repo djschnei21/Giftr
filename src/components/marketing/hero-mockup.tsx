@@ -128,7 +128,7 @@ export function HeroMockup({ className }: { className?: string }) {
             </ul>
           </div>
 
-          <div className="grid content-start gap-4 rounded-xl border bg-card p-4">
+          <div className="grid grid-rows-[auto_1fr_auto] gap-4 rounded-xl border bg-card p-4">
             <div className="m-up flex items-center gap-3" style={at(1180)}>
               <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground">
                 <DetectiveIcon className="size-4" />
@@ -138,7 +138,7 @@ export function HeroMockup({ className }: { className?: string }) {
                 <span className="truncate text-xs text-muted-foreground">Your name stays hidden</span>
               </span>
             </div>
-            <div className="grid gap-2 text-sm">
+            <div className="grid content-end gap-2 text-sm">
               <p
                 className="m-up max-w-4/5 justify-self-end rounded-2xl rounded-br-md bg-primary px-3 py-2 text-primary-foreground"
                 style={at(1460)}
