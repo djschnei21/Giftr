@@ -19,7 +19,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVerticalIcon, PencilIcon, PlusIcon, StarIcon, Trash2Icon } from "lucide-react";
+import { DotsSixVerticalIcon, PencilSimpleIcon, PlusIcon, StarIcon, TrashIcon } from "@/components/icons";
 import { toast } from "sonner";
 import type { WishlistItem } from "@/db/schema";
 import {
@@ -59,17 +59,17 @@ function SortableItem({
     >
       <ItemCard
         item={item}
-        className={cn(isDragging && "shadow-lg ring-2 ring-primary/30")}
+        className={cn(isDragging && "scale-[1.02] shadow-xl ring-2 ring-primary/30")}
         leading={
           <button
             ref={setActivatorNodeRef}
             type="button"
             aria-label={`Reorder ${item.title}`}
-            className="-ml-1 flex h-16 w-6 shrink-0 cursor-grab touch-none items-center justify-center rounded-md text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none active:cursor-grabbing sm:h-20"
+            className="-ml-1 flex h-16 w-6 shrink-0 cursor-grab touch-none items-center justify-center rounded-md text-muted-foreground transition hover:text-foreground focus-visible:ring-4 focus-visible:ring-ring/30 focus-visible:outline-none active:cursor-grabbing sm:h-20"
             {...attributes}
             {...listeners}
           >
-            <GripVerticalIcon className="size-4" />
+            <DotsSixVerticalIcon className="size-4" />
           </button>
         }
         actions={
@@ -81,13 +81,25 @@ function SortableItem({
               onClick={onStar}
               aria-label={item.mostWanted ? "Unmark most wanted" : "Mark most wanted"}
             >
-              <StarIcon className={cn(item.mostWanted && "fill-gold text-gold")} />
+              <StarIcon weight={item.mostWanted ? "fill" : "bold"} className={cn(item.mostWanted && "text-gold")} />
             </Button>
-            <Button variant="ghost" size="icon-sm" className="sm:size-10" onClick={onEdit} aria-label={`Edit ${item.title}`}>
-              <PencilIcon />
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className="sm:size-10"
+              onClick={onEdit}
+              aria-label={`Edit ${item.title}`}
+            >
+              <PencilSimpleIcon />
             </Button>
-            <Button variant="ghost" size="icon-sm" className="sm:size-10" onClick={onDelete} aria-label={`Delete ${item.title}`}>
-              <Trash2Icon />
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className="sm:size-10"
+              onClick={onDelete}
+              aria-label={`Delete ${item.title}`}
+            >
+              <TrashIcon />
             </Button>
           </>
         }
@@ -209,7 +221,7 @@ export function WishlistEditor({ wishlistId, items: serverItems }: { wishlistId:
 
       <ResponsiveDialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)} title="Edit idea">
         {editing ? (
-          <div className="pb-5 sm:pb-0">
+          <div className="pb-4 sm:pb-0">
             <ItemForm
               key={editing.id}
               idPrefix="edit-item"

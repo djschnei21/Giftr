@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon } from "@/components/icons";
 import { createWishlist } from "@/server/actions/wishlists";
 import { useAction } from "@/components/use-action";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ export function NewWishlistButton() {
       open={open}
       onOpenChange={setOpen}
       title="New wishlist"
-      description="Name it after the occasion or the vibe — “Cozy winter”, “Kitchen upgrades”…"
+      description="Name it after the occasion or the vibe, like “Cozy winter” or “Kitchen upgrades”."
       trigger={
         <Button>
           <PlusIcon /> New wishlist
@@ -29,7 +29,7 @@ export function NewWishlistButton() {
       }
     >
       <form
-        className="grid gap-4 pb-5 sm:pb-0"
+        className="grid gap-4 pb-4 sm:pb-0"
         onSubmit={(e) => {
           e.preventDefault();
           run(() => createWishlist(name), {

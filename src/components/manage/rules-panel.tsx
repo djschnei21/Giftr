@@ -3,14 +3,14 @@
 import { useState } from "react";
 import {
   ArrowRightIcon,
-  ArrowLeftRightIcon,
-  HomeIcon,
+  ArrowsLeftRightIcon,
+  HouseIcon,
   LockIcon,
-  PencilIcon,
+  PencilSimpleIcon,
   PlusIcon,
-  Trash2Icon,
+  TrashIcon,
   XIcon,
-} from "lucide-react";
+} from "@/components/icons";
 import { addExclusion, deleteHousehold, removeExclusion, saveHousehold } from "@/server/actions/draw";
 import { useAction } from "@/components/use-action";
 import { Badge } from "@/components/ui/badge";
@@ -69,15 +69,15 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
   return (
     <div className="grid gap-6">
       {locked ? (
-        <div className="flex items-start gap-3 rounded-2xl border bg-secondary/60 p-4 text-sm">
+        <div className="flex items-start gap-3 rounded-2xl bg-secondary p-4 text-sm">
           <LockIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
           <p>
             Names are drawn, so these rules are locked. To change them, undo the draw from the Draw tab and draw again.
           </p>
         </div>
       ) : blockers.length ? (
-        <div role="alert" className="grid gap-1 rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-sm">
-          <p className="font-medium text-destructive">These rules make the draw impossible</p>
+        <div role="alert" className="grid gap-1 rounded-2xl bg-destructive/10 p-4 text-sm">
+          <p className="font-semibold text-destructive">These rules make the draw impossible</p>
           {blockers.map((b, i) => (
             <p key={i}>{b.message}</p>
           ))}
@@ -87,10 +87,10 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
       <Card>
         <CardHeader>
           <div className="flex items-start justify-between gap-3">
-            <div className="grid gap-1.5">
+            <div className="grid gap-2">
               <CardTitle>Households</CardTitle>
               <CardDescription>
-                People in the same household never draw each other — perfect for couples and roommates.
+                People in the same household never draw each other, which is perfect for couples and roommates.
               </CardDescription>
             </div>
             {!locked ? (
@@ -114,12 +114,12 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
               {households.map((h) => {
                 const members = people.filter((p) => p.householdId === h.id);
                 return (
-                  <li key={h.id} className="flex min-w-0 items-center gap-3 rounded-xl border p-3">
-                    <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-                      <HomeIcon className="size-4" />
+                  <li key={h.id} className="flex min-w-0 items-center gap-3 rounded-xl bg-secondary p-3">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-card text-accent-foreground">
+                      <HouseIcon className="size-4" />
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{h.name}</p>
+                      <p className="truncate text-sm font-semibold">{h.name}</p>
                       <p className="truncate text-sm text-muted-foreground">{members.map((m) => m.name).join(", ")}</p>
                     </div>
                     {!locked ? (
@@ -130,7 +130,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
                           aria-label={`Edit ${h.name}`}
                           onClick={() => openHousehold(h)}
                         >
-                          <PencilIcon />
+                          <PencilSimpleIcon />
                         </Button>
                         <Button
                           variant="ghost"
@@ -139,7 +139,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
                           disabled={pending}
                           onClick={() => run(() => deleteHousehold(eventId, h.id), { success: "Household removed" })}
                         >
-                          <Trash2Icon />
+                          <TrashIcon />
                         </Button>
                       </>
                     ) : null}
@@ -155,22 +155,22 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
         <CardHeader>
           <CardTitle>Exclusions</CardTitle>
           <CardDescription>
-            Keep specific people from drawing each other — like last year&apos;s pair, or the boss.
+            Keep specific people from drawing each other, like last year&apos;s pair or the boss.
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-5">
+        <CardContent className="grid gap-6">
           {rows.length ? (
             <ul className="grid gap-2" data-testid="exclusions">
               {rows.map((r) => (
-                <li key={r.ids.join()} className="flex min-w-0 items-start gap-2 rounded-xl border px-3 py-2 text-sm">
+                <li key={r.ids.join()} className="flex min-w-0 items-center gap-2 rounded-xl bg-secondary py-2 pr-2 pl-3 text-sm">
                   <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1">
-                    <span className="font-medium break-words">{r.a}</span>
+                    <span className="font-semibold break-words">{r.a}</span>
                     {r.mutual ? (
-                      <ArrowLeftRightIcon className="size-4 shrink-0 text-muted-foreground" aria-label="and" />
+                      <ArrowsLeftRightIcon className="size-4 shrink-0 text-muted-foreground" aria-label="and" />
                     ) : (
                       <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground" aria-label="won't draw" />
                     )}
-                    <span className="font-medium break-words">{r.b}</span>
+                    <span className="font-semibold break-words">{r.b}</span>
                     <span className="text-muted-foreground">
                       {r.mutual ? "won't draw each other" : "won't be drawn"}
                     </span>
@@ -196,7 +196,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
 
           {!locked && people.length >= 2 ? (
             <form
-              className="grid gap-3 rounded-2xl bg-secondary/50 p-4"
+              className="grid gap-4 rounded-2xl border p-4"
               onSubmit={(e) => {
                 e.preventDefault();
                 run(() => addExclusion(eventId, giver, recipient, bothWays), {
@@ -219,7 +219,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
                     ))}
                   </NativeSelect>
                 </Field>
-                <span className="hidden pb-2.5 text-sm text-muted-foreground sm:block">won&apos;t draw</span>
+                <span className="hidden pb-2 text-sm font-medium text-muted-foreground sm:block">won&apos;t draw</span>
                 <Field label="This person" htmlFor="ex-recipient">
                   <NativeSelect id="ex-recipient" value={recipient} onChange={(e) => setRecipient(e.target.value)}>
                     <option value="">Choose…</option>
@@ -260,7 +260,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
         description="Pick everyone who lives together."
       >
         <form
-          className="grid gap-4 pb-5 sm:pb-0"
+          className="grid gap-4 pb-4 sm:pb-0"
           onSubmit={(e) => {
             e.preventDefault();
             run(
@@ -286,7 +286,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
             />
           </Field>
           <fieldset className="grid gap-2">
-            <legend className="mb-2 text-sm font-medium">Members</legend>
+            <legend className="mb-2 text-sm font-semibold">Members</legend>
             <div className="grid gap-2 sm:grid-cols-2">
               {people.map((p) => {
                 const on = hhMembers.has(p.id);
@@ -295,13 +295,13 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
                   <label
                     key={p.id}
                     className={cn(
-                      "flex cursor-pointer items-center gap-2.5 rounded-xl border p-2.5 text-sm transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring",
-                      on && "border-primary bg-accent/50",
+                      "flex cursor-pointer items-center gap-2 rounded-xl border p-3 text-sm transition has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-ring/30",
+                      on && "border-primary bg-accent",
                     )}
                   >
                     <input
                       type="checkbox"
-                      className="size-4 accent-[var(--primary)]"
+                      className="size-4 accent-primary"
                       checked={on}
                       onChange={() =>
                         setHhMembers((s) => {
@@ -313,7 +313,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
                       }
                     />
                     <span className="min-w-0 flex-1 truncate">{p.name}</span>
-                    {elsewhere && p.householdId ? <Badge variant="outline">moves</Badge> : null}
+                    {elsewhere && p.householdId ? <Badge variant="outline">Moves</Badge> : null}
                   </label>
                 );
               })}

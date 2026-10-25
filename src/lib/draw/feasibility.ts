@@ -39,7 +39,7 @@ export function explainInfeasible(graph: Graph, rules: DrawRules): Blocker[] {
     return [
       {
         code: "too_few_for_no_swaps",
-        message: "With only 2 people they'd have to swap. Add a third person or turn off “No two-person swaps”.",
+        message: "With only 2 people they'd have to swap. Add a third person or turn off “No pair swaps”.",
       },
     ];
 
@@ -54,7 +54,7 @@ export function explainInfeasible(graph: Graph, rules: DrawRules): Blocker[] {
     if (members.length > n - members.length) {
       blockers.push({
         code: "household_too_big",
-        message: `${listNames(members.map((m) => m.name))} are in one household — that's ${members.length} of ${n} people, so there aren't enough others for them to draw. Add more people or split the household.`,
+        message: `${listNames(members.map((m) => m.name))} are in one household. That's ${members.length} of ${n} people, so there aren't enough others for them to draw. Add more people or split the household.`,
         people: members.map((m) => m.id),
       });
     }
@@ -104,7 +104,7 @@ export function explainInfeasible(graph: Graph, rules: DrawRules): Blocker[] {
   return [
     {
       code: "group_squeezed",
-      message: `${listNames(giverNames)} can only draw ${listNames(recipientNames)} — ${givers.size} people sharing ${recipients.size} possible ${recipients.size === 1 ? "match" : "matches"}. Remove an exclusion or a household link involving them.`,
+      message: `${listNames(giverNames)} can only draw ${listNames(recipientNames)}: ${givers.size} people sharing ${recipients.size} possible ${recipients.size === 1 ? "match" : "matches"}. Remove an exclusion or a household link involving them.`,
       people: [...givers].map((g) => people[g].id),
     },
   ];

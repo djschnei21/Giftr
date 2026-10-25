@@ -72,7 +72,7 @@ async function runScheduledDraws(today: string) {
         content: reminderEmail({
           subject: `We couldn't draw names for ${row.event.name}`,
           heading: "The scheduled draw needs your help",
-          body: `${outcome.blockers.map((b) => b.message).join(" ")} Fix this on the Draw tab and draw names when you're ready — we'll try again tomorrow.`,
+          body: `${outcome.blockers.map((b) => b.message).join(" ")} Fix this on the Draw tab and draw names when you're ready. We'll try again tomorrow.`,
           cta: { label: "Open the Draw tab", href: appUrl(`/events/${row.event.id}/manage?tab=draw`) },
         }),
       },
@@ -149,7 +149,7 @@ async function unopenedMatches(now: Date) {
       key: `unopened:${ev.id}:${r.participantId}:${ev.drawnAt?.getTime() ?? 0}`,
       subject: `Your match for ${ev.name} is waiting`,
       heading: "You haven't opened your match yet",
-      body: `Names were drawn for ${ev.name} — tap below to see who you're shopping for.`,
+      body: `Names were drawn for ${ev.name}. Tap below to see who you're shopping for.`,
       cta: { label: "Reveal my match", href: appUrl(`/events/${ev.id}`) },
     }));
   }

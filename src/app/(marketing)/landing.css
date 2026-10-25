@@ -1,0 +1,571 @@
+/* Landing page motion. Entrances rise and resolve from blur; bento visuals act out a story on loop. */
+.landing {
+  --e: cubic-bezier(0.16, 1, 0.3, 1);
+  --e2: cubic-bezier(0.33, 1, 0.68, 1);
+  --fluid: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Hero: plays on first paint, no script needed. */
+.rise {
+  animation:
+    rise-move 1s var(--fluid) backwards,
+    rise-fade 0.8s var(--e2) backwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes rise-move {
+  from {
+    transform: translateY(64px);
+  }
+}
+@keyframes rise-fade {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+  }
+}
+
+/* Mockup contents load inside the frame, which stays put. */
+.m-up,
+.m-left,
+.m-pop {
+  animation:
+    var(--m-move) 1.05s var(--e) backwards,
+    m-fade 0.75s var(--e2) backwards;
+  animation-delay: var(--d, 0ms);
+}
+.m-up {
+  --m-move: m-up;
+}
+.m-left {
+  --m-move: m-left;
+}
+.m-pop {
+  --m-move: m-pop;
+}
+@keyframes m-up {
+  from {
+    transform: translateY(10px);
+  }
+}
+@keyframes m-left {
+  from {
+    transform: translateX(-10px);
+  }
+}
+@keyframes m-pop {
+  from {
+    transform: scale(0.86);
+  }
+}
+@keyframes m-fade {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+
+/* Scroll reveals. Hidden only when script can reveal them again. */
+.reveal,
+.card-in {
+  transition-delay: var(--d, 0ms);
+}
+.reveal {
+  transition:
+    transform 1s var(--fluid),
+    opacity 0.9s var(--e2),
+    filter 0.9s var(--e2);
+}
+.card-in {
+  transition:
+    transform 0.9s var(--e),
+    opacity 0.6s var(--e2),
+    filter 0.6s var(--e2);
+}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(64px);
+    filter: blur(12px);
+  }
+  .card-in {
+    opacity: 0;
+    transform: translateY(24px) scale(0.985);
+    filter: blur(6px);
+  }
+}
+[data-in].reveal,
+[data-in] .reveal,
+[data-in].card-in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* Tagline: `--lit` counts how many words have crossed the trigger line. Unlit words stay at
+   half strength, the lowest that keeps large text above 3:1 contrast in both themes. */
+.tagline-word {
+  opacity: clamp(0.5, calc((var(--lit) - var(--i)) * 100), 1);
+  transition: opacity 0.7s var(--fluid);
+}
+
+/* Stories run only while their card is on screen. */
+.story {
+  animation-play-state: paused;
+  animation-timing-function: var(--fluid);
+  animation-iteration-count: infinite;
+}
+[data-live] .story {
+  animation-play-state: running;
+}
+
+/* Join: a new guest lands on top, the others step back a slot, the oldest leaves. */
+.join-row {
+  --row: 64px;
+  transform: translateY(calc(var(--row) * var(--slot)));
+  animation-name: join-slot;
+  animation-duration: 12s;
+  animation-delay: calc(var(--slot) * -3s - 1s);
+}
+@keyframes join-slot {
+  0% {
+    transform: translateY(calc(var(--row) * -1)) scale(0.96);
+    opacity: 0;
+    filter: blur(6px);
+  }
+  6%,
+  25% {
+    transform: translateY(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+  31%,
+  50% {
+    transform: translateY(var(--row));
+    opacity: 1;
+    filter: blur(0);
+  }
+  56%,
+  75% {
+    transform: translateY(calc(var(--row) * 2));
+    opacity: 1;
+    filter: blur(0);
+  }
+  81%,
+  100% {
+    transform: translateY(calc(var(--row) * 3));
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+
+/* Rules: each rule clears, then checks out in turn, then the verdict lands. */
+.rule-check {
+  animation-name: rule-check;
+  animation-duration: 6s;
+}
+@keyframes rule-check {
+  0%,
+  4% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  10%,
+  30% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  38%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.rule-ok {
+  animation-name: rule-ok;
+  animation-duration: 6s;
+}
+@keyframes rule-ok {
+  0%,
+  4% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+  10%,
+  50% {
+    opacity: 0;
+    transform: translateY(6px);
+    filter: blur(4px);
+  }
+  58%,
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* Unwrap: the lid closes, the box wiggles, then the lid lifts and the name rises out. */
+.gift-lid {
+  transform: translateY(-40px) rotate(-12deg);
+  animation-name: gift-lid;
+  animation-duration: 7s;
+}
+@keyframes gift-lid {
+  0%,
+  10% {
+    transform: translateY(-40px) rotate(-12deg);
+  }
+  22%,
+  52% {
+    transform: translateY(0) rotate(0);
+  }
+  64%,
+  100% {
+    transform: translateY(-40px) rotate(-12deg);
+  }
+}
+.gift-tag {
+  transform: translateY(-64px);
+  animation-name: gift-tag;
+  animation-duration: 7s;
+}
+@keyframes gift-tag {
+  0%,
+  8% {
+    transform: translateY(-64px);
+    opacity: 1;
+    filter: blur(0);
+  }
+  20%,
+  54% {
+    transform: translateY(0) scale(0.92);
+    opacity: 0;
+    filter: blur(6px);
+  }
+  68%,
+  100% {
+    transform: translateY(-64px);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+.gift-box {
+  transform-origin: 50% 100%;
+  animation-name: gift-box;
+  animation-duration: 7s;
+}
+@keyframes gift-box {
+  0%,
+  40%,
+  54%,
+  100% {
+    transform: rotate(0);
+  }
+  44% {
+    transform: rotate(-4deg);
+  }
+  48% {
+    transform: rotate(4deg);
+  }
+  51% {
+    transform: rotate(-2deg);
+  }
+}
+
+/* Chat: the question goes out, the giftee types, answers, and the Santa signs off. */
+.chat-1,
+.chat-2,
+.chat-3,
+.chat-typing {
+  animation-duration: 9s;
+  animation-delay: -6s;
+}
+.chat-1 {
+  animation-name: chat-1;
+}
+.chat-2 {
+  animation-name: chat-2;
+}
+.chat-3 {
+  animation-name: chat-3;
+}
+.chat-typing {
+  opacity: 0;
+  animation-name: chat-typing;
+}
+@keyframes chat-1 {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+  6%,
+  84% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+}
+@keyframes chat-typing {
+  0%,
+  14% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  18%,
+  31% {
+    opacity: 1;
+    transform: none;
+  }
+  35%,
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+@keyframes chat-2 {
+  0%,
+  33% {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+  39%,
+  84% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+}
+@keyframes chat-3 {
+  0%,
+  50% {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+  56%,
+  84% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+}
+.typing-dot {
+  animation-name: typing-dot;
+  animation-duration: 1.2s;
+  animation-timing-function: ease-in-out;
+}
+@keyframes typing-dot {
+  0%,
+  60%,
+  100% {
+    transform: none;
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+
+/* Wishlist: a store link types in glyph by glyph, then the item resolves from it. */
+.url-text,
+.url-caret,
+.product {
+  animation-duration: 8s;
+  animation-delay: -5s;
+}
+.url-text {
+  animation-name: url-text;
+  animation-timing-function: linear;
+}
+@keyframes url-text {
+  0%,
+  6% {
+    clip-path: inset(0 100% 0 0);
+    animation-timing-function: steps(24, end);
+  }
+  26%,
+  92% {
+    clip-path: inset(0 0 0 0);
+    animation-timing-function: steps(24, end);
+  }
+  96%,
+  100% {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+.url-caret {
+  transform: translateX(24ch);
+  animation-name: url-caret;
+  animation-timing-function: linear;
+}
+@keyframes url-caret {
+  0%,
+  6% {
+    transform: translateX(0);
+    animation-timing-function: steps(24, end);
+  }
+  26%,
+  92% {
+    transform: translateX(24ch);
+    animation-timing-function: steps(24, end);
+  }
+  96%,
+  100% {
+    transform: translateX(0);
+  }
+}
+.caret-blink {
+  animation: caret-blink 1s steps(1) infinite;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+.product {
+  animation-name: product;
+}
+@keyframes product {
+  0%,
+  28% {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(10px);
+  }
+  36%,
+  90% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+  95%,
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(10px);
+  }
+}
+
+/* Changes: Priya drops out, Maya's arrow reroutes to Jordan, then Priya rejoins. */
+.chain-leave,
+.chain-fade,
+.chain-arc,
+.chain-note {
+  animation-duration: 8s;
+}
+.chain-leave {
+  animation-name: chain-leave;
+}
+@keyframes chain-leave {
+  0%,
+  12% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  20%,
+  70% {
+    opacity: 0.25;
+    transform: scale(0.86);
+  }
+  80%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.chain-fade {
+  animation-name: chain-fade;
+}
+@keyframes chain-fade {
+  0%,
+  12% {
+    opacity: 1;
+  }
+  20%,
+  70% {
+    opacity: 0.15;
+  }
+  80%,
+  100% {
+    opacity: 1;
+  }
+}
+.chain-arc {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation-name: chain-arc;
+}
+@keyframes chain-arc {
+  0%,
+  22% {
+    stroke-dashoffset: 1;
+  }
+  34%,
+  66% {
+    stroke-dashoffset: 0;
+  }
+  74%,
+  100% {
+    stroke-dashoffset: 1;
+  }
+}
+.chain-note {
+  opacity: 0;
+  animation-name: chain-note;
+}
+@keyframes chain-note {
+  0%,
+  31% {
+    opacity: 0;
+    transform: translateY(6px);
+    filter: blur(4px);
+  }
+  38%,
+  66% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+  72%,
+  100% {
+    opacity: 0;
+    transform: translateY(6px);
+    filter: blur(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .m-up,
+  .m-left,
+  .m-pop,
+  .story,
+  .caret-blink {
+    animation: none !important;
+  }
+  .chain-arc {
+    stroke-dashoffset: 1;
+  }
+}

@@ -1,4 +1,4 @@
-import { CheckIcon } from "lucide-react";
+import { CheckIcon } from "@/components/icons";
 import type { Event } from "@/db/schema";
 import { dateLabel } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -44,7 +44,7 @@ export function Timeline({ event, joined }: { event: Event; joined: number }) {
           {i < steps.length - 1 ? (
             <span
               className={cn(
-                "absolute top-7 bottom-0 left-[13px] w-px",
+                "absolute top-7 bottom-0 left-3.5 w-px -translate-x-1/2",
                 s.state === "done" ? "bg-primary" : "bg-border",
               )}
               aria-hidden
@@ -61,11 +61,11 @@ export function Timeline({ event, joined }: { event: Event; joined: number }) {
             {s.state === "done" ? <CheckIcon className="size-3.5" /> : i + 1}
           </span>
           <div className="grid min-w-0 gap-0.5 pt-0.5">
-            <p className={cn("text-sm font-medium", s.state === "upcoming" && "text-muted-foreground")}>
+            <p className={cn("text-sm font-semibold", s.state === "upcoming" && "text-muted-foreground")}>
               {s.title}
               {s.state === "current" ? <span className="sr-only"> (current step)</span> : null}
             </p>
-            <p className="text-[13px] text-muted-foreground">{s.detail}</p>
+            <p className="text-xs text-muted-foreground">{s.detail}</p>
           </div>
         </li>
       ))}

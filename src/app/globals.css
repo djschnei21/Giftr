@@ -4,9 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-manrope);
   --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-fraunces);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -26,67 +25,81 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-berry: var(--berry);
-  --color-berry-foreground: var(--berry-foreground);
+  --color-berry: var(--primary);
+  --color-berry-foreground: var(--primary-foreground);
   --color-gold: var(--gold);
+  --color-gold-foreground: var(--gold-foreground);
   --color-success: var(--success);
+  --color-pine: var(--pine);
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
+  --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
+  --default-transition-duration: 300ms;
+  --default-transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --shadow-xs: 0 1px 2px 0 var(--shadow-color);
+  --shadow-sm: 0 1px 3px 0 var(--shadow-color), 0 1px 2px -1px var(--shadow-color);
+  --shadow-md: 0 4px 12px -2px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+  --shadow-lg: 0 12px 32px -8px var(--shadow-strong), 0 4px 8px -4px var(--shadow-color);
+  --shadow-xl: 0 24px 48px -12px var(--shadow-strong), 0 8px 16px -8px var(--shadow-color);
+  --shadow-2xl: 0 32px 64px -16px var(--shadow-strong);
 }
 
+/* Holiday card: warm paper, cranberry ink. One accent; pine and gold only carry status. */
 :root {
-  --radius: 0.75rem;
-  --background: oklch(0.985 0.006 85);
-  --foreground: oklch(0.22 0.012 60);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.012 60);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.012 60);
-  --primary: oklch(0.42 0.085 160);
-  --primary-foreground: oklch(0.985 0.006 85);
-  --secondary: oklch(0.955 0.012 85);
-  --secondary-foreground: oklch(0.26 0.012 60);
-  --muted: oklch(0.955 0.01 85);
-  --muted-foreground: oklch(0.5 0.015 60);
-  --accent: oklch(0.94 0.025 160);
-  --accent-foreground: oklch(0.3 0.07 160);
-  --destructive: oklch(0.55 0.2 25);
-  --border: oklch(0.91 0.012 80);
-  --input: oklch(0.89 0.014 80);
-  --ring: oklch(0.42 0.085 160);
-  --berry: oklch(0.48 0.17 15);
-  --berry-foreground: oklch(0.985 0.006 85);
-  --gold: oklch(0.72 0.13 75);
-  --success: oklch(0.55 0.13 150);
+  --background: #faf6ef;
+  --foreground: #1f1a17;
+  --card: #ffffff;
+  --card-foreground: #1f1a17;
+  --popover: #ffffff;
+  --popover-foreground: #1f1a17;
+  --primary: #b01e2b;
+  --primary-foreground: #fffaf5;
+  --secondary: #f2ece2;
+  --secondary-foreground: #2a231f;
+  --muted: #f2ece2;
+  --muted-foreground: #6e645b;
+  --accent: #f8e9e6;
+  --accent-foreground: #9a1b26;
+  --destructive: #b42318;
+  --border: #e9e1d5;
+  --input: #ddd3c5;
+  --ring: #b01e2b;
+  --gold: #c99a3b;
+  --gold-foreground: #8a5f12;
+  --success: #2a7048;
+  --pine: #1f5c45;
+  --flake: rgb(176 30 43 / 0.22);
+  --shadow-color: rgb(92 52 30 / 0.07);
+  --shadow-strong: rgb(92 52 30 / 0.16);
 }
 
+/* Christmas night: approved neutral darks only, a brighter cranberry for contrast. */
 .dark {
-  --background: oklch(0.17 0.01 60);
-  --foreground: oklch(0.95 0.008 85);
-  --card: oklch(0.21 0.011 60);
-  --card-foreground: oklch(0.95 0.008 85);
-  --popover: oklch(0.21 0.011 60);
-  --popover-foreground: oklch(0.95 0.008 85);
-  --primary: oklch(0.72 0.11 160);
-  --primary-foreground: oklch(0.17 0.02 160);
-  --secondary: oklch(0.26 0.01 60);
-  --secondary-foreground: oklch(0.95 0.008 85);
-  --muted: oklch(0.25 0.01 60);
-  --muted-foreground: oklch(0.7 0.012 70);
-  --accent: oklch(0.29 0.04 160);
-  --accent-foreground: oklch(0.9 0.05 160);
-  --destructive: oklch(0.65 0.19 25);
-  --border: oklch(0.3 0.01 60);
-  --input: oklch(0.33 0.01 60);
-  --ring: oklch(0.72 0.11 160);
-  --berry: oklch(0.66 0.16 15);
-  --berry-foreground: oklch(0.17 0.01 60);
-  --gold: oklch(0.8 0.12 80);
-  --success: oklch(0.7 0.13 150);
+  --background: #181818;
+  --foreground: #f3f0eb;
+  --card: #1f1f1f;
+  --card-foreground: #f3f0eb;
+  --popover: #1f1f1f;
+  --popover-foreground: #f3f0eb;
+  --primary: #d7343c;
+  --primary-foreground: #ffffff;
+  --secondary: #272727;
+  --secondary-foreground: #f3f0eb;
+  --muted: #272727;
+  --muted-foreground: #a8a29a;
+  --accent: #272727;
+  --accent-foreground: #ff9c9c;
+  --destructive: #f06a5f;
+  --border: #313131;
+  --input: #313131;
+  --ring: #ff9c9c;
+  --gold: #e7b65c;
+  --gold-foreground: #e7b65c;
+  --success: #5dbb86;
+  --pine: #5dbb86;
+  --flake: rgb(255 255 255 / 0.55);
+  --shadow-color: rgb(0 0 0 / 0.3);
+  --shadow-strong: rgb(0 0 0 / 0.5);
 }
 
 @layer base {
@@ -95,10 +108,27 @@
   }
   html {
     -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "ss01", "cv11";
+    font-feature-settings: "cv11";
+    font-optical-sizing: auto;
+    isolation: isolate;
+  }
+  /* Paper grain behind everything. Cards stay clean because they paint over it. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.2 0 0 0 0 0.12 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .dark body::before {
+    opacity: 0.35;
+    filter: invert(1);
   }
   h1,
   h2,
@@ -124,14 +154,125 @@
   .grid > * {
     min-width: 0;
   }
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 22%, transparent);
+  }
 }
 
 @utility font-display {
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  letter-spacing: -0.01em;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.035em;
 }
 
+@utility text-hero {
+  background-image: linear-gradient(to right, #000000, #666666);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  .dark & {
+    background-image: linear-gradient(to right, #ffffff, #9b9b9b);
+  }
+}
+
+/* Clears the floating mobile tab bar, including the home indicator area. */
+@utility pb-nav {
+  padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+}
 @utility pb-safe {
   padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+}
+
+/* Glass for floating islands: blur, a hairline edge, and an inner highlight. */
+@utility glass {
+  background-color: color-mix(in oklab, var(--background) 72%, transparent);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid color-mix(in oklab, var(--border) 80%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.5),
+    var(--shadow-lg);
+  .dark & {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.06),
+      var(--shadow-lg);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(8px);
+  }
+}
+
+/* Page entrance: each top level block of a page rises in turn.
+   `backwards` so nothing lingers on the element once it lands. */
+@utility page-enter {
+  & > * > * {
+    animation: rise 800ms var(--ease-fluid) backwards;
+  }
+  & > * > :nth-child(2) {
+    animation-delay: 60ms;
+  }
+  & > * > :nth-child(3) {
+    animation-delay: 120ms;
+  }
+  & > * > :nth-child(4) {
+    animation-delay: 180ms;
+  }
+  & > * > :nth-child(n + 5) {
+    animation-delay: 240ms;
+  }
+}
+
+/* Snow measures its own box (cqh) so it falls the full height of any section. */
+@utility snowfall {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: size;
+}
+@utility flake {
+  position: absolute;
+  top: 0;
+  border-radius: 9999px;
+  background: var(--flake);
+  animation: fall linear infinite;
+  will-change: transform;
+}
+@keyframes fall {
+  from {
+    transform: translate3d(0, -10cqh, 0);
+  }
+  to {
+    transform: translate3d(var(--drift, 24px), 110cqh, 0);
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--tilt, 0deg));
+  }
+  50% {
+    transform: translateY(-3px) rotate(calc(var(--tilt, 0deg) * -1));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .flake {
+    animation: none !important;
+    transform: translate3d(0, var(--y, 50cqh), 0);
+  }
 }

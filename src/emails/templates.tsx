@@ -29,7 +29,7 @@ export function inviteEmail(p: {
     subject: `${p.inviterName} invited you to ${p.eventName}`,
     react: (
       <EmailLayout
-        preview={`Join ${p.eventName} on Giftr — exchange on ${p.dateLabel}`}
+        preview={`Join ${p.eventName} on Giftr, exchange on ${p.dateLabel}`}
         heading={`You're invited to ${p.eventName}`}
         cta={{ label: "Join the exchange", href: p.url }}
       >
@@ -56,10 +56,10 @@ export function namesDrawnEmail(p: {
   wildcard?: boolean;
 }): EmailContent {
   return {
-    subject: p.wildcard ? `Names are drawn for ${p.eventName} — you have two matches` : `Names are drawn for ${p.eventName}`,
+    subject: p.wildcard ? `Names are drawn for ${p.eventName}, and you have two matches` : `Names are drawn for ${p.eventName}`,
     react: (
       <EmailLayout
-        preview={p.wildcard ? "Find out who you're shopping for — you drew two people" : "Find out who you're shopping for"}
+        preview={p.wildcard ? "Find out who you're shopping for. You drew two people." : "Find out who you're shopping for"}
         heading="Names have been drawn"
         cta={{ label: "Reveal my match" + (p.wildcard ? "es" : ""), href: p.url }}
       >
@@ -71,7 +71,7 @@ export function namesDrawnEmail(p: {
               lower-budget wildcard gift with just a name.
             </>
           ) : (
-            <>Your match is waiting for you — along with their wishlist and gift preferences.</>
+            <>Your match is waiting for you, along with their wishlist and gift preferences.</>
           )}
         </P>
         <Muted>
@@ -135,7 +135,7 @@ export function newMessageEmail(p: {
       >
         <P>
           You have a new message in <strong>{p.eventName}</strong>.
-          {p.fromSanta ? " Your Santa stays anonymous — reply to help them pick the perfect gift." : null}
+          {p.fromSanta ? " Your Santa stays anonymous. Reply to help them pick the perfect gift." : null}
         </P>
       </EmailLayout>
     ),

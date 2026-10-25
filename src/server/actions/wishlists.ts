@@ -169,7 +169,7 @@ export async function previewLink(url: string) {
     const user = await assertUser();
     const now = Date.now();
     const recent = (previewHits.get(user.id) ?? []).filter((t) => now - t < 60_000);
-    if (recent.length >= 20) throw new UserError("Slow down a little — try again in a minute.");
+    if (recent.length >= 20) throw new UserError("Slow down a little and try again in a minute.");
     previewHits.set(user.id, [...recent, now]);
     return fetchLinkPreview(url);
   });

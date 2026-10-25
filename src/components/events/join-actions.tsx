@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2Icon, PartyPopperIcon } from "lucide-react";
+import { CircleNotchIcon, ConfettiIcon } from "@/components/icons";
 import { toast } from "sonner";
 import { declineInvite, joinEvent } from "@/server/actions/invites";
 import { Button } from "@/components/ui/button";
@@ -14,14 +14,14 @@ export function JoinActions({ code, token }: { code: string; token?: string }) {
 
   if (declined) {
     return (
-      <p className="rounded-2xl bg-secondary p-4 text-sm text-muted-foreground">
-        No problem — we let the organizer know you can&apos;t make it this time.
+      <p className="rounded-xl bg-secondary p-4 text-sm text-muted-foreground">
+        No problem. We let the organizer know you can&apos;t make it this time.
       </p>
     );
   }
 
   return (
-    <div className="grid gap-2.5">
+    <div className="grid gap-2">
       <Button
         size="lg"
         disabled={pending}
@@ -29,12 +29,12 @@ export function JoinActions({ code, token }: { code: string; token?: string }) {
           startTransition(async () => {
             const res = await joinEvent(code, token);
             if (!res.ok) return void toast.error(res.error);
-            toast.success("You're in! Add a few wishlist ideas while you wait.");
+            toast.success("You're in. Add a few wishlist ideas while you wait.");
             router.push(`/events/${res.data.eventId}`);
           })
         }
       >
-        {pending ? <Loader2Icon className="animate-spin" /> : <PartyPopperIcon />}
+        {pending ? <CircleNotchIcon className="animate-spin" /> : <ConfettiIcon />}
         Count me in
       </Button>
       <Button

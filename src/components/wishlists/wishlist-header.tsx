@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronLeftIcon, MoreHorizontalIcon, PencilIcon, StarIcon, Trash2Icon } from "lucide-react";
+import { CaretLeftIcon, DotsThreeIcon, PencilSimpleIcon, StarIcon, TrashIcon } from "@/components/icons";
 import { deleteWishlist, makeDefaultWishlist, renameWishlist } from "@/server/actions/wishlists";
 import { useAction } from "@/components/use-action";
 import { Badge } from "@/components/ui/badge";
@@ -27,13 +27,16 @@ export function WishlistHeader({
   const [deleting, setDeleting] = useState(false);
 
   return (
-    <header className="grid grid-cols-1 gap-3">
-      <Link href="/wishlists" className="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ChevronLeftIcon className="size-4" /> All wishlists
+    <header className="grid grid-cols-1 gap-4">
+      <Link
+        href="/wishlists"
+        className="-ml-1 inline-flex w-fit items-center gap-1 rounded-lg text-sm text-muted-foreground transition hover:text-foreground"
+      >
+        <CaretLeftIcon className="size-4" /> All wishlists
       </Link>
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-4">
         <div className="grid min-w-0 gap-2">
-          <h1 className="font-display text-3xl font-semibold break-words sm:text-4xl">{wishlist.name}</h1>
+          <h1 className="font-display text-4xl break-words sm:text-5xl">{wishlist.name}</h1>
           <div className="flex flex-wrap gap-2">
             {wishlist.isDefault ? (
               <Badge variant="gold">
@@ -52,23 +55,22 @@ export function WishlistHeader({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon" aria-label="Wishlist options" disabled={pending}>
-              <MoreHorizontalIcon />
+              <DotsThreeIcon />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onSelect={() => setRenaming(true)}>
-              <PencilIcon /> Rename
+              <PencilSimpleIcon /> Rename
             </DropdownMenuItem>
             {!wishlist.isDefault ? (
               <>
-                <DropdownMenuItem onSelect={() => run(() => makeDefaultWishlist(wishlist.id), { success: "Default wishlist updated" })}>
+                <DropdownMenuItem
+                  onSelect={() => run(() => makeDefaultWishlist(wishlist.id), { success: "Default wishlist updated" })}
+                >
                   <StarIcon /> Make default
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  destructive
-                  onSelect={() => setDeleting(true)}
-                >
-                  <Trash2Icon /> Delete
+                <DropdownMenuItem destructive onSelect={() => setDeleting(true)}>
+                  <TrashIcon /> Delete
                 </DropdownMenuItem>
               </>
             ) : null}
@@ -84,20 +86,29 @@ export function WishlistHeader({
         confirmLabel="Delete wishlist"
         destructive
         onConfirm={() =>
-          run(() => deleteWishlist(wishlist.id), { success: "Wishlist deleted", onSuccess: () => router.push("/wishlists") })
+          run(() => deleteWishlist(wishlist.id), {
+            success: "Wishlist deleted",
+            onSuccess: () => router.push("/wishlists"),
+          })
         }
       />
 
       <ResponsiveDialog open={renaming} onOpenChange={setRenaming} title="Rename wishlist">
         <form
-          className="grid gap-4 pb-5 sm:pb-0"
+          className="grid gap-4 pb-4 sm:pb-0"
           onSubmit={(e) => {
             e.preventDefault();
             run(() => renameWishlist(wishlist.id, name), { success: "Renamed", onSuccess: () => setRenaming(false) });
           }}
         >
           <Field label="Name" htmlFor="rename-wishlist">
-            <Input id="rename-wishlist" value={name} onChange={(e) => setName(e.target.value)} maxLength={60} autoFocus />
+            <Input
+              id="rename-wishlist"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              maxLength={60}
+              autoFocus
+            />
           </Field>
           <Button type="submit" disabled={pending || !name.trim()}>
             Save

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import { Link2Icon, Loader2Icon, StarIcon } from "lucide-react";
+import { CircleNotchIcon, LinkSimpleIcon, StarIcon } from "@/components/icons";
 import { previewLink } from "@/server/actions/wishlists";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
@@ -103,12 +103,12 @@ export function ItemForm({
         error={errors.url}
       >
         <div className="relative">
-          <Link2Icon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+          <LinkSimpleIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             id={`${idPrefix}-url`}
             inputMode="url"
             placeholder="https://"
-            className="pl-9"
+            className="pl-10"
             value={state.url}
             onChange={(e) => set({ url: e.target.value })}
             onPaste={(e) => {
@@ -118,7 +118,7 @@ export function ItemForm({
             onBlur={(e) => fetchPreview(e.target.value)}
           />
           {fetching ? (
-            <Loader2Icon className="absolute top-1/2 right-3 size-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+            <CircleNotchIcon className="absolute top-1/2 right-3 size-4 -translate-y-1/2 animate-spin text-muted-foreground" />
           ) : null}
         </div>
       </Field>
@@ -130,12 +130,12 @@ export function ItemForm({
               src={state.imageUrl}
               alt=""
               referrerPolicy="no-referrer"
-              className="size-11 shrink-0 rounded-lg border object-cover"
+              className="size-10 shrink-0 rounded-lg border object-cover"
             />
           ) : null}
           <Input
             id={`${idPrefix}-title`}
-            placeholder="e.g. Hand-thrown ceramic mug"
+            placeholder="Hand thrown ceramic mug"
             value={state.title}
             onChange={(e) => set({ title: e.target.value })}
             maxLength={200}
@@ -147,7 +147,7 @@ export function ItemForm({
         <Textarea
           id={`${idPrefix}-notes`}
           rows={2}
-          placeholder="e.g. Size M, any color but orange"
+          placeholder="Size M, any color but orange"
           value={state.notes}
           onChange={(e) => set({ notes: e.target.value })}
           maxLength={1000}
@@ -160,14 +160,14 @@ export function ItemForm({
           aria-pressed={state.mostWanted}
           onClick={() => set({ mostWanted: !state.mostWanted })}
           className={cn(
-            "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-            state.mostWanted ? "border-gold bg-gold/15 text-foreground" : "text-muted-foreground hover:text-foreground",
+            "inline-flex h-10 cursor-pointer items-center gap-2 rounded-xl border px-3 text-sm font-semibold transition focus-visible:ring-4 focus-visible:ring-ring/30 focus-visible:outline-none active:scale-[0.98]",
+            state.mostWanted ? "border-gold bg-gold/15 text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground",
           )}
         >
-          <StarIcon className={cn("size-4", state.mostWanted && "fill-gold text-gold")} /> Most wanted
+          <StarIcon weight={state.mostWanted ? "fill" : "bold"} className={cn("size-4", state.mostWanted && "text-gold")} /> Most wanted
         </button>
         <Button type="submit" disabled={pending || !state.title.trim()}>
-          {pending ? <Loader2Icon className="animate-spin" /> : null}
+          {pending ? <CircleNotchIcon className="animate-spin" /> : null}
           {submitLabel}
         </Button>
       </div>

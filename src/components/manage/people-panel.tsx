@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { CrownIcon, EyeIcon, MoreHorizontalIcon, UserMinusIcon, UserRoundXIcon, UsersIcon, UserCheckIcon } from "lucide-react";
+import {
+  CrownIcon,
+  DotsThreeIcon,
+  EyeIcon,
+  UserCheckIcon,
+  UserCircleMinusIcon,
+  UserMinusIcon,
+  UsersIcon,
+} from "@/components/icons";
 import { toast } from "sonner";
 import type { EventPerson } from "@/server/queries/events";
 import { removeParticipant, setParticipantInDraw } from "@/server/actions/participants";
@@ -64,14 +72,16 @@ export function PeoplePanel({ eventId, status, people, householdNames, viewed }:
       {status === "drawn" ? (
         <Card>
           <CardContent className="flex items-center gap-4">
-            <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent text-accent-foreground">
               <EyeIcon className="size-5" />
             </span>
             <div className="grid gap-0.5">
-              <p className="font-medium" data-testid="viewed-total">
+              <p className="font-semibold" data-testid="viewed-total">
                 {viewed.viewed} of {viewed.assigned} have opened their match
               </p>
-              <p className="text-sm text-muted-foreground">You only see totals, so nobody&apos;s match is given away.</p>
+              <p className="text-sm text-muted-foreground">
+                You only see totals, so nobody&apos;s match is given away.
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -79,9 +89,7 @@ export function PeoplePanel({ eventId, status, people, householdNames, viewed }:
 
       <Card>
         <CardHeader>
-          <CardTitle>
-            {pluralize(joined.length, "person", "people")} joined
-          </CardTitle>
+          <CardTitle>{pluralize(joined.length, "person", "people")} joined</CardTitle>
           <CardDescription>
             {inDraw} in the draw{joined.length - inDraw > 0 ? ` · ${joined.length - inDraw} sitting out` : ""}
           </CardDescription>
@@ -89,10 +97,10 @@ export function PeoplePanel({ eventId, status, people, householdNames, viewed }:
         <CardContent className="p-0 sm:p-0">
           <ul className="divide-y" data-testid="people-list">
             {joined.map((p) => (
-              <li key={p.id} className="flex items-center gap-3 px-5 py-3 sm:px-6">
+              <li key={p.id} className="flex items-center gap-3 px-4 py-3 sm:px-6">
                 <UserAvatar name={p.name} image={p.image} />
                 <div className="min-w-0 flex-1">
-                  <p className="flex flex-wrap items-center gap-1.5 font-medium">
+                  <p className="flex flex-wrap items-center gap-2 font-semibold">
                     <span className="truncate">{p.name}</span>
                     {p.role === "organizer" ? (
                       <Badge variant="gold">
@@ -110,7 +118,7 @@ export function PeoplePanel({ eventId, status, people, householdNames, viewed }:
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" aria-label={`Options for ${p.name}`} disabled={pending}>
-                        <MoreHorizontalIcon />
+                        <DotsThreeIcon />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -122,7 +130,7 @@ export function PeoplePanel({ eventId, status, people, householdNames, viewed }:
                             })
                           }
                         >
-                          {p.inDraw ? <UserRoundXIcon /> : <UserCheckIcon />}
+                          {p.inDraw ? <UserCircleMinusIcon /> : <UserCheckIcon />}
                           {p.inDraw ? "Leave out of the draw" : "Include in the draw"}
                         </DropdownMenuItem>
                       ) : null}
@@ -166,11 +174,11 @@ export function PeoplePanel({ eventId, status, people, householdNames, viewed }:
           blocked
             ? blocked
             : status === "drawn"
-              ? "Names are already drawn. Their Santa will take over their giftee, so only one person's match changes — and we'll email them."
+              ? "Names are already drawn. Their Santa will take over their giftee, so only one person's match changes, and we'll email them."
               : "They'll be taken off the list. You can invite them again later."
         }
       >
-        <div className="flex flex-col-reverse gap-2 pb-5 sm:flex-row sm:justify-end sm:pb-0">
+        <div className="flex flex-col-reverse gap-2 pb-4 sm:flex-row sm:justify-end sm:pb-0">
           <Button variant="outline" onClick={() => setRemoving(null)}>
             Cancel
           </Button>

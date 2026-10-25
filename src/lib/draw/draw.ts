@@ -118,7 +118,7 @@ function conflictBlocker(
   };
   const tips: string[] = [];
   if (rules.singleLoop && culprit({ ...plain, noReciprocal: rules.noReciprocal })) tips.push("turn off “One big loop”");
-  if (rules.noReciprocal && culprit({ ...plain, singleLoop: rules.singleLoop })) tips.push("turn off “No two-person swaps”");
+  if (rules.noReciprocal && culprit({ ...plain, singleLoop: rules.singleLoop })) tips.push("turn off “No pair swaps”");
   const fix = tips.length ? `Try to ${tips.join(" or ")}, or remove an exclusion.` : "Try removing an exclusion or household link.";
   return {
     code: "rules_conflict",

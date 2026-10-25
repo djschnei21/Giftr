@@ -17,7 +17,7 @@ export default function PrivacyPage() {
       <ul>
         <li>
           <strong>Account details</strong>: your name, email address and profile picture. If you sign in with Google or
-          Facebook, we receive only these basic profile fields — never your contacts, posts or friends list.
+          Facebook, we receive only these basic profile fields, never your contacts, posts or friends list.
         </li>
         <li>
           <strong>What you add</strong>: exchanges you create or join, wishlists, gift preferences and sizes, your shipping
@@ -37,7 +37,7 @@ export default function PrivacyPage() {
           Who drew whom is visible only to each giver. The organizer can see matches only if they turn that setting on,
           and the exchange page tells everyone when it&apos;s on.
         </li>
-        <li>Anonymous messages never reveal the Santa&apos;s identity to their giftee — not in the app and not in emails.</li>
+        <li>Anonymous messages never reveal the Santa&apos;s identity to their giftee, not in the app and not in emails.</li>
       </ul>
 
       <h2>Service providers</h2>
@@ -49,8 +49,8 @@ export default function PrivacyPage() {
 
       <h2>Emails</h2>
       <p>
-        We email you about invitations, draws and changes to your match. Reminders and message notifications are optional
-        — every one has a one-click unsubscribe link, and you can change them on your{" "}
+        We email you about invitations, draws and changes to your match. Reminders and message notifications are
+        optional. Every one has a one click unsubscribe link, and you can change them on your{" "}
         <Link href="/profile#notifications">profile</Link>.
       </p>
 

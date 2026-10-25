@@ -19,9 +19,9 @@ export default async function DevOutboxPage() {
     .limit(30);
 
   return (
-    <main id="main" className="mx-auto w-full max-w-3xl px-4 py-10">
-      <h1 className="font-display text-3xl font-semibold">Dev outbox</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
+    <main id="main" className="mx-auto w-full max-w-3xl px-4 py-12">
+      <h1 className="font-display text-4xl">Dev outbox</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
         Emails sent while no RESEND_API_KEY is configured. Newest first. Only available when running outside Vercel.
       </p>
       <div className="mt-8 grid gap-6">
@@ -31,10 +31,10 @@ export default async function DevOutboxPage() {
             .map((m) => m[1].replaceAll("&amp;", "&"))
             .filter((href) => href.includes("/api/auth/") || href.includes("/join/") || href.includes("/events/"));
           return (
-            <article key={e.id} className="overflow-hidden rounded-2xl border bg-card">
-              <header className="flex flex-wrap items-baseline justify-between gap-2 border-b px-5 py-3">
+            <article key={e.id} className="overflow-hidden rounded-2xl bg-card shadow-sm">
+              <header className="flex flex-wrap items-baseline justify-between gap-2 border-b px-4 py-3">
                 <div>
-                  <p className="font-medium">{e.subject}</p>
+                  <p className="font-semibold">{e.subject}</p>
                   <p className="text-sm text-muted-foreground">to {e.toEmail}</p>
                 </div>
                 <time className="text-xs text-muted-foreground">
@@ -42,9 +42,9 @@ export default async function DevOutboxPage() {
                 </time>
               </header>
               {links[0] ? (
-                <div className="border-b bg-accent/40 px-5 py-2 text-sm">
-                  <a className="font-medium text-primary underline" href={links[0]} data-testid="outbox-link">
-                    Open link →
+                <div className="border-b bg-accent px-4 py-2 text-sm">
+                  <a className="font-semibold text-accent-foreground underline underline-offset-4" href={links[0]} data-testid="outbox-link">
+                    Open link
                   </a>
                 </div>
               ) : null}

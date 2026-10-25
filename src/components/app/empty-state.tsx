@@ -1,3 +1,4 @@
+import { GiftStack } from "@/components/festive";
 import { cn } from "@/lib/utils";
 
 export function EmptyState({
@@ -7,7 +8,7 @@ export function EmptyState({
   action,
   className,
 }: {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   title: string;
   description?: React.ReactNode;
   action?: React.ReactNode;
@@ -16,15 +17,19 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center gap-4 rounded-3xl border border-dashed bg-card/60 px-6 py-14 text-center",
+        "flex flex-col items-center gap-6 rounded-3xl bg-card px-6 py-16 text-center shadow-sm",
         className,
       )}
     >
-      <div className="flex size-14 items-center justify-center rounded-2xl bg-accent text-accent-foreground [&_svg]:size-6">
-        {icon}
-      </div>
-      <div className="grid max-w-sm gap-1.5">
-        <h2 className="font-display text-xl font-semibold">{title}</h2>
+      {icon ? (
+        <div className="flex size-14 -rotate-3 items-center justify-center rounded-2xl bg-accent text-accent-foreground [&_svg]:size-6">
+          {icon}
+        </div>
+      ) : (
+        <GiftStack />
+      )}
+      <div className="grid max-w-sm gap-2">
+        <h2 className="font-display text-2xl">{title}</h2>
         {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
       </div>
       {action}

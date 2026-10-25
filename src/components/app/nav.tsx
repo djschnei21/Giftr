@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { GiftIcon, ListChecksIcon, UserRoundIcon } from "lucide-react";
+import { GiftIcon, ListChecksIcon, UserIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
 const items = [
   { href: "/events", label: "Exchanges", icon: GiftIcon },
   { href: "/wishlists", label: "Wishlists", icon: ListChecksIcon },
-  { href: "/profile", label: "Profile", icon: UserRoundIcon },
+  { href: "/profile", label: "Profile", icon: UserIcon },
 ];
 
 export function MainNav() {
@@ -23,10 +23,11 @@ export function MainNav() {
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "rounded-full px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground",
-              active && "bg-secondary text-foreground",
+              "flex h-9 items-center gap-2 rounded-full px-4 text-sm font-semibold text-muted-foreground transition outline-none hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 active:scale-[0.98]",
+              active && "bg-accent text-accent-foreground hover:bg-accent hover:text-accent-foreground",
             )}
           >
+            <item.icon weight={active ? "fill" : "bold"} className="size-4" />
             {item.label}
           </Link>
         );
@@ -40,9 +41,9 @@ export function MobileNav() {
   return (
     <nav
       aria-label="Main"
-      className="pb-safe fixed inset-x-0 bottom-0 z-40 border-t bg-background/90 backdrop-blur-lg sm:hidden"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-safe sm:hidden"
     >
-      <div className="mx-auto grid max-w-md grid-cols-3">
+      <div className="glass pointer-events-auto mb-2 grid w-full max-w-xs grid-cols-3 gap-1 rounded-full p-1">
         {items.map((item) => {
           const active = pathname.startsWith(item.href);
           return (
@@ -51,11 +52,11 @@ export function MobileNav() {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex flex-col items-center gap-1 pt-2.5 pb-1 text-[11px] font-medium text-muted-foreground transition-colors",
-                active && "text-primary",
+                "flex min-w-0 flex-col items-center gap-0.5 rounded-full py-2 text-xs font-semibold text-muted-foreground transition outline-none focus-visible:ring-2 focus-visible:ring-ring/40 active:scale-[0.98]",
+                active && "bg-accent text-accent-foreground",
               )}
             >
-              <item.icon className={cn("size-[22px]", active && "stroke-[2.25]")} />
+              <item.icon weight={active ? "fill" : "bold"} className="size-5" />
               {item.label}
             </Link>
           );

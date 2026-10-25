@@ -2,7 +2,7 @@
 
 import { useOptimistic, useTransition } from "react";
 import Link from "next/link";
-import { GiftIcon } from "lucide-react";
+import { GiftIcon } from "@/components/icons";
 import { toast } from "sonner";
 import { setSharedWishlist } from "@/server/actions/wishlists";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,15 +31,15 @@ export function WishlistPicker({
             <GiftIcon className="size-5" />
           </span>
           <div className="min-w-0">
-            <p className="text-sm font-medium">Wishlist you&apos;re sharing</p>
-            <p className="text-[13px] break-words text-muted-foreground">
+            <p className="text-sm font-semibold">Wishlist you&apos;re sharing</p>
+            <p className="text-xs break-words text-muted-foreground">
               {selected ? (
                 selected.itemCount === 0 ? (
                   <>
-                    It&apos;s empty —{" "}
+                    It&apos;s empty, so{" "}
                     <Link
                       href={`/wishlists/${selected.id}`}
-                      className="font-medium text-primary underline-offset-2 hover:underline"
+                      className="font-semibold text-accent-foreground underline decoration-current/30 underline-offset-4 hover:decoration-current"
                     >
                       add a few ideas
                     </Link>
@@ -49,7 +49,7 @@ export function WishlistPicker({
                     {selected.itemCount} {selected.itemCount === 1 ? "idea" : "ideas"} ·{" "}
                     <Link
                       href={`/wishlists/${selected.id}`}
-                      className="font-medium text-primary underline-offset-2 hover:underline"
+                      className="font-semibold text-accent-foreground underline decoration-current/30 underline-offset-4 hover:decoration-current"
                     >
                       edit
                     </Link>
@@ -59,7 +59,7 @@ export function WishlistPicker({
                 "Your Santa will only see your profile preferences."
               )}
               {wildcard
-                ? " Only your main gift Santa sees this — your wild card Santa just gets your name and budget."
+                ? " Only your main Santa sees this. Your wild card Santa just gets your name and budget."
                 : ""}
             </p>
           </div>

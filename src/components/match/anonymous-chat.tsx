@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNowStrict } from "date-fns";
-import { LoaderCircleIcon, SendHorizonalIcon, VenetianMaskIcon } from "lucide-react";
+import { CircleNotchIcon, DetectiveIcon, PaperPlaneRightIcon } from "@/components/icons";
 import { toast } from "sonner";
 import { loadThread, markThreadRead, sendMessage } from "@/server/actions/match";
 import type { ThreadMessage, ThreadRole } from "@/server/queries/match";
@@ -104,11 +104,11 @@ export function AnonymousChat({
         role="log"
         aria-live="polite"
         aria-label="Messages"
-        className="grid max-h-96 min-h-32 content-start gap-2 overflow-y-auto rounded-2xl bg-secondary/50 p-3"
+        className="grid max-h-96 min-h-32 content-start gap-2 overflow-y-auto rounded-2xl bg-secondary p-3"
       >
         {messages.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-6 text-center text-sm text-muted-foreground">
-            <VenetianMaskIcon className="size-6 text-primary" />
+            <DetectiveIcon className="size-8 text-primary" />
             <p className="max-w-xs">{emptyHint}</p>
           </div>
         ) : (
@@ -117,14 +117,14 @@ export function AnonymousChat({
               <p
                 data-testid={m.mine ? "message-mine" : "message-theirs"}
                 className={cn(
-                  "max-w-[85%] rounded-2xl px-3.5 py-2 text-sm leading-relaxed break-words whitespace-pre-wrap",
-                  m.mine ? "rounded-br-md bg-primary text-primary-foreground" : "rounded-bl-md border bg-card",
+                  "max-w-4/5 rounded-2xl px-3 py-2 text-sm break-words whitespace-pre-wrap",
+                  m.mine ? "rounded-br-sm bg-primary text-primary-foreground" : "rounded-bl-sm bg-card shadow-xs",
                   m.id.startsWith("pending:") && "opacity-70",
                 )}
               >
                 {m.body}
               </p>
-              <span className="px-1 text-[11px] text-muted-foreground">
+              <span className="px-1 text-xs text-muted-foreground">
                 {m.mine ? "You" : otherName} ·{" "}
                 {m.id.startsWith("pending:") ? (
                   "sending…"
@@ -158,10 +158,10 @@ export function AnonymousChat({
           aria-label="Message"
           maxLength={1000}
           rows={1}
-          className="max-h-40 min-h-11 resize-none"
+          className="max-h-40 min-h-10 resize-none py-2"
         />
         <Button type="submit" size="icon" aria-label="Send message" disabled={!draft.trim() || sending}>
-          {sending ? <LoaderCircleIcon className="animate-spin" /> : <SendHorizonalIcon />}
+          {sending ? <CircleNotchIcon className="animate-spin" /> : <PaperPlaneRightIcon />}
         </Button>
       </form>
     </div>

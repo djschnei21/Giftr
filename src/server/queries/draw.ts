@@ -38,19 +38,19 @@ export async function getPreDrawChecks(ev: Event) {
       message:
         people.length < 2
           ? "You need at least 2 people in the draw (3 or more is more fun)."
-          : "Only 2 people are in the draw — they'll just swap gifts.",
+          : "Only 2 people are in the draw, so they'll just swap gifts.",
     });
   else
     checks.push({
       level: "ok",
       message: wildcard
-        ? `${people.length} people are in the draw — each one gets two gifts to shop for.`
+        ? `${people.length} people are in the draw, and each one gets two gifts to shop for.`
         : `${people.length} people are in the draw.`,
     });
 
   if (result && !result.ok) for (const b of result.blockers) checks.push({ level: "block", message: b.message });
   else if (result?.relaxedSoftRules)
-    checks.push({ level: "warn", message: "Some people may get the same match as last time — there was no way around it." });
+    checks.push({ level: "warn", message: "Some people may get the same match as last time. There was no way around it." });
   else if (result) checks.push({ level: "ok", message: "Every rule can be satisfied." });
 
   const [{ n: pendingInvites }] = await db

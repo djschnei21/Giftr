@@ -1,48 +1,32 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { SiteNav } from "@/components/marketing/site-nav";
 import { getCurrentUser } from "@/lib/authz";
 
 export default async function MarketingLayout({ children }: LayoutProps<"/">) {
   const user = await getCurrentUser();
   return (
     <div className="flex min-h-dvh min-w-0 flex-col">
-      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/70">
-        <div className="mx-auto flex min-h-16 w-full max-w-6xl min-w-0 flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2 sm:px-6">
-          <Logo />
-          <nav className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-2">
-            {user ? (
-              <Button asChild size="sm">
-                <Link href="/events">Open Giftr</Link>
-              </Button>
-            ) : (
-              <>
-                <Button asChild variant="ghost" size="sm">
-                  <Link href="/sign-in">Sign in</Link>
-                </Button>
-                <Button asChild size="sm">
-                  <Link href="/sign-in?next=/events/new">Start an exchange</Link>
-                </Button>
-              </>
-            )}
-          </nav>
-        </div>
-      </header>
+      <SiteNav signedIn={Boolean(user)} />
       <main id="main" className="flex-1">
         {children}
       </main>
-      <footer className="border-t">
-        <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-8 text-sm text-muted-foreground sm:px-6">
-          <span>© {new Date().getFullYear()} Giftr</span>
-          <Link href="/privacy" className="hover:text-foreground">
-            Privacy
-          </Link>
-          <Link href="/terms" className="hover:text-foreground">
-            Terms
-          </Link>
-          <ThemeToggle className="ml-auto" />
+      <footer className="mx-auto w-full max-w-6xl px-4 pt-16 pb-12 sm:px-6">
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-muted-foreground">
+          <Logo />
+          <span className="text-balance">Made for families, friends and offices that love the holidays.</span>
+          <nav aria-label="Legal" className="flex items-center gap-6 sm:ml-auto">
+            <Link href="/privacy" className="transition hover:text-foreground">
+              Privacy
+            </Link>
+            <Link href="/terms" className="transition hover:text-foreground">
+              Terms
+            </Link>
+          </nav>
+          <ThemeToggle />
         </div>
+        <p className="mt-8 text-xs text-muted-foreground">© {new Date().getFullYear()} Giftr</p>
       </footer>
     </div>
   );

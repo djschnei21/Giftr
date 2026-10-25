@@ -2,7 +2,15 @@
 
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { CheckIcon, HistoryIcon, Loader2Icon, MailIcon, RefreshCwIcon, SendIcon, XIcon } from "lucide-react";
+import {
+  ArrowsClockwiseIcon,
+  CheckIcon,
+  CircleNotchIcon,
+  ClockCounterClockwiseIcon,
+  EnvelopeSimpleIcon,
+  PaperPlaneTiltIcon,
+  XIcon,
+} from "@/components/icons";
 import { toast } from "sonner";
 import type { Invitation } from "@/db/schema";
 import {
@@ -45,7 +53,15 @@ const statusBadge = {
   accepted: <Badge>Joined</Badge>,
 } as const;
 
-export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLinkEnabled, invitations, pastPeople }: Props) {
+export function InvitesPanel({
+  eventId,
+  eventName,
+  status,
+  inviteUrl,
+  inviteLinkEnabled,
+  invitations,
+  pastPeople,
+}: Props) {
   const [pending, run] = useAction();
   const [emails, setEmails] = useState("");
   const [picked, setPicked] = useState<Set<string>>(new Set());
@@ -56,7 +72,9 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
   if (closed) {
     return (
       <Card>
-        <CardContent className="text-sm text-muted-foreground">This exchange is closed, so invites are off.</CardContent>
+        <CardContent className="text-sm text-muted-foreground">
+          This exchange is closed, so invites are off.
+        </CardContent>
       </Card>
     );
   }
@@ -68,7 +86,7 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
           <CardTitle>Invite link</CardTitle>
           <CardDescription>
             {drawn
-              ? "Names are drawn, so the link no longer lets new people in. Email invites still work — newcomers get slotted into the draw."
+              ? "Names are drawn, so the link no longer lets new people in. Email invites still work, and newcomers get slotted into the draw."
               : "Anyone with this link can join. It shows a preview card in iMessage, WhatsApp and Slack."}
           </CardDescription>
         </CardHeader>
@@ -76,7 +94,7 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
           {inviteLinkEnabled ? (
             <ShareLink url={inviteUrl} title={eventName} />
           ) : (
-            <p className="rounded-xl bg-secondary p-3 text-sm text-muted-foreground">
+            <p className="rounded-xl bg-secondary p-4 text-sm text-muted-foreground">
               The link is off. People who open it are told to ask you for an invite.
             </p>
           )}
@@ -86,13 +104,15 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
             description="Turn it off to stop new people joining by link."
             checked={inviteLinkEnabled}
             disabled={pending}
-            onCheckedChange={(v) => run(() => setInviteLinkEnabled(eventId, v), { success: v ? "Invite link is on" : "Invite link is off" })}
+            onCheckedChange={(v) =>
+              run(() => setInviteLinkEnabled(eventId, v), { success: v ? "Invite link is on" : "Invite link is off" })
+            }
           />
           <div>
             <ConfirmDialog
               trigger={
                 <Button variant="outline" size="sm" disabled={pending}>
-                  <RefreshCwIcon /> Get a new link
+                  <ArrowsClockwiseIcon /> Get a new link
                 </Button>
               }
               title="Replace the invite link?"
@@ -135,9 +155,11 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
               rows={3}
             />
             <div className="flex items-center justify-end gap-3">
-              {count ? <span className="text-sm text-muted-foreground">{pluralize(count, "address", "addresses")}</span> : null}
+              {count ? (
+                <span className="text-sm text-muted-foreground">{pluralize(count, "address", "addresses")}</span>
+              ) : null}
               <Button type="submit" disabled={pending || count === 0}>
-                {pending ? <Loader2Icon className="animate-spin" /> : <SendIcon />}
+                {pending ? <CircleNotchIcon className="animate-spin" /> : <PaperPlaneTiltIcon />}
                 Send invites
               </Button>
             </div>
@@ -149,7 +171,7 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <HistoryIcon className="size-4 text-muted-foreground" /> From your past exchanges
+              <ClockCounterClockwiseIcon className="size-4 text-muted-foreground" /> From your past exchanges
             </CardTitle>
             <CardDescription>Tap people to invite them again.</CardDescription>
           </CardHeader>
@@ -171,18 +193,18 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
                         })
                       }
                       className={cn(
-                        "flex w-full cursor-pointer items-center gap-3 rounded-xl border p-2.5 text-left transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-                        on && "border-primary bg-accent/60",
+                        "flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 text-left transition hover:bg-secondary focus-visible:ring-4 focus-visible:ring-ring/30 focus-visible:outline-none active:scale-[0.98]",
+                        on && "border-primary bg-accent hover:bg-accent",
                       )}
                     >
-                      <UserAvatar name={p.name} image={p.image} className="size-8" />
+                      <UserAvatar name={p.name} image={p.image} className="size-8 rounded-lg" />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-medium">{p.name}</span>
+                        <span className="block truncate text-sm font-semibold">{p.name}</span>
                         <span className="block truncate text-xs text-muted-foreground">{p.eventName}</span>
                       </span>
                       <span
                         className={cn(
-                          "flex size-5 items-center justify-center rounded-full border",
+                          "flex size-5 items-center justify-center rounded-md border transition",
                           on && "border-primary bg-primary text-primary-foreground",
                         )}
                       >
@@ -203,7 +225,7 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
                   })
                 }
               >
-                <MailIcon /> Invite {picked.size || ""}
+                <EnvelopeSimpleIcon /> Invite {picked.size || ""}
               </Button>
             </div>
           </CardContent>
@@ -219,9 +241,9 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
           <CardContent className="p-0 sm:p-0">
             <ul className="divide-y" data-testid="invite-list">
               {invitations.map((inv) => (
-                <li key={inv.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-5 py-3 sm:px-6">
+                <li key={inv.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-4 py-3 sm:px-6">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{inv.email}</p>
+                    <p className="truncate text-sm font-semibold">{inv.email}</p>
                     <p className="text-xs text-muted-foreground">
                       Sent {formatDistanceToNow(new Date(inv.lastSentAt), { addSuffix: true })}
                     </p>
@@ -233,9 +255,11 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
                         variant="ghost"
                         size="sm"
                         disabled={pending}
-                        onClick={() => run(() => resendInvite(eventId, inv.id), { success: `Invite resent to ${inv.email}` })}
+                        onClick={() =>
+                          run(() => resendInvite(eventId, inv.id), { success: `Invite resent to ${inv.email}` })
+                        }
                       >
-                        <RefreshCwIcon /> Resend
+                        <ArrowsClockwiseIcon /> Resend
                       </Button>
                       {inv.status === "pending" ? (
                         <Button

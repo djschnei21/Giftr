@@ -21,7 +21,7 @@ const optionalAmount = z
 
 export const emailList = z
   .array(z.string().trim().toLowerCase().pipe(z.email("One of those emails doesn't look right.")))
-  .max(100, "That's a lot of invites — add up to 100 at a time.")
+  .max(100, "That's a lot of invites. Add up to 100 at a time.")
   .transform((list) => [...new Set(list)]);
 
 export function parseEmailList(raw: string) {

@@ -1,20 +1,21 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import {
-  CalendarIcon,
+  CalendarBlankIcon,
   GiftIcon,
   HeartIcon,
   MapPinIcon,
   PaletteIcon,
   RulerIcon,
   ThumbsDownIcon,
-  UserRoundIcon,
+  UserIcon,
   WalletIcon,
-} from "lucide-react";
+} from "@/components/icons";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAvatar } from "@/components/ui/avatar";
 import { EventHeader } from "@/components/events/event-header";
 import { EmptyState } from "@/components/app/empty-state";
+import { Snowfall } from "@/components/festive";
 import { AnonymousChat } from "@/components/match/anonymous-chat";
 import { BoughtChecklist, GiftStatusPicker, GiverNotes } from "@/components/match/gift-tracker";
 import { requireEventAccess } from "@/lib/authz";
@@ -25,7 +26,13 @@ import { countUnread, getMatchDetails, getThread, markViewedOnOpen } from "@/ser
 
 export const metadata: Metadata = { title: "Your match", robots: { index: false } };
 
-const sizeLabels: Record<keyof Sizes, string> = { top: "Tops", bottom: "Bottoms", shoe: "Shoes", ring: "Ring", other: "Other" };
+const sizeLabels: Record<keyof Sizes, string> = {
+  top: "Tops",
+  bottom: "Bottoms",
+  shoe: "Shoes",
+  ring: "Ring",
+  other: "Other",
+};
 
 export default async function MatchPage({ params }: PageProps<"/events/[id]/match">) {
   const { id } = await params;
@@ -50,24 +57,38 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
   const days = daysUntil(event.exchangeDate);
   const bought = match.assignment.boughtItemIds.filter((b) => match.items.some((i) => i.id === b));
   const prefs = match.preferences;
-  const sizes = prefs ? (Object.entries(prefs.sizes) as [keyof Sizes, string | undefined][]).filter(([, v]) => v?.trim()) : [];
-  const hasPrefs = !!prefs && (prefs.aboutMe || prefs.likes || prefs.dislikes || prefs.favoriteColors || sizes.length > 0);
+  const sizes = prefs
+    ? (Object.entries(prefs.sizes) as [keyof Sizes, string | undefined][]).filter(([, v]) => v?.trim())
+    : [];
+  const hasPrefs =
+    !!prefs && (prefs.aboutMe || prefs.likes || prefs.dislikes || prefs.favoriteColors || sizes.length > 0);
   const drawn = event.status === "drawn";
 
   return (
     <div className="grid gap-8">
-      <EventHeader event={event} isOrganizer={isOrganizer} back={{ href: `/events/${id}`, label: "Back to exchange" }} showManage={false} />
+      <EventHeader
+        event={event}
+        isOrganizer={isOrganizer}
+        back={{ href: `/events/${id}`, label: "Back to exchange" }}
+        showManage={false}
+      />
 
       {wildcard ? <SectionLabel icon={<GiftIcon />} label="Main gift" /> : null}
 
-      <MatchHero giftee={match.giftee} subtitle="You're Secret Santa for" budget={budget ?? "No set budget"} days={days} event={event} />
+      <MatchHero
+        giftee={match.giftee}
+        subtitle="You're Secret Santa for"
+        budget={budget ?? "No set budget"}
+        days={days}
+        event={event}
+      />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="grid content-start gap-6">
           <Card>
             <CardHeader>
               <CardTitle>Your progress</CardTitle>
-              <CardDescription>Just for you — {first} never sees this.</CardDescription>
+              <CardDescription>Just for you. {first} never sees this.</CardDescription>
             </CardHeader>
             <CardContent>
               <GiftStatusPicker eventId={id} slot="main" status={match.assignment.giftStatus} shipped={match.shipTo} />
@@ -89,6 +110,7 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
               ) : (
                 <EmptyState
                   icon={<HeartIcon />}
+                  className="rounded-xl bg-secondary py-10 shadow-none"
                   title="No wishlist ideas yet"
                   description={`We'll show ${first}'s ideas here as soon as they add some.`}
                 />
@@ -103,10 +125,14 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
             <CardContent>
               {hasPrefs && prefs ? (
                 <dl className="grid gap-4 text-sm">
-                  {prefs.aboutMe ? <Pref icon={<UserRoundIcon />} label="About" value={prefs.aboutMe} /> : null}
+                  {prefs.aboutMe ? <Pref icon={<UserIcon />} label="About" value={prefs.aboutMe} /> : null}
                   {prefs.likes ? <Pref icon={<HeartIcon />} label="Loves" value={prefs.likes} /> : null}
-                  {prefs.dislikes ? <Pref icon={<ThumbsDownIcon />} label="Please avoid" value={prefs.dislikes} /> : null}
-                  {prefs.favoriteColors ? <Pref icon={<PaletteIcon />} label="Favorite colors" value={prefs.favoriteColors} /> : null}
+                  {prefs.dislikes ? (
+                    <Pref icon={<ThumbsDownIcon />} label="Please avoid" value={prefs.dislikes} />
+                  ) : null}
+                  {prefs.favoriteColors ? (
+                    <Pref icon={<PaletteIcon />} label="Favorite colors" value={prefs.favoriteColors} />
+                  ) : null}
                   {sizes.length ? (
                     <Pref
                       icon={<RulerIcon />}
@@ -116,7 +142,9 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
                   ) : null}
                 </dl>
               ) : (
-                <p className="text-sm text-muted-foreground">{first} hasn&apos;t filled in their gift preferences yet.</p>
+                <p className="text-sm text-muted-foreground">
+                  {first} hasn&apos;t filled in their gift preferences yet.
+                </p>
               )}
             </CardContent>
           </Card>
@@ -126,7 +154,9 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
           <Card id="chat" className="scroll-mt-24">
             <CardHeader>
               <CardTitle>Ask {first} anonymously</CardTitle>
-              <CardDescription>They&apos;ll see your messages from &ldquo;Your Secret Santa&rdquo; — never your name.</CardDescription>
+              <CardDescription>
+                They&apos;ll see your messages from &ldquo;Your Secret Santa&rdquo;, never your name.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {drawn ? (
@@ -136,7 +166,7 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
                   initialMessages={thread}
                   hasUnread={unread > 0}
                   otherName={first}
-                  emptyHint={`Not sure about sizes or style? Ask ${first} here — they won't know it's you.`}
+                  emptyHint={`Not sure about sizes or style? Ask ${first} here. They won't know it's you.`}
                   placeholder={`Message ${first}…`}
                 />
               ) : (
@@ -189,7 +219,7 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
 
 function SectionLabel({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <div className="-mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+    <div className="-mb-4 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
       <span className="[&_svg]:size-4">{icon}</span>
       {label}
     </div>
@@ -210,20 +240,31 @@ function MatchHero({
   event: { exchangeDate: string };
 }) {
   return (
-    <section className="flex flex-wrap items-center gap-4 rounded-3xl border bg-gradient-to-br from-accent/60 via-card to-gold/10 p-5 sm:p-6">
-      <UserAvatar name={giftee.name} image={giftee.image} className="size-16 text-xl ring-4" />
+    <section className="relative isolate flex flex-wrap items-center gap-4 overflow-hidden rounded-3xl bg-card p-6 shadow-md sm:gap-6 sm:p-8">
+      <Snowfall count={20} seed={5} className="-z-10" />
+      <UserAvatar
+        name={giftee.name}
+        image={giftee.image}
+        className="size-16 rounded-2xl text-xl ring-4 ring-gold/40 sm:size-20 sm:text-2xl"
+      />
       <div className="grid min-w-0 flex-1 gap-1">
-        <p className="text-sm text-muted-foreground">{subtitle}</p>
-        <h2 className="font-display text-2xl font-semibold break-words sm:text-3xl" data-testid="match-name">
+        <p className="text-sm font-medium text-muted-foreground">{subtitle}</p>
+        <h2 className="font-display text-3xl break-words sm:text-4xl" data-testid="match-name">
           {giftee.name}
         </h2>
-        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5">
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-medium text-muted-foreground">
+          <span className="inline-flex items-center gap-2">
             <WalletIcon className="size-4" /> {budget}
           </span>
-          <span className="inline-flex items-center gap-1.5">
-            <CalendarIcon className="size-4" />
-            {days > 1 ? `${days} days to go` : days === 1 ? "Tomorrow!" : days === 0 ? "Today!" : longDateLabel(event.exchangeDate)}
+          <span className="inline-flex items-center gap-2">
+            <CalendarBlankIcon className="size-4" />
+            {days > 1
+              ? `${days} days to go`
+              : days === 1
+                ? "Tomorrow"
+                : days === 0
+                  ? "Today"
+                  : longDateLabel(event.exchangeDate)}
           </span>
         </div>
       </div>
@@ -233,7 +274,7 @@ function MatchHero({
 
 type WildcardMatch = NonNullable<Awaited<ReturnType<typeof getMatchDetails>>>;
 
-/** The wildcard gift has no wishlist — just a name, a budget, progress, notes, and (when shipping applies) an address. */
+/** The wildcard gift has no wishlist: just a name, a budget, progress, notes, and (when shipping applies) an address. */
 function WildcardSection({
   eventId,
   event,
@@ -250,16 +291,27 @@ function WildcardSection({
   const budget = budgetLabel(event.wildcardBudgetMin, event.wildcardBudgetMax, event.currency);
   return (
     <>
-      <SectionLabel icon={<GiftIcon />} label="Wildcard gift" />
-      <MatchHero giftee={match.giftee} subtitle="Your wildcard is for" budget={budget ?? "No set budget"} days={days} event={event} />
+      <SectionLabel icon={<GiftIcon />} label="Wild card gift" />
+      <MatchHero
+        giftee={match.giftee}
+        subtitle="Your wild card is for"
+        budget={budget ?? "No set budget"}
+        days={days}
+        event={event}
+      />
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <Card>
           <CardHeader>
             <CardTitle>Your progress</CardTitle>
-            <CardDescription>No wishlist for this one — it&apos;s the surprise.</CardDescription>
+            <CardDescription>No wishlist for this one. It&apos;s the surprise.</CardDescription>
           </CardHeader>
           <CardContent>
-            <GiftStatusPicker eventId={eventId} slot="wildcard" status={match.assignment.giftStatus} shipped={match.shipTo} />
+            <GiftStatusPicker
+              eventId={eventId}
+              slot="wildcard"
+              status={match.assignment.giftStatus}
+              shipped={match.shipTo}
+            />
           </CardContent>
         </Card>
 
@@ -301,14 +353,22 @@ function Pref({ icon, label, value }: { icon: React.ReactNode; label: string; va
     <div className="flex items-start gap-3">
       <span className="mt-0.5 text-primary [&_svg]:size-4">{icon}</span>
       <div className="grid min-w-0 gap-0.5">
-        <dt className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{label}</dt>
-        <dd className="leading-relaxed whitespace-pre-line break-words">{value}</dd>
+        <dt className="text-xs font-semibold text-muted-foreground">{label}</dt>
+        <dd className="break-words whitespace-pre-line">{value}</dd>
       </div>
     </div>
   );
 }
 
-function AddressBlock({ address, name, canNudge = true }: { address: Address | null; name: string; canNudge?: boolean }) {
+function AddressBlock({
+  address,
+  name,
+  canNudge = true,
+}: {
+  address: Address | null;
+  name: string;
+  canNudge?: boolean;
+}) {
   const lines = address
     ? [
         address.name || name,
@@ -326,7 +386,7 @@ function AddressBlock({ address, name, canNudge = true }: { address: Address | n
       </p>
     );
   return (
-    <address className="text-sm leading-relaxed not-italic" data-testid="ship-to">
+    <address className="text-sm not-italic" data-testid="ship-to">
       {lines.map((l, i) => (
         <span key={i} className="block">
           {l}

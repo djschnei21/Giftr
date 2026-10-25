@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 export function LogoMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 32" aria-hidden className={cn("size-7", className)}>
-      <rect x="4" y="12" width="24" height="16" rx="4" className="fill-primary" />
-      <rect x="2.5" y="8.5" width="27" height="6" rx="3" className="fill-primary" />
-      <rect x="14.5" y="8.5" width="3" height="19.5" className="fill-berry" />
+      <rect x="5" y="13" width="22" height="15" rx="3" className="fill-primary" />
+      <rect x="3" y="9" width="26" height="6" rx="2" className="fill-primary" />
+      <rect x="14.5" y="9" width="3" height="19" className="fill-gold" />
       <path
-        d="M16 8.5c-1.6-3.4-5.8-4.6-7-2.4-1 1.9 1.6 3.2 7 2.4Zm0 0c1.6-3.4 5.8-4.6 7-2.4 1 1.9-1.6 3.2-7 2.4Z"
-        className="fill-berry"
+        d="M16 9c-1.5-3.6-6.2-5-7.4-2.6-1 2 1.8 3.4 7.4 2.6Zm0 0c1.5-3.6 6.2-5 7.4-2.6 1 2-1.8 3.4-7.4 2.6Z"
+        className="fill-gold"
       />
     </svg>
   );
@@ -17,9 +17,15 @@ export function LogoMark({ className }: { className?: string }) {
 
 export function Logo({ href = "/", className }: { href?: string; className?: string }) {
   return (
-    <Link href={href} className={cn("flex items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring/50", className)}>
+    <Link
+      href={href}
+      className={cn(
+        "flex items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+        className,
+      )}
+    >
       <LogoMark />
-      <span className="font-display text-xl font-semibold tracking-tight">Giftr</span>
+      <span className="font-display text-xl">Giftr</span>
     </Link>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Loader2Icon, TriangleAlertIcon } from "lucide-react";
+import { CircleNotchIcon, WarningIcon } from "@/components/icons";
 import { toast } from "sonner";
 import { deleteAccount } from "@/server/actions/profile";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ export function DeleteAccount({ email }: { email: string }) {
         if (!o) setTyped("");
       }}
       trigger={
-        <Button variant="outline" className="w-fit border-destructive/40 text-destructive hover:bg-destructive/5">
+        <Button variant="outline" className="w-fit border-destructive/40 text-destructive hover:bg-destructive/10">
           Delete account
         </Button>
       }
@@ -31,7 +31,7 @@ export function DeleteAccount({ email }: { email: string }) {
       description="This can't be undone."
     >
       <form
-        className="grid gap-5 pb-5 sm:pb-0"
+        className="grid gap-6 pb-4 sm:pb-0"
         onSubmit={(e) => {
           e.preventDefault();
           if (!matches) return;
@@ -41,8 +41,8 @@ export function DeleteAccount({ email }: { email: string }) {
           });
         }}
       >
-        <div className="flex gap-3 rounded-2xl bg-destructive/5 p-4 text-sm leading-relaxed">
-          <TriangleAlertIcon className="mt-0.5 size-4 shrink-0 text-destructive" />
+        <div className="flex gap-3 rounded-xl bg-destructive/10 p-4 text-sm">
+          <WarningIcon className="mt-0.5 size-4 shrink-0 text-destructive" />
           <ul className="grid gap-1">
             <li>Your wishlists, profile and sign-in connections are deleted.</li>
             <li>Exchanges you organize are cancelled, and their members get an email.</li>
@@ -60,7 +60,7 @@ export function DeleteAccount({ email }: { email: string }) {
           />
         </Field>
         <Button type="submit" variant="destructive" disabled={!matches || pending}>
-          {pending ? <Loader2Icon className="animate-spin" /> : null} Delete my account
+          {pending ? <CircleNotchIcon className="animate-spin" /> : null} Delete my account
         </Button>
       </form>
     </ResponsiveDialog>
