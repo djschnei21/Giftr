@@ -1,6 +1,16 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { CalendarIcon, HeartIcon, MapPinIcon, PaletteIcon, RulerIcon, ThumbsDownIcon, UserRoundIcon, WalletIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  GiftIcon,
+  HeartIcon,
+  MapPinIcon,
+  PaletteIcon,
+  RulerIcon,
+  ThumbsDownIcon,
+  UserRoundIcon,
+  WalletIcon,
+} from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAvatar } from "@/components/ui/avatar";
 import { EventHeader } from "@/components/events/event-header";
@@ -21,7 +31,12 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
   const { id } = await params;
   const { event, me, isOrganizer } = await requireEventAccess(id);
   if (!me || event.status === "open" || event.status === "cancelled") redirect(`/events/${id}`);
-  const match = await getMatchDetails(event, me.id);
+  const wildcard = event.drawFormat === "wildcard";
+
+  const [match, wildcardMatch] = await Promise.all([
+    getMatchDetails(event, me.id, "main"),
+    wildcard ? getMatchDetails(event, me.id, "wildcard") : null,
+  ]);
   if (!match) redirect(`/events/${id}`);
 
   const [thread, unread] = await Promise.all([
@@ -43,24 +58,9 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
     <div className="grid gap-8">
       <EventHeader event={event} isOrganizer={isOrganizer} back={{ href: `/events/${id}`, label: "Back to exchange" }} showManage={false} />
 
-      <section className="flex flex-wrap items-center gap-4 rounded-3xl border bg-gradient-to-br from-accent/60 via-card to-gold/10 p-5 sm:p-6">
-        <UserAvatar name={match.giftee.name} image={match.giftee.image} className="size-16 text-xl ring-4" />
-        <div className="grid min-w-0 flex-1 gap-1">
-          <p className="text-sm text-muted-foreground">You&apos;re Secret Santa for</p>
-          <h2 className="font-display text-2xl font-semibold break-words sm:text-3xl" data-testid="match-name">
-            {match.giftee.name}
-          </h2>
-          <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5">
-              <WalletIcon className="size-4" /> {budget ?? "No set budget"}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <CalendarIcon className="size-4" />
-              {days > 1 ? `${days} days to go` : days === 1 ? "Tomorrow!" : days === 0 ? "Today!" : longDateLabel(event.exchangeDate)}
-            </span>
-          </div>
-        </div>
-      </section>
+      {wildcard ? <SectionLabel icon={<GiftIcon />} label="Main gift" /> : null}
+
+      <MatchHero giftee={match.giftee} subtitle="You're Secret Santa for" budget={budget ?? "No set budget"} days={days} event={event} />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="grid content-start gap-6">
@@ -70,7 +70,7 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
               <CardDescription>Just for you — {first} never sees this.</CardDescription>
             </CardHeader>
             <CardContent>
-              <GiftStatusPicker eventId={id} status={match.assignment.giftStatus} shipped={event.exchangeType === "shipped"} />
+              <GiftStatusPicker eventId={id} slot="main" status={match.assignment.giftStatus} shipped={event.exchangeType === "shipped"} />
             </CardContent>
           </Card>
 
@@ -168,12 +168,131 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
               <CardTitle>Private notes</CardTitle>
             </CardHeader>
             <CardContent>
-              <GiverNotes eventId={id} initial={match.assignment.giverNotes ?? ""} />
+              <GiverNotes eventId={id} slot="main" initial={match.assignment.giverNotes ?? ""} />
             </CardContent>
           </Card>
         </aside>
       </div>
+
+      {wildcardMatch ? (
+        <WildcardSection
+          eventId={id}
+          event={event}
+          match={wildcardMatch}
+          days={days}
+          shippingLocation={event.location}
+        />
+      ) : null}
     </div>
+  );
+}
+
+function SectionLabel({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <div className="-mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+      <span className="[&_svg]:size-4">{icon}</span>
+      {label}
+    </div>
+  );
+}
+
+function MatchHero({
+  giftee,
+  subtitle,
+  budget,
+  days,
+  event,
+}: {
+  giftee: { name: string; image: string | null };
+  subtitle: string;
+  budget: string;
+  days: number;
+  event: { exchangeDate: string };
+}) {
+  return (
+    <section className="flex flex-wrap items-center gap-4 rounded-3xl border bg-gradient-to-br from-accent/60 via-card to-gold/10 p-5 sm:p-6">
+      <UserAvatar name={giftee.name} image={giftee.image} className="size-16 text-xl ring-4" />
+      <div className="grid min-w-0 flex-1 gap-1">
+        <p className="text-sm text-muted-foreground">{subtitle}</p>
+        <h2 className="font-display text-2xl font-semibold break-words sm:text-3xl" data-testid="match-name">
+          {giftee.name}
+        </h2>
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5">
+            <WalletIcon className="size-4" /> {budget}
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <CalendarIcon className="size-4" />
+            {days > 1 ? `${days} days to go` : days === 1 ? "Tomorrow!" : days === 0 ? "Today!" : longDateLabel(event.exchangeDate)}
+          </span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+type WildcardMatch = NonNullable<Awaited<ReturnType<typeof getMatchDetails>>>;
+
+/** The wildcard gift has no wishlist — just a name, a budget, progress, notes, and (if shipped) an address. */
+function WildcardSection({
+  eventId,
+  event,
+  match,
+  days,
+  shippingLocation,
+}: {
+  eventId: string;
+  event: { exchangeDate: string; exchangeType: "in_person" | "shipped"; wildcardBudgetMin: number | null; wildcardBudgetMax: number | null; currency: string };
+  match: WildcardMatch;
+  days: number;
+  shippingLocation: string | null;
+}) {
+  const budget = budgetLabel(event.wildcardBudgetMin, event.wildcardBudgetMax, event.currency);
+  return (
+    <>
+      <SectionLabel icon={<GiftIcon />} label="Wildcard gift" />
+      <MatchHero giftee={match.giftee} subtitle="Your wildcard is for" budget={budget ?? "No set budget"} days={days} event={event} />
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <Card>
+          <CardHeader>
+            <CardTitle>Your progress</CardTitle>
+            <CardDescription>No wishlist for this one — it&apos;s the surprise.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <GiftStatusPicker eventId={eventId} slot="wildcard" status={match.assignment.giftStatus} shipped={event.exchangeType === "shipped"} />
+          </CardContent>
+        </Card>
+
+        <aside className="grid content-start gap-6">
+          {event.exchangeType === "shipped" ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Ship to</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <AddressBlock address={match.address} name={match.giftee.name} canNudge={false} />
+              </CardContent>
+            </Card>
+          ) : shippingLocation ? (
+            <Card>
+              <CardContent className="flex items-start gap-3 text-sm">
+                <MapPinIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+                <span>Bring your gift to {shippingLocation}.</span>
+              </CardContent>
+            </Card>
+          ) : null}
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Private notes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <GiverNotes eventId={eventId} slot="wildcard" initial={match.assignment.giverNotes ?? ""} />
+            </CardContent>
+          </Card>
+        </aside>
+      </div>
+    </>
   );
 }
 
@@ -189,7 +308,7 @@ function Pref({ icon, label, value }: { icon: React.ReactNode; label: string; va
   );
 }
 
-function AddressBlock({ address, name }: { address: Address | null; name: string }) {
+function AddressBlock({ address, name, canNudge = true }: { address: Address | null; name: string; canNudge?: boolean }) {
   const lines = address
     ? [
         address.name || name,
@@ -202,7 +321,8 @@ function AddressBlock({ address, name }: { address: Address | null; name: string
   if (!address?.line1)
     return (
       <p className="text-sm text-muted-foreground">
-        {firstName(name)} hasn&apos;t added a shipping address yet. Send them a quick anonymous nudge.
+        {firstName(name)} hasn&apos;t added a shipping address yet.
+        {canNudge ? " Send them a quick anonymous nudge." : ""}
       </p>
     );
   return (

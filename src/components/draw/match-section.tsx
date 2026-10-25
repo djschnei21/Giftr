@@ -7,13 +7,16 @@ import { RevealCard } from "./reveal-card";
 export function MatchSection({
   event,
   me,
-  assignment,
-  giftee,
+  assignments,
+  giftees,
 }: {
   event: Event;
   me: Participant;
-  assignment: Assignment | null;
-  giftee: { name: string; image: string | null } | null;
+  assignments: { main: Assignment | null; wildcard: Assignment | null };
+  giftees: {
+    main: { name: string; image: string | null } | null;
+    wildcard: { name: string; image: string | null } | null;
+  };
 }) {
   if (!me.inDraw) {
     return (
@@ -29,7 +32,10 @@ export function MatchSection({
     );
   }
 
-  if (event.status === "open" || !assignment || !giftee) {
+  const wildcard = event.drawFormat === "wildcard";
+  const ready = assignments.main && giftees.main && (!wildcard || (assignments.wildcard && giftees.wildcard));
+
+  if (event.status === "open" || !ready) {
     const scheduled = event.drawMode === "scheduled" && event.drawDate;
     return (
       <Card className="overflow-hidden">
@@ -50,12 +56,34 @@ export function MatchSection({
     );
   }
 
+  if (!wildcard) {
+    return (
+      <RevealCard
+        eventId={event.id}
+        giftee={giftees.main!}
+        alreadyViewed={!!me.matchViewedAt}
+        changed={!!assignments.main!.changedAt && !me.matchViewedAt}
+      />
+    );
+  }
+
   return (
-    <RevealCard
-      eventId={event.id}
-      giftee={giftee}
-      alreadyViewed={!!me.matchViewedAt}
-      changed={!!assignment.changedAt && !me.matchViewedAt}
-    />
+    <div className="grid gap-4 sm:grid-cols-2">
+      <RevealCard
+        eventId={event.id}
+        giftee={giftees.main!}
+        alreadyViewed={!!me.matchViewedAt}
+        changed={!!assignments.main!.changedAt && !me.matchViewedAt}
+        label="Your main gift is for"
+      />
+      <RevealCard
+        eventId={event.id}
+        giftee={giftees.wildcard!}
+        alreadyViewed={!!me.matchViewedAt}
+        changed={!!assignments.wildcard!.changedAt && !me.matchViewedAt}
+        label="Your wildcard is for"
+        cta="match"
+      />
+    </div>
   );
 }

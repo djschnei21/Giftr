@@ -3,7 +3,7 @@
 import { useOptimistic, useState, useTransition } from "react";
 import { CheckIcon, GiftIcon, PackageCheckIcon, ShoppingBagIcon, TruckIcon } from "lucide-react";
 import { toast } from "sonner";
-import type { WishlistItem } from "@/db/schema";
+import type { AssignmentSlot, WishlistItem } from "@/db/schema";
 import { saveGiverNotes, setGiftStatus, toggleBoughtItem } from "@/server/actions/match";
 import { ItemCard } from "@/components/wishlists/item-card";
 import { Textarea } from "@/components/ui/input";
@@ -11,7 +11,17 @@ import { cn } from "@/lib/utils";
 
 type GiftStatus = "not_started" | "purchased" | "shipped" | "given";
 
-export function GiftStatusPicker({ eventId, status, shipped }: { eventId: string; status: GiftStatus; shipped: boolean }) {
+export function GiftStatusPicker({
+  eventId,
+  slot,
+  status,
+  shipped,
+}: {
+  eventId: string;
+  slot: AssignmentSlot;
+  status: GiftStatus;
+  shipped: boolean;
+}) {
   const [optimistic, setOptimistic] = useOptimistic(status);
   const [, start] = useTransition();
   const steps: { value: GiftStatus; label: string; icon: React.ReactNode }[] = [
@@ -35,7 +45,7 @@ export function GiftStatusPicker({ eventId, status, shipped }: { eventId: string
             onClick={() =>
               start(async () => {
                 setOptimistic(s.value);
-                const res = await setGiftStatus(eventId, s.value);
+                const res = await setGiftStatus(eventId, slot, s.value);
                 if (!res.ok) toast.error(res.error);
               })
             }
@@ -118,7 +128,7 @@ export function BoughtChecklist({
   );
 }
 
-export function GiverNotes({ eventId, initial }: { eventId: string; initial: string }) {
+export function GiverNotes({ eventId, slot, initial }: { eventId: string; slot: AssignmentSlot; initial: string }) {
   const [value, setValue] = useState(initial);
   const [saved, setSaved] = useState(initial);
   const [pending, start] = useTransition();
@@ -126,7 +136,7 @@ export function GiverNotes({ eventId, initial }: { eventId: string; initial: str
   function save() {
     if (value === saved) return;
     start(async () => {
-      const res = await saveGiverNotes(eventId, value);
+      const res = await saveGiverNotes(eventId, slot, value);
       if (!res.ok) return void toast.error(res.error);
       setSaved(value);
     });
