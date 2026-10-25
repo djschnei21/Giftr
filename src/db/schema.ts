@@ -174,6 +174,8 @@ export const participant = pgTable(
     inDraw: boolean("in_draw").notNull().default(true),
     wishlistId: text("wishlist_id").references(() => wishlist.id, { onDelete: "set null" }),
     householdId: text("household_id").references(() => household.id, { onDelete: "set null" }),
+    /** For in-person exchanges: this person asked their own Santa to ship instead. Only their Santa ever sees this. */
+    needsShipping: boolean("needs_shipping").notNull().default(false),
     matchViewedAt: timestamp("match_viewed_at", { withTimezone: true }),
     joinedAt: createdAt(),
   },
