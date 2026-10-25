@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl()),
-  title: { default: "Giftr · Secret Santa, beautifully simple", template: "%s · Giftr" },
+  title: { default: "Giftr · Secret Santa, simplified", template: "%s · Giftr" },
   description:
     "Run a Secret Santa in minutes. Invite everyone with one link, share wishlists, set the rules and let Giftr draw the names. No ads, no spreadsheets.",
   applicationName: "Giftr",

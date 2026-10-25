@@ -21,7 +21,7 @@ import { getCurrentUser } from "@/lib/authz";
 import "./landing.css";
 
 export const metadata: Metadata = {
-  title: { absolute: "Giftr · Secret Santa, sorted in one link" },
+  title: { absolute: "Giftr · Secret Santa, simplified" },
   description:
     "Run your family, friends or office Secret Santa from one link. Giftr draws names around your rules, shares wishlists and keeps every match secret. Free, with no ads.",
   alternates: { canonical: "/" },
@@ -134,7 +134,7 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
             style={at(80)}
           >
             <span className="block">Secret Santa,</span>
-            <span className="block">sorted in one link</span>
+            <span className="block">simplified</span>
           </h1>
           <p className="rise max-w-[680px] text-lg text-muted-foreground" style={at(160)}>
             Send one link to your family, friends or team. Giftr draws names around your rules, shares wishlists, and
