@@ -70,7 +70,7 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
               <CardDescription>Just for you — {first} never sees this.</CardDescription>
             </CardHeader>
             <CardContent>
-              <GiftStatusPicker eventId={id} slot="main" status={match.assignment.giftStatus} shipped={event.exchangeType === "shipped"} />
+              <GiftStatusPicker eventId={id} slot="main" status={match.assignment.giftStatus} shipped={match.shipTo} />
             </CardContent>
           </Card>
 
@@ -145,7 +145,7 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
             </CardContent>
           </Card>
 
-          {event.exchangeType === "shipped" ? (
+          {match.shipTo ? (
             <Card>
               <CardHeader>
                 <CardTitle>Ship to</CardTitle>
@@ -233,7 +233,7 @@ function MatchHero({
 
 type WildcardMatch = NonNullable<Awaited<ReturnType<typeof getMatchDetails>>>;
 
-/** The wildcard gift has no wishlist — just a name, a budget, progress, notes, and (if shipped) an address. */
+/** The wildcard gift has no wishlist — just a name, a budget, progress, notes, and (when shipping applies) an address. */
 function WildcardSection({
   eventId,
   event,
@@ -242,7 +242,7 @@ function WildcardSection({
   shippingLocation,
 }: {
   eventId: string;
-  event: { exchangeDate: string; exchangeType: "in_person" | "shipped"; wildcardBudgetMin: number | null; wildcardBudgetMax: number | null; currency: string };
+  event: { exchangeDate: string; wildcardBudgetMin: number | null; wildcardBudgetMax: number | null; currency: string };
   match: WildcardMatch;
   days: number;
   shippingLocation: string | null;
@@ -259,12 +259,12 @@ function WildcardSection({
             <CardDescription>No wishlist for this one — it&apos;s the surprise.</CardDescription>
           </CardHeader>
           <CardContent>
-            <GiftStatusPicker eventId={eventId} slot="wildcard" status={match.assignment.giftStatus} shipped={event.exchangeType === "shipped"} />
+            <GiftStatusPicker eventId={eventId} slot="wildcard" status={match.assignment.giftStatus} shipped={match.shipTo} />
           </CardContent>
         </Card>
 
         <aside className="grid content-start gap-6">
-          {event.exchangeType === "shipped" ? (
+          {match.shipTo ? (
             <Card>
               <CardHeader>
                 <CardTitle>Ship to</CardTitle>

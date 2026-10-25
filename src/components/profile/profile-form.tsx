@@ -96,10 +96,13 @@ export function ProfileForm({ initial }: { initial: ProfileFormValue }) {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card id="shipping-address" className="scroll-mt-24">
         <CardHeader>
           <CardTitle>Shipping address</CardTitle>
-          <CardDescription>Only shown to your Santa, and only in exchanges where gifts are shipped.</CardDescription>
+          <CardDescription>
+            Only shown to your Santa — and only in exchanges where gifts are shipped, or in-person exchanges where you&apos;ve asked to
+            have yours shipped.
+          </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <Field label="Full name" htmlFor="a-name" className="sm:col-span-2">
