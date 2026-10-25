@@ -108,7 +108,7 @@ export function ItemForm({
             id={`${idPrefix}-url`}
             inputMode="url"
             placeholder="https://"
-            className="pl-9"
+            className="pl-10"
             value={state.url}
             onChange={(e) => set({ url: e.target.value })}
             onPaste={(e) => {
@@ -160,7 +160,7 @@ export function ItemForm({
           aria-pressed={state.mostWanted}
           onClick={() => set({ mostWanted: !state.mostWanted })}
           className={cn(
-            "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+            "inline-flex cursor-pointer items-center gap-2 rounded-full border px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
             state.mostWanted ? "border-gold bg-gold/15 text-foreground" : "text-muted-foreground hover:text-foreground",
           )}
         >

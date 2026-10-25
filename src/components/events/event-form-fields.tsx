@@ -65,7 +65,7 @@ type FieldsProps = {
 
 export function BasicsFields({ value, onChange, errors = {} }: FieldsProps) {
   return (
-    <div className="grid gap-5">
+    <div className="grid gap-6">
       <Field label="Exchange name" htmlFor="name" error={errors.name}>
         <Input
           id="name"
@@ -124,7 +124,7 @@ export function BasicsFields({ value, onChange, errors = {} }: FieldsProps) {
 export function BudgetRulesFields({ value, onChange, errors = {}, locked }: FieldsProps) {
   const wildcard = value.drawFormat === "wildcard";
   return (
-    <div className="grid gap-5">
+    <div className="grid gap-6">
       <div className="grid gap-2">
         <span className="text-sm font-medium">Exchange format</span>
         <Segmented
@@ -172,7 +172,7 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
             ))}
           </NativeSelect>
         </div>
-        {errors.budgetMax ? <p className="text-[13px] text-destructive">{errors.budgetMax}</p> : null}
+        {errors.budgetMax ? <p className="text-xs text-destructive">{errors.budgetMax}</p> : null}
       </div>
 
       {wildcard ? (
@@ -195,9 +195,9 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
               aria-invalid={Boolean(errors.wildcardBudgetMax)}
             />
           </div>
-          {errors.wildcardBudgetMax ? <p className="text-[13px] text-destructive">{errors.wildcardBudgetMax}</p> : null}
-          <p className="text-[13px] text-muted-foreground">
-            No wishlist here — just a name and this budget, so it stays a fun surprise.
+          {errors.wildcardBudgetMax ? <p className="text-xs text-destructive">{errors.wildcardBudgetMax}</p> : null}
+          <p className="text-xs text-muted-foreground">
+            No wishlist here, just a name and this budget, so it stays a fun surprise.
           </p>
         </div>
       ) : null}
@@ -238,7 +238,7 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
               onChange={(e) => onChange({ drawDate: e.target.value })}
               aria-invalid={Boolean(errors.drawDate)}
             />
-            {errors.drawDate ? <p className="text-[13px] text-destructive">{errors.drawDate}</p> : null}
+            {errors.drawDate ? <p className="text-xs text-destructive">{errors.drawDate}</p> : null}
           </div>
         ) : null}
       </div>
@@ -259,7 +259,7 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
 export function AdvancedFields({ value, onChange, locked, extra }: FieldsProps & { extra?: React.ReactNode }) {
   return (
     <details className="group rounded-2xl border bg-card">
-      <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3.5 text-sm font-medium [&::-webkit-details-marker]:hidden">
+      <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-4 text-sm font-medium [&::-webkit-details-marker]:hidden">
         Advanced options
         <CaretDownIcon className="size-4 text-muted-foreground transition-transform group-open:rotate-180" />
       </summary>
@@ -267,7 +267,7 @@ export function AdvancedFields({ value, onChange, locked, extra }: FieldsProps &
         {extra}
         <SwitchRow
           id="noReciprocal"
-          label="No two-person swaps"
+          label="No pair swaps"
           description="If Sam gets Alex, Alex won't get Sam."
           checked={value.noReciprocal}
           disabled={locked}

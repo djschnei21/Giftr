@@ -221,7 +221,7 @@ export function WishlistEditor({ wishlistId, items: serverItems }: { wishlistId:
 
       <ResponsiveDialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)} title="Edit idea">
         {editing ? (
-          <div className="pb-5 sm:pb-0">
+          <div className="pb-4 sm:pb-0">
             <ItemForm
               key={editing.id}
               idPrefix="edit-item"

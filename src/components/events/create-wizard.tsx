@@ -135,7 +135,7 @@ export function CreateEventWizard({
       }
       toast.success(
         res.data.invited
-          ? `Exchange created — ${res.data.invited} invite${res.data.invited === 1 ? "" : "s"} on the way`
+          ? `Exchange created, ${res.data.invited} invite${res.data.invited === 1 ? "" : "s"} on the way`
           : "Exchange created",
       );
       router.push(`/events/${res.data.id}?created=1`);
@@ -146,7 +146,7 @@ export function CreateEventWizard({
   const isLast = step === steps.length - 1;
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
+    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16">
       <div className="mx-auto w-full max-w-xl">
         <ol className="mb-8 flex items-center gap-2" aria-label="Progress">
           {steps.map((s, i) => (
@@ -185,7 +185,7 @@ export function CreateEventWizard({
           >
             {step === 0 ? <BasicsFields value={form} onChange={patch} errors={errors} /> : null}
             {step === 1 ? (
-              <div className="grid gap-5">
+              <div className="grid gap-6">
                 <BudgetRulesFields value={form} onChange={patch} errors={errors} />
                 <AdvancedFields
                   value={form}
@@ -225,7 +225,7 @@ export function CreateEventWizard({
                   }}
                   className="min-h-20"
                 />
-                {errors.inviteEmails ? <p className="text-[13px] text-destructive">{errors.inviteEmails}</p> : null}
+                {errors.inviteEmails ? <p className="text-xs text-destructive">{errors.inviteEmails}</p> : null}
                 {emails.length ? (
                   <ul className="flex flex-wrap gap-2" aria-label="Invitees">
                     {emails.map((email) => (

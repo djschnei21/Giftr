@@ -95,7 +95,7 @@ export function WishlistHeader({
 
       <ResponsiveDialog open={renaming} onOpenChange={setRenaming} title="Rename wishlist">
         <form
-          className="grid gap-4 pb-5 sm:pb-0"
+          className="grid gap-4 pb-4 sm:pb-0"
           onSubmit={(e) => {
             e.preventDefault();
             run(() => renameWishlist(wishlist.id, name), { success: "Renamed", onSuccess: () => setRenaming(false) });

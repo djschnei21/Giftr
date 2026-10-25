@@ -83,7 +83,7 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
             <h1 className="font-display text-5xl leading-[1.05] font-semibold tracking-tight text-balance sm:text-6xl">
               Secret Santa, <span className="text-primary">beautifully simple.</span>
             </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-pretty text-muted-foreground">
+            <p className="max-w-xl text-lg text-pretty text-muted-foreground">
               Invite everyone with one link, share wishlists, set the rules, and let Giftr draw names. Everyone finds
               out who they&apos;re shopping for — and nobody else does.
             </p>
@@ -117,12 +117,12 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
             <div className="absolute -bottom-20 -left-4 w-56 rotate-[3deg] rounded-2xl border bg-card p-4 shadow-[0_12px_40px_rgb(0_0_0/0.12)] sm:-left-10">
               <p className="text-xs text-muted-foreground">You&apos;re Secret Santa for</p>
               <p className="font-display text-2xl font-semibold">Jordan</p>
-              <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+              <p className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
                 <HeartIcon className="size-3.5 text-berry" /> 6 wishlist ideas
               </p>
             </div>
-            <div className="absolute -right-2 -bottom-24 max-w-52 rotate-[-1deg] rounded-2xl rounded-br-md bg-primary px-4 py-2.5 text-sm text-primary-foreground shadow-lg sm:-right-6">
-              <span className="mb-0.5 flex items-center gap-1 text-[11px] opacity-80">
+            <div className="absolute -right-2 -bottom-24 max-w-52 rotate-[-1deg] rounded-2xl rounded-br-md bg-primary px-4 py-3 text-sm text-primary-foreground shadow-lg sm:-right-6">
+              <span className="mb-0.5 flex items-center gap-1 text-xs opacity-80">
                 <ChatCircleIcon className="size-3" /> Your Secret Santa
               </span>
               Medium or large for the sweater?
@@ -146,7 +146,7 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
                   <f.icon className="size-5" />
                 </span>
                 <h3 className="text-lg font-semibold">{f.title}</h3>
-                <p className="leading-relaxed text-muted-foreground">{f.body}</p>
+                <p className=" text-muted-foreground">{f.body}</p>
               </li>
             ))}
           </ul>
@@ -163,7 +163,7 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
               <li key={s.title} className="grid content-start gap-3 rounded-3xl border bg-card p-6">
                 <span className="font-display text-4xl font-semibold text-primary">{i + 1}</span>
                 <h3 className="text-lg font-semibold">{s.title}</h3>
-                <p className="leading-relaxed text-muted-foreground">{s.body}</p>
+                <p className=" text-muted-foreground">{s.body}</p>
               </li>
             ))}
           </ol>
@@ -171,7 +171,7 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
       </section>
 
       <section className="px-4 pb-20 sm:px-6">
-        <div className="relative mx-auto grid w-full max-w-6xl justify-items-center gap-5 overflow-hidden rounded-[2rem] bg-primary px-6 py-16 text-center text-primary-foreground">
+        <div className="relative mx-auto grid w-full max-w-6xl justify-items-center gap-6 overflow-hidden rounded-[2rem] bg-primary px-6 py-16 text-center text-primary-foreground">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(40rem_20rem_at_50%_120%,color-mix(in_oklch,var(--gold),transparent_70%),transparent)]" />
           <h2 className="relative font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
             This year, skip the hat full of paper scraps.

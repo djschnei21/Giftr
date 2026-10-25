@@ -15,7 +15,7 @@ export default function AppError({ error, reset }: { error: Error & { digest?: s
     <EmptyState
       icon={<SnowflakeIcon />}
       title="Something went wrong"
-      description="That's on us, not you. Try again — and if it keeps happening, give it a minute."
+      description="That's on us, not you. Try again, and if it keeps happening, give it a minute."
       action={
         <div className="flex flex-wrap justify-center gap-2">
           <Button onClick={reset}>

@@ -51,14 +51,14 @@ export function ItemCard({
         <div className="grid min-w-0 flex-1 gap-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             {item.mostWanted ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-gold/15 px-2 py-0.5 text-[11px] font-medium whitespace-nowrap text-[color-mix(in_oklch,var(--gold),black_35%)] dark:text-gold">
+              <span className="inline-flex items-center gap-1 rounded-full bg-gold/15 px-2 py-0.5 text-xs font-medium whitespace-nowrap text-[color-mix(in_oklch,var(--gold),black_35%)] dark:text-gold">
                 <StarIcon weight="fill" className="size-3" /> Most wanted
               </span>
             ) : null}
           </div>
           <p
             className={cn(
-              "leading-snug font-medium break-words",
+              " font-medium break-words",
               muted && "text-muted-foreground line-through decoration-1",
             )}
           >

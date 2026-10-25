@@ -22,7 +22,7 @@ export function statusBadge(ev: Pick<Event, "status" | "exchangeDate">) {
     case "invites":
       return { label: "Gathering people", variant: "gold" as const };
     case "exchange":
-      return { label: "Exchange day!", variant: "berry" as const };
+      return { label: "Exchange day", variant: "berry" as const };
     default:
       return { label: "Names drawn", variant: "default" as const };
   }

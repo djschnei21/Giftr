@@ -8,9 +8,10 @@ import { markMatchViewed } from "@/server/actions/draw";
 import { UserAvatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Snowfall } from "@/components/festive";
 import { firstName } from "@/lib/utils";
 
-const confettiColors = ["var(--primary)", "var(--berry)", "var(--gold)", "oklch(0.8 0.1 160)", "oklch(0.85 0.1 80)"];
+const confettiColors = ["var(--primary)", "var(--gold)", "var(--pine)", "var(--accent-foreground)"];
 
 function Confetti() {
   const pieces = useMemo(
@@ -38,7 +39,7 @@ function Confetti() {
           style={{ backgroundColor: p.color }}
           initial={{ x: 0, y: 0, opacity: 1, rotate: 0, scale: 0.6 }}
           animate={{ x: p.x, y: [0, p.y, p.y + 90], opacity: [1, 1, 0], rotate: p.rotate + 180, scale: 1 }}
-          transition={{ duration: 1.4, ease: "easeOut", delay: p.delay }}
+          transition={{ duration: 1.4, ease: [0.32, 0.72, 0, 1], delay: p.delay }}
         />
       ))}
     </div>
@@ -78,19 +79,19 @@ export function RevealCard({
 
   return (
     <Card className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/70 via-transparent to-gold/10" />
-      <CardContent className="relative grid min-h-64 place-items-center py-10 text-center">
+      <Snowfall count={24} seed={11} />
+      <CardContent className="relative grid min-h-80 place-items-center py-10 text-center">
         <AnimatePresence mode="wait" initial={false}>
           {!revealed ? (
             <motion.div
               key="wrapped"
-              className="grid justify-items-center gap-5"
-              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.15, rotate: -4 }}
-              transition={{ duration: 0.35 }}
+              className="grid justify-items-center gap-6"
+              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.15, rotate: -4, filter: "blur(8px)" }}
+              transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
             >
               {changed ? (
-                <p className="rounded-full bg-gold/15 px-3 py-1 text-xs font-medium">
-                  The group changed — you have a new match
+                <p className="rounded-md bg-gold/15 px-2 py-1 text-xs font-semibold text-gold-foreground">
+                  The group changed, so you have a new match
                 </p>
               ) : null}
               <motion.button
@@ -102,17 +103,17 @@ export function RevealCard({
                 whileTap={{ scale: 0.96 }}
               >
                 <span className="relative block size-32">
-                  <span className="absolute inset-x-2 top-9 bottom-0 rounded-2xl bg-berry shadow-lg" />
-                  <span className="absolute inset-x-0 top-5 h-8 rounded-xl bg-berry shadow-md brightness-110 transition-transform group-hover:-translate-y-1" />
-                  <span className="absolute inset-y-5 left-1/2 w-5 -translate-x-1/2 rounded-sm bg-gold" />
-                  <span className="absolute top-0 left-1/2 flex -translate-x-1/2 gap-0.5">
-                    <span className="size-6 rotate-[-30deg] rounded-full border-[5px] border-gold" />
-                    <span className="size-6 rotate-[30deg] rounded-full border-[5px] border-gold" />
+                  <span className="absolute inset-x-2 top-10 bottom-0 rounded-2xl bg-primary shadow-lg" />
+                  <span className="absolute inset-x-0 top-6 h-8 rounded-xl bg-primary shadow-md brightness-110 transition-transform duration-500 group-hover:-translate-y-2" />
+                  <span className="absolute top-6 bottom-0 left-1/2 w-5 -translate-x-1/2 bg-gold" />
+                  <span className="absolute top-0 left-1/2 flex -translate-x-1/2 gap-0.5 transition-transform duration-500 group-hover:-translate-y-2">
+                    <span className="size-7 -rotate-45 rounded-full border-4 border-gold" />
+                    <span className="size-7 rotate-45 rounded-full border-4 border-gold" />
                   </span>
                 </span>
               </motion.button>
               <div className="grid gap-1">
-                <p className="font-display text-2xl font-semibold">Your match is ready</p>
+                <p className="font-display text-3xl">Your match is ready</p>
                 <p className="text-sm text-muted-foreground">Tap the present to see who you&apos;re shopping for.</p>
               </div>
             </motion.div>
@@ -125,13 +126,13 @@ export function RevealCard({
               transition={{ type: "spring", stiffness: 260, damping: 20, delay: alreadyViewed ? 0 : 0.1 }}
             >
               {celebrate ? <Confetti /> : null}
-              <UserAvatar name={giftee.name} image={giftee.image} className="size-20 text-2xl ring-4" />
+              <UserAvatar name={giftee.name} image={giftee.image} className="size-20 rounded-3xl text-2xl ring-4 ring-gold/40" />
               <div className="grid gap-1">
-                <p className="text-sm text-muted-foreground">{label}</p>
-                <p className="font-display text-3xl font-semibold" data-testid="giftee-name">
+                <p className="text-sm font-medium text-muted-foreground">{label}</p>
+                <p className="font-display text-4xl" data-testid="giftee-name">
                   {giftee.name}
                 </p>
-                <p className="text-xs text-muted-foreground">Shh — only you can see this.</p>
+                <p className="text-xs text-muted-foreground">Shh. Only you can see this.</p>
               </div>
               <div className="flex flex-wrap justify-center gap-2">
                 <Button asChild>

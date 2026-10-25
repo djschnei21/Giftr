@@ -87,10 +87,10 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
       <Card>
         <CardHeader>
           <div className="flex items-start justify-between gap-3">
-            <div className="grid gap-1.5">
+            <div className="grid gap-2">
               <CardTitle>Households</CardTitle>
               <CardDescription>
-                People in the same household never draw each other — perfect for couples and roommates.
+                People in the same household never draw each other, which is perfect for couples and roommates.
               </CardDescription>
             </div>
             {!locked ? (
@@ -155,10 +155,10 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
         <CardHeader>
           <CardTitle>Exclusions</CardTitle>
           <CardDescription>
-            Keep specific people from drawing each other — like last year&apos;s pair, or the boss.
+            Keep specific people from drawing each other, like last year&apos;s pair or the boss.
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-5">
+        <CardContent className="grid gap-6">
           {rows.length ? (
             <ul className="grid gap-2" data-testid="exclusions">
               {rows.map((r) => (
@@ -219,7 +219,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
                     ))}
                   </NativeSelect>
                 </Field>
-                <span className="hidden pb-2.5 text-sm text-muted-foreground sm:block">won&apos;t draw</span>
+                <span className="hidden pb-3 text-sm text-muted-foreground sm:block">won&apos;t draw</span>
                 <Field label="This person" htmlFor="ex-recipient">
                   <NativeSelect id="ex-recipient" value={recipient} onChange={(e) => setRecipient(e.target.value)}>
                     <option value="">Choose…</option>
@@ -260,7 +260,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
         description="Pick everyone who lives together."
       >
         <form
-          className="grid gap-4 pb-5 sm:pb-0"
+          className="grid gap-4 pb-4 sm:pb-0"
           onSubmit={(e) => {
             e.preventDefault();
             run(
@@ -295,7 +295,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
                   <label
                     key={p.id}
                     className={cn(
-                      "flex cursor-pointer items-center gap-2.5 rounded-xl border p-2.5 text-sm transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring",
+                      "flex cursor-pointer items-center gap-2 rounded-xl border p-3 text-sm transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring",
                       on && "border-primary bg-accent/50",
                     )}
                   >

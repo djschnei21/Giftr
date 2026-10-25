@@ -32,7 +32,7 @@ export default async function DevOutboxPage() {
             .filter((href) => href.includes("/api/auth/") || href.includes("/join/") || href.includes("/events/"));
           return (
             <article key={e.id} className="overflow-hidden rounded-2xl border bg-card">
-              <header className="flex flex-wrap items-baseline justify-between gap-2 border-b px-5 py-3">
+              <header className="flex flex-wrap items-baseline justify-between gap-2 border-b px-4 py-3">
                 <div>
                   <p className="font-medium">{e.subject}</p>
                   <p className="text-sm text-muted-foreground">to {e.toEmail}</p>
@@ -42,7 +42,7 @@ export default async function DevOutboxPage() {
                 </time>
               </header>
               {links[0] ? (
-                <div className="border-b bg-accent/40 px-5 py-2 text-sm">
+                <div className="border-b bg-accent/40 px-4 py-2 text-sm">
                   <a className="font-medium text-primary underline" href={links[0]} data-testid="outbox-link">
                     Open link →
                   </a>

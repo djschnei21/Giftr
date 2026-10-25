@@ -18,7 +18,7 @@ export async function leaveEvent(eventId: string) {
   return runAction(async () => {
     const { event: ev, me, isOrganizer } = await assertEventAccess(eventId);
     if (!me) throw new UserError("You're not in this exchange.");
-    if (isOrganizer) throw new UserError("Organizers can't leave their own exchange — cancel it instead.");
+    if (isOrganizer) throw new UserError("Organizers can't leave their own exchange. Cancel it instead.");
     if (ev.status !== "open") throw new UserError("Names are already drawn. Ask the organizer to remove you.");
     await db.update(participant).set({ status: "declined" }).where(eq(participant.id, me.id));
     revalidatePath("/events");
@@ -156,7 +156,7 @@ export async function resendInvite(eventId: string, invitationId: string) {
     if (!inv) throw new UserError("That invite doesn't exist.");
     if (inv.status === "accepted") throw new UserError("They've already joined.");
     if (inv.status === "pending" && Date.now() - inv.lastSentAt.getTime() < RESEND_COOLDOWN_MS)
-      throw new UserError("Sent just now — give it a few minutes before resending.");
+      throw new UserError("Sent just now. Give it a few minutes before resending.");
     await inviteByEmail(ev, user, [inv.email]);
     revalidatePath(`/events/${eventId}/manage`);
   });

@@ -112,14 +112,14 @@ export default async function JoinPage({ params, searchParams }: PageProps<"/joi
             </Button>
           </div>
         ) : current ? (
-          <div className="grid gap-5 rounded-3xl border bg-card p-6 sm:p-8">
-            <div className="grid gap-1.5">
+          <div className="grid gap-6 rounded-3xl border bg-card p-6 sm:p-8">
+            <div className="grid gap-2">
               <h1 className="font-display text-2xl font-semibold">Join {ev.name}?</h1>
               <p className="text-sm text-muted-foreground">
                 You&apos;ll join as <span className="font-medium text-foreground">{current.name}</span> ({current.email}
                 ).
                 {ev.status === "drawn"
-                  ? " Names are already drawn — you'll be slotted in without spoiling anyone else's match."
+                  ? " Names are already drawn. You'll be slotted in without spoiling anyone else's match."
                   : null}
               </p>
             </div>
@@ -131,7 +131,7 @@ export default async function JoinPage({ params, searchParams }: PageProps<"/joi
             providers={enabledSocialProviders}
             devOutbox={devOutboxEnabled()}
             heading={`Join ${ev.name}`}
-            subheading="Sign in to join — it takes one tap."
+            subheading="Sign in to join. It takes one tap."
           />
         )}
       </div>

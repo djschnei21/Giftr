@@ -50,14 +50,14 @@ export function DrawPanel({ eventId, status, format, scheduledFor, checks, canDr
         <Card>
           <CardHeader>
             <CardTitle>Before you draw</CardTitle>
-            <CardDescription>Warnings won&apos;t stop the draw — anything in red will.</CardDescription>
+            <CardDescription>Warnings won&apos;t stop the draw. Anything in red will.</CardDescription>
           </CardHeader>
           <CardContent>
-            <ul className="grid gap-2.5" data-testid="draw-checks">
+            <ul className="grid gap-2" data-testid="draw-checks">
               {checks.map((c, i) => (
                 <li
                   key={i}
-                  className={cn("flex items-start gap-2.5 text-sm", c.level === "block" && "text-destructive")}
+                  className={cn("flex items-start gap-2 text-sm", c.level === "block" && "text-destructive")}
                 >
                   <span className="mt-0.5 shrink-0">{icons[c.level]}</span>
                   {c.message}
@@ -86,8 +86,8 @@ export function DrawPanel({ eventId, status, format, scheduledFor, checks, canDr
               title="Draw names now?"
               description={
                 wildcard
-                  ? "Everyone in the draw gets both their main and wildcard match by email. People can still join later — we'll slot them into both without spoiling anyone's match."
-                  : "Everyone in the draw gets their match by email. People can still join later — we'll slot them in without spoiling anyone's match."
+                  ? "Everyone in the draw gets both their main and wild card match by email. People can still join later, and we'll slot them into both without spoiling anyone's match."
+                  : "Everyone in the draw gets their match by email. People can still join later, and we'll slot them in without spoiling anyone's match."
               }
               confirmLabel="Draw names"
               onConfirm={() =>
@@ -187,7 +187,7 @@ export function DrawPanel({ eventId, status, format, scheduledFor, checks, canDr
             description="Every match changes and everyone gets an email. Anonymous messages and gift notes from the current draw are deleted."
             confirmLabel="Redraw"
             destructive
-            onConfirm={() => run(() => redrawAll(eventId), { success: "Names redrawn — everyone has been emailed." })}
+            onConfirm={() => run(() => redrawAll(eventId), { success: "Names redrawn. Everyone has been emailed." })}
           />
           <ConfirmDialog
             trigger={

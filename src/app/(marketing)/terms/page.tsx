@@ -18,12 +18,12 @@ export default function TermsPage() {
         <li>You need to be at least 13 years old (or the minimum age in your country) to create an account.</li>
         <li>Keep your sign-in secure. You&apos;re responsible for what happens under your account.</li>
         <li>Only invite people who&apos;d expect to hear from you, and only add details you have the right to share.</li>
-        <li>Don&apos;t use Giftr to harass anyone, send spam, or break the law — including through anonymous messages.</li>
+        <li>Don&apos;t use Giftr to harass anyone, send spam, or break the law, including through anonymous messages.</li>
       </ul>
 
       <h2>Your content</h2>
       <p>
-        You own what you add — wishlists, preferences, messages and so on. You give us permission to store it and show it
+        You own what you add: wishlists, preferences, messages and so on. You give us permission to store it and show it
         to the people it&apos;s meant for, only so we can run the service. You can delete it at any time; see the{" "}
         <Link href="/privacy#delete">privacy policy</Link>.
       </p>
@@ -44,7 +44,7 @@ export default function TermsPage() {
       <p>
         Giftr is provided as is. We work hard to keep it running and to keep every draw secret and fair, but we can&apos;t
         promise it will always be available or error-free. To the extent the law allows, we aren&apos;t liable for indirect
-        or consequential losses — or for anyone&apos;s taste in gifts.
+        or consequential losses, or for anyone&apos;s taste in gifts.
       </p>
 
       <h2>Changes</h2>

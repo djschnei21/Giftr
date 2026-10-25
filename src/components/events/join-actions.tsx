@@ -15,13 +15,13 @@ export function JoinActions({ code, token }: { code: string; token?: string }) {
   if (declined) {
     return (
       <p className="rounded-2xl bg-secondary p-4 text-sm text-muted-foreground">
-        No problem — we let the organizer know you can&apos;t make it this time.
+        No problem. We let the organizer know you can&apos;t make it this time.
       </p>
     );
   }
 
   return (
-    <div className="grid gap-2.5">
+    <div className="grid gap-2">
       <Button
         size="lg"
         disabled={pending}

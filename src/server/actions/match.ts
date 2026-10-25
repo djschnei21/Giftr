@@ -64,7 +64,7 @@ export async function sendMessage(eventId: string, input: z.input<typeof message
           gt(message.createdAt, new Date(Date.now() - MESSAGE_WINDOW_MS)),
         ),
       );
-    if (recent.n >= MESSAGE_BURST) throw new UserError("That's a lot of messages at once — give it a few minutes.");
+    if (recent.n >= MESSAGE_BURST) throw new UserError("That's a lot of messages at once. Give it a few minutes.");
 
     const [saved] = await db.insert(message).values({ assignmentId: a.id, senderRole: as, body }).returning();
 

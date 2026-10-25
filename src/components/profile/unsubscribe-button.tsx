@@ -15,7 +15,7 @@ export function UnsubscribeButton({ token, type }: { token: string; type: string
   if (done)
     return (
       <p className="flex items-center gap-2 text-sm font-medium text-primary" role="status">
-        <CheckCircleIcon className="size-4" /> Done — you won&apos;t get those emails anymore.
+        <CheckCircleIcon className="size-4" /> Done. You won&apos;t get those emails anymore.
       </p>
     );
 

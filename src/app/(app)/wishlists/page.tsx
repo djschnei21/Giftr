@@ -31,7 +31,7 @@ export default async function WishlistsPage() {
         <EmptyState
           icon={<ListChecksIcon />}
           title="No wishlists yet"
-          description="Start one and paste links to things you love — we'll fill in the name and picture."
+          description="Start one and paste links to things you love. We'll fill in the name and picture."
           action={<NewWishlistButton />}
         />
       ) : (
@@ -40,7 +40,7 @@ export default async function WishlistsPage() {
             <li key={list.id}>
               <Link
                 href={`/wishlists/${list.id}`}
-                className="group flex h-full flex-col gap-4 rounded-2xl border bg-card p-5 transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                className="group flex h-full flex-col gap-4 rounded-2xl border bg-card p-4 transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -69,7 +69,7 @@ export default async function WishlistsPage() {
                             className="size-full object-cover"
                           />
                         ) : item ? (
-                          <span className="line-clamp-3 px-1.5 text-center text-[10px] leading-tight">
+                          <span className="line-clamp-3 px-2 text-center text-xs">
                             {item.title}
                           </span>
                         ) : (

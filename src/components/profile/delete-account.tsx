@@ -31,7 +31,7 @@ export function DeleteAccount({ email }: { email: string }) {
       description="This can't be undone."
     >
       <form
-        className="grid gap-5 pb-5 sm:pb-0"
+        className="grid gap-6 pb-4 sm:pb-0"
         onSubmit={(e) => {
           e.preventDefault();
           if (!matches) return;
@@ -41,7 +41,7 @@ export function DeleteAccount({ email }: { email: string }) {
           });
         }}
       >
-        <div className="flex gap-3 rounded-2xl bg-destructive/5 p-4 text-sm leading-relaxed">
+        <div className="flex gap-3 rounded-2xl bg-destructive/5 p-4 text-sm">
           <WarningIcon className="mt-0.5 size-4 shrink-0 text-destructive" />
           <ul className="grid gap-1">
             <li>Your wishlists, profile and sign-in connections are deleted.</li>

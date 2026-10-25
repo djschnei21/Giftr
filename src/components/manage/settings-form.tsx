@@ -63,7 +63,7 @@ export function SettingsForm({ event, organizerInDraw }: { event: Event; organiz
               </CardDescription>
             ) : null}
           </CardHeader>
-          <CardContent className="grid gap-5">
+          <CardContent className="grid gap-6">
             <BudgetRulesFields value={form} onChange={patch} errors={errors} locked={locked} />
             <AdvancedFields
               value={form}
@@ -93,7 +93,7 @@ export function SettingsForm({ event, organizerInDraw }: { event: Event; organiz
             />
           </CardContent>
         </Card>
-        <div className="sticky bottom-20 z-10 flex justify-end sm:bottom-4">
+        <div className="sticky bottom-24 z-10 flex justify-end sm:bottom-4">
           <Button type="submit" size="lg" disabled={pending} className="shadow-lg">
             {pending ? <CircleNotchIcon className="animate-spin" /> : null}
             Save changes

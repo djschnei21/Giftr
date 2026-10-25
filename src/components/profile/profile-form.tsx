@@ -81,7 +81,7 @@ export function ProfileForm({ initial }: { initial: ProfileFormValue }) {
           <Field
             label="Please no"
             htmlFor="p-dislikes"
-            hint="Allergies, scents, clutter — anything to avoid."
+            hint="Allergies, scents, clutter, anything to avoid."
             error={errors.dislikes}
           >
             <Textarea
@@ -162,7 +162,7 @@ export function ProfileForm({ initial }: { initial: ProfileFormValue }) {
         <CardHeader>
           <CardTitle>Shipping address</CardTitle>
           <CardDescription>
-            Only shown to your Santa — and only in exchanges where gifts are shipped, or in-person exchanges where
+            Only shown to your Santa, and only in exchanges where gifts are shipped, or in-person exchanges where
             you&apos;ve asked to have yours shipped.
           </CardDescription>
         </CardHeader>
@@ -226,7 +226,7 @@ export function ProfileForm({ initial }: { initial: ProfileFormValue }) {
         </CardContent>
       </Card>
 
-      <div className="sticky bottom-20 z-10 flex justify-end sm:bottom-4">
+      <div className="sticky bottom-24 z-10 flex justify-end sm:bottom-4">
         <Button type="submit" size="lg" disabled={pending} className="shadow-lg">
           {pending ? <CircleNotchIcon className="animate-spin" /> : null}
           Save profile

@@ -74,7 +74,7 @@ export function SignInCard({ next, providers, devOutbox, error, heading, subhead
             <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-accent text-accent-foreground">
               <EnvelopeSimpleIcon className="size-6" />
             </div>
-            <div className="grid gap-1.5">
+            <div className="grid gap-2">
               <h1 className="font-display text-2xl font-semibold">Check your email</h1>
               <p className="text-sm text-muted-foreground">
                 We sent a sign-in link to <span className="font-medium text-foreground">{sentTo}</span>. It expires in
@@ -100,7 +100,7 @@ export function SignInCard({ next, providers, devOutbox, error, heading, subhead
             exit={{ opacity: 0, y: -8 }}
             className="grid gap-6"
           >
-            <div className="grid gap-1.5 text-center">
+            <div className="grid gap-2 text-center">
               <h1 className="font-display text-2xl font-semibold">{heading ?? "Welcome to Giftr"}</h1>
               <p className="text-sm text-muted-foreground">
                 {subheading ?? "Sign in or create an account in one tap."}
@@ -108,7 +108,7 @@ export function SignInCard({ next, providers, devOutbox, error, heading, subhead
             </div>
 
             {hasSocial ? (
-              <div className="grid gap-2.5">
+              <div className="grid gap-2">
                 {providers.google ? (
                   <Button variant="outline" size="lg" disabled={pending !== null} onClick={() => social("google")}>
                     {pending === "google" ? <CircleNotchIcon className="animate-spin" /> : <GoogleIcon />}
@@ -158,7 +158,7 @@ export function SignInCard({ next, providers, devOutbox, error, heading, subhead
               </p>
             ) : null}
 
-            <p className="text-center text-xs leading-relaxed text-muted-foreground">
+            <p className="text-center text-xs text-muted-foreground">
               By continuing you agree to our{" "}
               <Link href="/terms" className="underline underline-offset-2">
                 Terms

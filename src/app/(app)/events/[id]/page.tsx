@@ -22,7 +22,7 @@ import { WishlistPicker } from "@/components/wishlists/wishlist-picker";
 import { ShippingToggle } from "@/components/events/shipping-toggle";
 import { LeaveEventButton } from "@/components/events/leave-event-button";
 import { requireEventAccess } from "@/lib/authz";
-import { budgetLabel } from "@/lib/format";
+import { budgetLabel, pluralize } from "@/lib/format";
 import { getEventCounts, getEventPeople, getMyAssignments, hasShippingAddress } from "@/server/queries/events";
 import { listMyWishlists } from "@/server/queries/wishlists";
 import { joinUrl } from "@/server/invites";
@@ -60,15 +60,15 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
       <EventHeader event={event} isOrganizer={isOrganizer} />
 
       {event.status === "cancelled" ? (
-        <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-5 text-sm">
+        <div className="rounded-2xl bg-destructive/10 p-4 text-sm font-semibold text-destructive">
           This exchange was cancelled by the organizer.
         </div>
       ) : null}
 
       {isOrganizer && open && event.inviteLinkEnabled ? (
-        <Card className={created ? "border-primary/40 bg-accent/30" : undefined}>
+        <Card className={created ? "bg-accent ring-2 ring-primary/30" : undefined}>
           <CardHeader>
-            <CardTitle>{created ? "Your exchange is ready — invite people" : "Invite link"}</CardTitle>
+            <CardTitle>{created ? "Your exchange is ready to share" : "Invite link"}</CardTitle>
             <p className="text-sm text-muted-foreground">
               Drop this in your group chat. Anyone with the link can join until names are drawn.
             </p>
@@ -111,7 +111,7 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
             <CardHeader>
               <CardTitle>The details</CardTitle>
             </CardHeader>
-            <CardContent className="grid gap-5">
+            <CardContent className="grid gap-6">
               <ul className="grid gap-3 text-sm">
                 <li className="flex items-start gap-3">
                   {event.exchangeType === "shipped" ? (
@@ -124,7 +124,7 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
                   ) : (
                     <>
                       <MapPinIcon className="mt-0.5 size-4 shrink-0 text-primary" />
-                      <span className="min-w-0">{event.location || "In person — location to be announced"}</span>
+                      <span className="min-w-0">{event.location || "In person, location to be announced"}</span>
                     </>
                   )}
                 </li>
@@ -142,29 +142,29 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
                   <li className="flex items-start gap-3">
                     <SparkleIcon className="mt-0.5 size-4 shrink-0 text-primary" />
                     <span className="min-w-0">
-                      {wildcardBudget ? `Wildcard budget: ${wildcardBudget}` : "Wildcard budget not set"}
+                      {wildcardBudget ? `Wild card budget: ${wildcardBudget}` : "Wild card budget not set"}
                     </span>
                   </li>
                 ) : null}
               </ul>
               {event.description ? (
-                <p className="text-sm leading-relaxed break-words whitespace-pre-line">{event.description}</p>
+                <p className="text-sm break-words whitespace-pre-line">{event.description}</p>
               ) : null}
               {event.rules ? (
-                <div className="rounded-2xl bg-secondary/70 p-4">
-                  <p className="mb-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">House rules</p>
-                  <p className="text-sm leading-relaxed break-words whitespace-pre-line">{event.rules}</p>
+                <div className="grid gap-1 rounded-xl bg-secondary p-4">
+                  <p className="text-xs font-semibold text-muted-foreground">House rules</p>
+                  <p className="text-sm break-words whitespace-pre-line">{event.rules}</p>
                 </div>
               ) : null}
               <div className="flex flex-wrap gap-2">
                 {event.drawFormat === "wildcard" ? (
                   <Badge variant="gold">
-                    <SparkleIcon /> Wild Card exchange
+                    <SparkleIcon /> Wild card exchange
                   </Badge>
                 ) : null}
                 {event.noReciprocal ? (
                   <Badge variant="secondary">
-                    <RepeatIcon /> No two-person swaps
+                    <RepeatIcon /> No pair swaps
                   </Badge>
                 ) : null}
                 {event.singleLoop ? (
@@ -198,14 +198,14 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
 
           <Card>
             <CardHeader>
-              <CardTitle>{counts.joined} people</CardTitle>
+              <CardTitle>{pluralize(counts.joined, "person", "people")}</CardTitle>
             </CardHeader>
             <CardContent>
               {canSeePeople ? (
                 <ul className="grid gap-3" aria-label="Participants">
                   {joinedPeople.map((p) => (
                     <li key={p.id} className="flex min-w-0 items-center gap-3">
-                      <UserAvatar name={p.name} image={p.image} className="size-8 text-xs" />
+                      <UserAvatar name={p.name} image={p.image} className="size-8 rounded-lg text-xs" />
                       <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                         <span className="min-w-0 break-words">
                           {p.name}

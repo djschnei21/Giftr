@@ -28,7 +28,7 @@ export function ShippingToggle({
       if (!res.ok) {
         setOn(before);
         toast.error(res.error);
-      } else toast.success(next ? "Your Santa will see your shipping address" : "Turned off — back to in person");
+      } else toast.success(next ? "Your Santa will see your shipping address" : "Back to in person");
     });
   }
 
@@ -40,18 +40,18 @@ export function ShippingToggle({
             <TruckIcon className="size-5" />
           </span>
           <div className="min-w-0">
-            <p className="text-sm font-medium">Can&apos;t make it in person?</p>
-            <p className="text-[13px] break-words text-muted-foreground">
+            <p className="text-sm font-semibold">Can&apos;t make it in person?</p>
+            <p className="text-xs break-words text-muted-foreground">
               {on
                 ? hasAddress
-                  ? "Your Santa sees your shipping address instead of the usual meetup. Only they know — nobody else."
+                  ? "Your Santa sees your shipping address instead of the usual meetup. Nobody else can see it."
                   : "Add a shipping address on your profile so your Santa knows where to send it."
                 : "Turn this on and only your Secret Santa will see your shipping address instead of the usual meetup."}
             </p>
             {on && !hasAddress ? (
               <Link
                 href="/profile#shipping-address"
-                className="text-[13px] font-medium text-primary underline-offset-2 hover:underline"
+                className="text-xs font-semibold text-accent-foreground underline decoration-current/30 underline-offset-4 hover:decoration-current"
               >
                 Add your address
               </Link>

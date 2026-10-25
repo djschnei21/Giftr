@@ -86,7 +86,7 @@ export function InvitesPanel({
           <CardTitle>Invite link</CardTitle>
           <CardDescription>
             {drawn
-              ? "Names are drawn, so the link no longer lets new people in. Email invites still work — newcomers get slotted into the draw."
+              ? "Names are drawn, so the link no longer lets new people in. Email invites still work, and newcomers get slotted into the draw."
               : "Anyone with this link can join. It shows a preview card in iMessage, WhatsApp and Slack."}
           </CardDescription>
         </CardHeader>
@@ -193,7 +193,7 @@ export function InvitesPanel({
                         })
                       }
                       className={cn(
-                        "flex w-full cursor-pointer items-center gap-3 rounded-xl border p-2.5 text-left transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                        "flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 text-left transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
                         on && "border-primary bg-accent/60",
                       )}
                     >
@@ -241,7 +241,7 @@ export function InvitesPanel({
           <CardContent className="p-0 sm:p-0">
             <ul className="divide-y" data-testid="invite-list">
               {invitations.map((inv) => (
-                <li key={inv.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-5 py-3 sm:px-6">
+                <li key={inv.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-4 py-3 sm:px-6">
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{inv.email}</p>
                     <p className="text-xs text-muted-foreground">

@@ -52,7 +52,7 @@ export function InviteCard({ data, className }: { data: InviteCardData; classNam
           <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
             {data.organizerName || "You"} invited you to
           </p>
-          <h2 className="font-display text-2xl leading-tight font-semibold break-words">
+          <h2 className="font-display text-2xl font-semibold break-words">
             {data.name || "Your exchange"}
           </h2>
         </div>
@@ -60,11 +60,11 @@ export function InviteCard({ data, className }: { data: InviteCardData; classNam
           <p className="line-clamp-3 text-sm whitespace-pre-line text-muted-foreground">{data.description}</p>
         ) : null}
         <ul className="grid gap-2 text-left text-sm">
-          <li className="flex min-w-0 items-start gap-2.5">
+          <li className="flex min-w-0 items-start gap-2">
             <CalendarDotsIcon className="mt-0.5 size-4 shrink-0 text-primary" />
             <span className="min-w-0">{data.exchangeDate ? longDateLabel(data.exchangeDate) : "Pick a date"}</span>
           </li>
-          <li className="flex min-w-0 items-start gap-2.5">
+          <li className="flex min-w-0 items-start gap-2">
             {data.exchangeType === "shipped" ? (
               <>
                 <PackageIcon className="mt-0.5 size-4 shrink-0 text-primary" />
@@ -78,7 +78,7 @@ export function InviteCard({ data, className }: { data: InviteCardData; classNam
             )}
           </li>
           {budget ? (
-            <li className="flex min-w-0 items-start gap-2.5">
+            <li className="flex min-w-0 items-start gap-2">
               <WalletIcon className="mt-0.5 size-4 shrink-0 text-primary" />
               <span className="min-w-0">
                 {budget}
@@ -87,7 +87,7 @@ export function InviteCard({ data, className }: { data: InviteCardData; classNam
             </li>
           ) : null}
           {data.drawFormat === "wildcard" ? (
-            <li className="flex min-w-0 items-start gap-2.5">
+            <li className="flex min-w-0 items-start gap-2">
               <SparkleIcon className="mt-0.5 size-4 shrink-0 text-primary" />
               <span className="min-w-0">
                 {wildcardBudget ? `${wildcardBudget} wild card gift` : "Plus a surprise wild card gift"}

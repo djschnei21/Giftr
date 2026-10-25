@@ -117,14 +117,14 @@ export function AnonymousChat({
               <p
                 data-testid={m.mine ? "message-mine" : "message-theirs"}
                 className={cn(
-                  "max-w-[85%] rounded-2xl px-3.5 py-2 text-sm leading-relaxed break-words whitespace-pre-wrap",
+                  "max-w-[85%] rounded-2xl px-4 py-2 text-sm break-words whitespace-pre-wrap",
                   m.mine ? "rounded-br-md bg-primary text-primary-foreground" : "rounded-bl-md border bg-card",
                   m.id.startsWith("pending:") && "opacity-70",
                 )}
               >
                 {m.body}
               </p>
-              <span className="px-1 text-[11px] text-muted-foreground">
+              <span className="px-1 text-xs text-muted-foreground">
                 {m.mine ? "You" : otherName} ·{" "}
                 {m.id.startsWith("pending:") ? (
                   "sending…"

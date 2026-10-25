@@ -87,7 +87,7 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
           <Card>
             <CardHeader>
               <CardTitle>Your progress</CardTitle>
-              <CardDescription>Just for you — {first} never sees this.</CardDescription>
+              <CardDescription>Just for you. {first} never sees this.</CardDescription>
             </CardHeader>
             <CardContent>
               <GiftStatusPicker eventId={id} slot="main" status={match.assignment.giftStatus} shipped={match.shipTo} />
@@ -153,7 +153,7 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
             <CardHeader>
               <CardTitle>Ask {first} anonymously</CardTitle>
               <CardDescription>
-                They&apos;ll see your messages from &ldquo;Your Secret Santa&rdquo; — never your name.
+                They&apos;ll see your messages from &ldquo;Your Secret Santa&rdquo;, never your name.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -164,7 +164,7 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
                   initialMessages={thread}
                   hasUnread={unread > 0}
                   otherName={first}
-                  emptyHint={`Not sure about sizes or style? Ask ${first} here — they won't know it's you.`}
+                  emptyHint={`Not sure about sizes or style? Ask ${first} here. They won't know it's you.`}
                   placeholder={`Message ${first}…`}
                 />
               ) : (
@@ -238,7 +238,7 @@ function MatchHero({
   event: { exchangeDate: string };
 }) {
   return (
-    <section className="flex flex-wrap items-center gap-4 rounded-3xl border bg-gradient-to-br from-accent/60 via-card to-gold/10 p-5 sm:p-6">
+    <section className="flex flex-wrap items-center gap-4 rounded-3xl border bg-gradient-to-br from-accent/60 via-card to-gold/10 p-4 sm:p-6">
       <UserAvatar name={giftee.name} image={giftee.image} className="size-16 text-xl ring-4" />
       <div className="grid min-w-0 flex-1 gap-1">
         <p className="text-sm text-muted-foreground">{subtitle}</p>
@@ -246,10 +246,10 @@ function MatchHero({
           {giftee.name}
         </h2>
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5">
+          <span className="inline-flex items-center gap-2">
             <WalletIcon className="size-4" /> {budget}
           </span>
-          <span className="inline-flex items-center gap-1.5">
+          <span className="inline-flex items-center gap-2">
             <CalendarBlankIcon className="size-4" />
             {days > 1
               ? `${days} days to go`
@@ -296,7 +296,7 @@ function WildcardSection({
         <Card>
           <CardHeader>
             <CardTitle>Your progress</CardTitle>
-            <CardDescription>No wishlist for this one — it&apos;s the surprise.</CardDescription>
+            <CardDescription>No wishlist for this one. It&apos;s the surprise.</CardDescription>
           </CardHeader>
           <CardContent>
             <GiftStatusPicker
@@ -347,7 +347,7 @@ function Pref({ icon, label, value }: { icon: React.ReactNode; label: string; va
       <span className="mt-0.5 text-primary [&_svg]:size-4">{icon}</span>
       <div className="grid min-w-0 gap-0.5">
         <dt className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{label}</dt>
-        <dd className="leading-relaxed break-words whitespace-pre-line">{value}</dd>
+        <dd className=" break-words whitespace-pre-line">{value}</dd>
       </div>
     </div>
   );
@@ -379,7 +379,7 @@ function AddressBlock({
       </p>
     );
   return (
-    <address className="text-sm leading-relaxed not-italic" data-testid="ship-to">
+    <address className="text-sm not-italic" data-testid="ship-to">
       {lines.map((l, i) => (
         <span key={i} className="block">
           {l}
