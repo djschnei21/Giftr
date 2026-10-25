@@ -81,6 +81,7 @@ export default async function ManagePage({ params, searchParams }: PageProps<"/e
             <DrawPanel
               eventId={id}
               status={event.status}
+              format={event.drawFormat}
               scheduledFor={event.drawMode === "scheduled" ? event.drawDate : null}
               checks={preDraw?.checks ?? []}
               canDraw={preDraw?.canDraw ?? false}

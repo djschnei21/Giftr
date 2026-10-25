@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, count, desc, eq, inArray, isNotNull, ne, or, sql } from "drizzle-orm";
+import { and, asc, count, countDistinct, desc, eq, inArray, isNotNull, ne, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { assignment, event, household, invitation, participant, user } from "@/db/schema";
 
@@ -84,16 +84,20 @@ export async function getEventCounts(eventId: string) {
     .select({ n: count() })
     .from(participant)
     .where(and(eq(participant.eventId, eventId), eq(participant.status, "joined"), eq(participant.inDraw, true)));
+  // Each person can have two assignment rows (main + wildcard), so count people, not rows.
   const [viewed] = await db
-    .select({ n: count() })
+    .select({ n: countDistinct(assignment.giverId) })
     .from(assignment)
     .innerJoin(participant, eq(participant.id, assignment.giverId))
     .where(and(eq(assignment.eventId, eventId), isNotNull(participant.matchViewedAt)));
-  const [assigned] = await db.select({ n: count() }).from(assignment).where(eq(assignment.eventId, eventId));
+  const [assigned] = await db
+    .select({ n: countDistinct(assignment.giverId) })
+    .from(assignment)
+    .where(eq(assignment.eventId, eventId));
   return { joined: joined.n, inDraw: inDraw.n, viewed: viewed.n, assigned: assigned.n };
 }
 
-export async function getMyAssignment(participantId: string) {
-  const [row] = await db.select().from(assignment).where(eq(assignment.giverId, participantId)).limit(1);
-  return row ?? null;
+/** A participant's gift(s): just the main one for Classic, both for Wildcard. */
+export async function getMyAssignments(participantId: string) {
+  return db.select().from(assignment).where(eq(assignment.giverId, participantId));
 }

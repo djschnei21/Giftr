@@ -37,8 +37,11 @@ const eventFields = {
   exchangeDate: isoDate,
   exchangeType: z.enum(["in_person", "shipped"]),
   location: optionalText(200),
+  drawFormat: z.enum(["classic", "wildcard"]),
   budgetMin: optionalAmount,
   budgetMax: optionalAmount,
+  wildcardBudgetMin: optionalAmount,
+  wildcardBudgetMax: optionalAmount,
   currency: z.enum(currencies),
   joinDeadline: optionalDate,
   drawMode: z.enum(["manual", "scheduled"]),
@@ -55,8 +58,11 @@ type DateChecked = {
   joinDeadline: string | null;
   drawMode: "manual" | "scheduled";
   drawDate: string | null;
+  drawFormat: "classic" | "wildcard";
   budgetMin: number | null;
   budgetMax: number | null;
+  wildcardBudgetMin: number | null;
+  wildcardBudgetMax: number | null;
 };
 
 function checkDates<T extends DateChecked>(v: T, ctx: z.RefinementCtx, today: string) {
@@ -73,6 +79,8 @@ function checkDates<T extends DateChecked>(v: T, ctx: z.RefinementCtx, today: st
   }
   if (v.budgetMin !== null && v.budgetMax !== null && v.budgetMin > v.budgetMax)
     ctx.addIssue({ code: "custom", path: ["budgetMax"], message: "The maximum should be at least the minimum." });
+  if (v.drawFormat === "wildcard" && v.wildcardBudgetMin !== null && v.wildcardBudgetMax !== null && v.wildcardBudgetMin > v.wildcardBudgetMax)
+    ctx.addIssue({ code: "custom", path: ["wildcardBudgetMax"], message: "The maximum should be at least the minimum." });
 }
 
 export function createEventSchema(today: string) {

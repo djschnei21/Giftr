@@ -50,11 +50,17 @@ export function RevealCard({
   giftee,
   alreadyViewed,
   changed,
+  label = "You're Secret Santa for",
+  cta = "wishlist",
 }: {
   eventId: string;
   giftee: { name: string; image: string | null };
   alreadyViewed: boolean;
   changed: boolean;
+  /** What to call this gift once it's unwrapped. */
+  label?: string;
+  /** Wildcard gifts have no wishlist to link to, just the match page. */
+  cta?: "wishlist" | "match";
 }) {
   const reduceMotion = useReducedMotion();
   const [revealed, setRevealed] = useState(alreadyViewed);
@@ -119,7 +125,7 @@ export function RevealCard({
               {celebrate ? <Confetti /> : null}
               <UserAvatar name={giftee.name} image={giftee.image} className="size-20 text-2xl ring-4" />
               <div className="grid gap-1">
-                <p className="text-sm text-muted-foreground">You&apos;re Secret Santa for</p>
+                <p className="text-sm text-muted-foreground">{label}</p>
                 <p className="font-display text-3xl font-semibold" data-testid="giftee-name">
                   {giftee.name}
                 </p>
@@ -128,14 +134,16 @@ export function RevealCard({
               <div className="flex flex-wrap justify-center gap-2">
                 <Button asChild>
                   <Link href={`/events/${eventId}/match`}>
-                    <GiftIcon /> See {first}&apos;s wishlist <ArrowRightIcon />
+                    <GiftIcon /> {cta === "wishlist" ? `See ${first}'s wishlist` : "See the details"} <ArrowRightIcon />
                   </Link>
                 </Button>
-                <Button asChild variant="outline">
-                  <Link href={`/events/${eventId}/match#chat`}>
-                    <MessageCircleIcon /> Ask anonymously
-                  </Link>
-                </Button>
+                {cta === "wishlist" ? (
+                  <Button asChild variant="outline">
+                    <Link href={`/events/${eventId}/match#chat`}>
+                      <MessageCircleIcon /> Ask anonymously
+                    </Link>
+                  </Button>
+                ) : null}
               </div>
             </motion.div>
           )}

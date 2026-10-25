@@ -12,10 +12,12 @@ export function WishlistPicker({
   eventId,
   wishlists,
   selectedId,
+  wildcard,
 }: {
   eventId: string;
   wishlists: { id: string; name: string; itemCount: number }[];
   selectedId: string | null;
+  wildcard?: boolean;
 }) {
   const [, startTransition] = useTransition();
   const [optimistic, setOptimistic] = useOptimistic(selectedId);
@@ -50,6 +52,7 @@ export function WishlistPicker({
               ) : (
                 "Your Santa will only see your profile preferences."
               )}
+              {wildcard ? " Only your main gift Santa sees this — your wild card Santa just gets your name and budget." : ""}
             </p>
           </div>
         </div>

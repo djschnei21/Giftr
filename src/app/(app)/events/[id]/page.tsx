@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { EyeIcon, LockIcon, MapPinIcon, PackageIcon, RepeatIcon, ShuffleIcon, WalletIcon } from "lucide-react";
+import { EyeIcon, LockIcon, MapPinIcon, PackageIcon, RepeatIcon, ShuffleIcon, SparklesIcon, WalletIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAvatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +13,7 @@ import { WishlistPicker } from "@/components/wishlists/wishlist-picker";
 import { LeaveEventButton } from "@/components/events/leave-event-button";
 import { requireEventAccess } from "@/lib/authz";
 import { budgetLabel } from "@/lib/format";
-import { getEventCounts, getEventPeople, getMyAssignment } from "@/server/queries/events";
+import { getEventCounts, getEventPeople, getMyAssignments } from "@/server/queries/events";
 import { listMyWishlists } from "@/server/queries/wishlists";
 import { joinUrl } from "@/server/invites";
 
@@ -26,16 +26,21 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
   const { id } = await params;
   const { created } = await searchParams;
   const { event, me, isOrganizer, user } = await requireEventAccess(id);
-  const [people, counts, myAssignment, wishlists] = await Promise.all([
+  const [people, counts, myAssignments, wishlists] = await Promise.all([
     getEventPeople(id),
     getEventCounts(id),
-    me ? getMyAssignment(me.id) : null,
+    me ? getMyAssignments(me.id) : [],
     listMyWishlists(user.id),
   ]);
   const joinedPeople = people.filter((p) => p.status === "joined");
-  const gifteeRow = myAssignment ? people.find((p) => p.id === myAssignment.recipientId) : null;
-  const giftee = gifteeRow ? { name: gifteeRow.name, image: gifteeRow.image } : null;
+  const mainAssignment = myAssignments.find((a) => a.slot === "main") ?? null;
+  const wildcardAssignment = myAssignments.find((a) => a.slot === "wildcard") ?? null;
+  const toGiftee = (a: typeof mainAssignment) => {
+    const row = a ? people.find((p) => p.id === a.recipientId) : null;
+    return row ? { name: row.name, image: row.image } : null;
+  };
   const budget = budgetLabel(event.budgetMin, event.budgetMax, event.currency);
+  const wildcardBudget = budgetLabel(event.wildcardBudgetMin, event.wildcardBudgetMax, event.currency);
   const canSeePeople = isOrganizer || event.showParticipants;
   const open = event.status === "open";
 
@@ -66,7 +71,12 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="grid content-start gap-6">
           {me && event.status !== "cancelled" ? (
-            <MatchSection event={event} me={me} assignment={myAssignment} giftee={giftee} />
+            <MatchSection
+              event={event}
+              me={me}
+              assignments={{ main: mainAssignment, wildcard: wildcardAssignment }}
+              giftees={{ main: toGiftee(mainAssignment), wildcard: toGiftee(wildcardAssignment) }}
+            />
           ) : null}
 
           {me && (event.status === "drawn" || event.status === "completed") ? (
@@ -78,6 +88,7 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
               eventId={event.id}
               wishlists={wishlists.map((w) => ({ id: w.id, name: w.name, itemCount: w.itemCount }))}
               selectedId={me.wishlistId}
+              wildcard={event.drawFormat === "wildcard"}
             />
           ) : null}
 
@@ -102,8 +113,14 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
                 </li>
                 <li className="flex items-start gap-3">
                   <WalletIcon className="mt-0.5 size-4 shrink-0 text-primary" />
-                  <span>{budget ? `Budget: ${budget}` : "No set budget"}</span>
+                  <span>{budget ? (event.drawFormat === "wildcard" ? `Main budget: ${budget}` : `Budget: ${budget}`) : "No set budget"}</span>
                 </li>
+                {event.drawFormat === "wildcard" ? (
+                  <li className="flex items-start gap-3">
+                    <SparklesIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+                    <span>{wildcardBudget ? `Wildcard budget: ${wildcardBudget}` : "Wildcard budget not set"}</span>
+                  </li>
+                ) : null}
               </ul>
               {event.description ? (
                 <p className="text-sm leading-relaxed whitespace-pre-line">{event.description}</p>
@@ -115,6 +132,11 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
                 </div>
               ) : null}
               <div className="flex flex-wrap gap-2">
+                {event.drawFormat === "wildcard" ? (
+                  <Badge variant="gold">
+                    <SparklesIcon /> Wild Card exchange
+                  </Badge>
+                ) : null}
                 {event.noReciprocal ? (
                   <Badge variant="secondary">
                     <RepeatIcon /> No two-person swaps

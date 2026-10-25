@@ -28,7 +28,7 @@ const steps = [
 
 const stepFields: Record<number, (keyof EventFormState)[]> = {
   0: ["name", "exchangeDate", "location", "description"],
-  1: ["budgetMin", "budgetMax", "joinDeadline", "drawDate", "rules"],
+  1: ["drawFormat", "budgetMin", "budgetMax", "wildcardBudgetMin", "wildcardBudgetMax", "joinDeadline", "drawDate", "rules"],
 };
 
 export function CreateEventWizard({
@@ -51,8 +51,11 @@ export function CreateEventWizard({
     exchangeDate: defaults.exchangeDate,
     exchangeType: "in_person",
     location: "",
+    drawFormat: "classic",
     budgetMin: "",
     budgetMax: "",
+    wildcardBudgetMin: "",
+    wildcardBudgetMax: "",
     currency: "USD",
     joinDeadline: "",
     drawMode: "manual",
@@ -94,6 +97,13 @@ export function CreateEventWizard({
       if (form.drawMode === "scheduled" && !form.drawDate) errs.drawDate = "Pick a draw date.";
       if (form.budgetMin && form.budgetMax && Number(form.budgetMin) > Number(form.budgetMax))
         errs.budgetMax = "The maximum should be at least the minimum.";
+      if (
+        form.drawFormat === "wildcard" &&
+        form.wildcardBudgetMin &&
+        form.wildcardBudgetMax &&
+        Number(form.wildcardBudgetMin) > Number(form.wildcardBudgetMax)
+      )
+        errs.wildcardBudgetMax = "The maximum should be at least the minimum.";
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -269,8 +279,11 @@ function previewData(form: EventFormState) {
     exchangeDate: form.exchangeDate,
     exchangeType: form.exchangeType,
     location: form.location,
+    drawFormat: form.drawFormat,
     budgetMin: form.budgetMin ? Number(form.budgetMin) : null,
     budgetMax: form.budgetMax ? Number(form.budgetMax) : null,
+    wildcardBudgetMin: form.wildcardBudgetMin ? Number(form.wildcardBudgetMin) : null,
+    wildcardBudgetMax: form.wildcardBudgetMax ? Number(form.wildcardBudgetMax) : null,
     currency: form.currency,
     description: form.description,
   };

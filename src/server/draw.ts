@@ -3,10 +3,22 @@ import { after } from "next/server";
 import { and, eq, inArray } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db, type Tx } from "@/db";
-import { assignment, event as eventTable, exclusion, participant, user, type Event } from "@/db/schema";
+import { assignment, event as eventTable, exclusion, participant, user, type AssignmentSlot, type Event } from "@/db/schema";
 import { matchChangedEmail, namesDrawnEmail, redrawEmail } from "@/emails/templates";
 import { sendEmails } from "@/lib/email";
-import { addToDraw, drawNames, removeFromDraw, type Blocker, type DrawPerson, type DrawRules, type Pair } from "@/lib/draw";
+import {
+  addToCoupledDraw,
+  addToDraw,
+  drawCoupled,
+  drawNames,
+  removeFromCoupledDraw,
+  removeFromDraw,
+  type Blocker,
+  type CoupledPairs,
+  type DrawPerson,
+  type DrawRules,
+  type Pair,
+} from "@/lib/draw";
 import { appUrl } from "@/lib/utils";
 
 /** Row lock that serializes draws, repairs and late joins for one event. */
@@ -15,7 +27,7 @@ export async function lockEvent(tx: Tx, eventId: string) {
   return row ?? null;
 }
 
-export async function loadDrawInputs(tx: Tx | typeof db, ev: Event) {
+export async function loadDrawInputs(tx: Tx | typeof db, ev: Event, slot: AssignmentSlot = "main") {
   const rows = await tx
     .select({ id: participant.id, name: participant.displayName, householdId: participant.householdId })
     .from(participant)
@@ -30,7 +42,7 @@ export async function loadDrawInputs(tx: Tx | typeof db, ev: Event) {
 
   let avoid: Pair[] = [];
   if (ev.previousEventId) {
-    // Map last year's pairings onto this year's participants by user.
+    // Map last year's pairings for this lane onto this year's participants by user.
     const giver = alias(participant, "giver");
     const recipient = alias(participant, "recipient");
     const prev = await tx
@@ -38,7 +50,7 @@ export async function loadDrawInputs(tx: Tx | typeof db, ev: Event) {
       .from(assignment)
       .innerJoin(giver, eq(giver.id, assignment.giverId))
       .innerJoin(recipient, eq(recipient.id, assignment.recipientId))
-      .where(eq(assignment.eventId, ev.previousEventId));
+      .where(and(eq(assignment.eventId, ev.previousEventId), eq(assignment.slot, slot)));
     const current = await tx
       .select({ id: participant.id, userId: participant.userId })
       .from(participant)
@@ -59,13 +71,13 @@ export async function loadDrawInputs(tx: Tx | typeof db, ev: Event) {
   const pairs: Pair[] = await tx
     .select({ giverId: assignment.giverId, recipientId: assignment.recipientId })
     .from(assignment)
-    .where(eq(assignment.eventId, ev.id));
+    .where(and(eq(assignment.eventId, ev.id), eq(assignment.slot, slot)));
 
   return { people, rules, pairs };
 }
 
-/** Writes the difference between two assignment sets; returns givers whose match changed. */
-async function applyPairs(tx: Tx, eventId: string, before: Pair[], next: Pair[]) {
+/** Writes the difference between two assignment sets for one slot; returns givers whose match changed. */
+async function applyPairs(tx: Tx, eventId: string, slot: AssignmentSlot, before: Pair[], next: Pair[]) {
   const prev = new Map(before.map((p) => [p.giverId, p.recipientId]));
   const nextGivers = new Set(next.map((p) => p.giverId));
   const gone = before.filter((p) => !nextGivers.has(p.giverId)).map((p) => p.giverId);
@@ -74,12 +86,13 @@ async function applyPairs(tx: Tx, eventId: string, before: Pair[], next: Pair[])
 
   // Old rows go (with their anonymous threads and private notes) so a new
   // recipient never sees messages meant for someone else.
-  if (replace.length) await tx.delete(assignment).where(inArray(assignment.giverId, replace));
+  if (replace.length) await tx.delete(assignment).where(and(eq(assignment.slot, slot), inArray(assignment.giverId, replace)));
   if (changedOrNew.length) {
     const now = new Date();
     await tx.insert(assignment).values(
       changedOrNew.map((p) => ({
         eventId,
+        slot,
         giverId: p.giverId,
         recipientId: p.recipientId,
         changedAt: prev.has(p.giverId) ? now : null,
@@ -96,9 +109,26 @@ export type DrawOutcome =
   | { ok: true; count: number; relaxedSoftRules: boolean }
   | { ok: false; blockers: Blocker[] };
 
+async function commitAssignments(
+  tx: Tx,
+  ev: Event,
+  rows: { giverId: string; recipientId: string; slot: AssignmentSlot }[],
+) {
+  await tx.delete(assignment).where(eq(assignment.eventId, ev.id));
+  await tx.insert(assignment).values(rows.map((r) => ({ eventId: ev.id, ...r })));
+  await tx.update(participant).set({ matchViewedAt: null }).where(eq(participant.eventId, ev.id));
+  const [updated] = await tx
+    .update(eventTable)
+    .set({ status: "drawn", drawnAt: new Date() })
+    .where(eq(eventTable.id, ev.id))
+    .returning();
+  return updated;
+}
+
 /**
  * Draw (or redraw) names in one transaction holding the event row lock, so a
- * double-click and the daily cron can never both draw.
+ * double-click and the daily cron can never both draw. Wildcard exchanges
+ * draw two disjoint derangements (main + wildcard); classic exchanges draw one.
  */
 export async function performDraw(eventId: string, opts: { redraw?: boolean; expectStatus?: "open" | "drawn" } = {}) {
   const result = await db.transaction(async (tx): Promise<DrawOutcome & { event?: Event }> => {
@@ -111,18 +141,32 @@ export async function performDraw(eventId: string, opts: { redraw?: boolean; exp
       return { ok: false, blockers: [{ code: "rules_conflict", message }] };
     }
 
-    const { people, rules } = await loadDrawInputs(tx, ev);
+    if (ev.drawFormat === "wildcard") {
+      const main = await loadDrawInputs(tx, ev, "main");
+      const wildcard = await loadDrawInputs(tx, ev, "wildcard");
+      const drawn = drawCoupled(main.people, {
+        exclusions: main.rules.exclusions,
+        noReciprocal: main.rules.noReciprocal,
+        singleLoop: main.rules.singleLoop,
+        mainAvoid: main.rules.avoid,
+        wildcardAvoid: wildcard.rules.avoid,
+      });
+      if (!drawn.ok) return drawn;
+      const updated = await commitAssignments(tx, ev, [
+        ...drawn.pairs.main.map((p) => ({ ...p, slot: "main" as const })),
+        ...drawn.pairs.wildcard.map((p) => ({ ...p, slot: "wildcard" as const })),
+      ]);
+      return { ok: true, count: main.people.length, relaxedSoftRules: drawn.relaxedSoftRules, event: updated };
+    }
+
+    const { people, rules } = await loadDrawInputs(tx, ev, "main");
     const drawn = drawNames(people, rules);
     if (!drawn.ok) return drawn;
-
-    await tx.delete(assignment).where(eq(assignment.eventId, ev.id));
-    await tx.insert(assignment).values(drawn.pairs.map((p) => ({ eventId: ev.id, ...p })));
-    await tx.update(participant).set({ matchViewedAt: null }).where(eq(participant.eventId, ev.id));
-    const [updated] = await tx
-      .update(eventTable)
-      .set({ status: "drawn", drawnAt: new Date() })
-      .where(eq(eventTable.id, ev.id))
-      .returning();
+    const updated = await commitAssignments(
+      tx,
+      ev,
+      drawn.pairs.map((p) => ({ ...p, slot: "main" as const })),
+    );
     return { ok: true, count: drawn.pairs.length, relaxedSoftRules: drawn.relaxedSoftRules, event: updated };
   });
 
@@ -134,7 +178,7 @@ export async function performDraw(eventId: string, opts: { redraw?: boolean; exp
       .where(eq(assignment.eventId, ev.id));
     notifyParticipants(
       ev,
-      givers.map((g) => g.id),
+      [...new Set(givers.map((g) => g.id))],
       opts.redraw ? "redraw" : "drawn",
     );
   }
@@ -144,21 +188,43 @@ export async function performDraw(eventId: string, opts: { redraw?: boolean; exp
 
 /** Splice a newly joined participant into an existing draw (inside the caller's locked transaction). */
 export async function spliceLateJoiner(tx: Tx, ev: Event, participantId: string) {
-  const { people, rules, pairs } = await loadDrawInputs(tx, ev);
+  if (ev.drawFormat === "wildcard") {
+    const main = await loadDrawInputs(tx, ev, "main");
+    const wildcard = await loadDrawInputs(tx, ev, "wildcard");
+    const pairs: CoupledPairs = { main: main.pairs, wildcard: wildcard.pairs };
+    const result = addToCoupledDraw(main.people, main.rules, pairs, participantId);
+    if (!result.ok) return result;
+    const mainChanged = await applyPairs(tx, ev.id, "main", main.pairs, result.pairs.main);
+    const wildcardChanged = await applyPairs(tx, ev.id, "wildcard", wildcard.pairs, result.pairs.wildcard);
+    return { ok: true as const, changedGivers: [...new Set([...mainChanged, ...wildcardChanged])] };
+  }
+  const { people, rules, pairs } = await loadDrawInputs(tx, ev, "main");
   const result = addToDraw(people, rules, pairs, participantId);
   if (!result.ok) return result;
-  const changedGivers = await applyPairs(tx, ev.id, pairs, result.pairs);
+  const changedGivers = await applyPairs(tx, ev.id, "main", pairs, result.pairs);
   return { ok: true as const, changedGivers };
 }
 
 /** Patch the chain around a participant leaving the draw (inside the caller's locked transaction). */
 export async function patchOutOfDraw(tx: Tx, ev: Event, participantId: string) {
-  const { people, rules, pairs } = await loadDrawInputs(tx, ev);
+  if (ev.drawFormat === "wildcard") {
+    const main = await loadDrawInputs(tx, ev, "main");
+    const wildcard = await loadDrawInputs(tx, ev, "wildcard");
+    const inDraw = (pairs: Pair[]) => pairs.some((p) => p.giverId === participantId || p.recipientId === participantId);
+    if (!inDraw(main.pairs) && !inDraw(wildcard.pairs)) return { ok: true as const, changedGivers: [] as string[] };
+    const pairs: CoupledPairs = { main: main.pairs, wildcard: wildcard.pairs };
+    const result = removeFromCoupledDraw(main.people, main.rules, pairs, participantId);
+    if (!result.ok) return result;
+    const mainChanged = await applyPairs(tx, ev.id, "main", main.pairs, result.pairs.main);
+    const wildcardChanged = await applyPairs(tx, ev.id, "wildcard", wildcard.pairs, result.pairs.wildcard);
+    return { ok: true as const, changedGivers: [...new Set([...mainChanged, ...wildcardChanged])] };
+  }
+  const { people, rules, pairs } = await loadDrawInputs(tx, ev, "main");
   if (!pairs.some((p) => p.giverId === participantId || p.recipientId === participantId))
     return { ok: true as const, changedGivers: [] as string[] };
   const result = removeFromDraw(people, rules, pairs, participantId);
   if (!result.ok) return result;
-  const changedGivers = await applyPairs(tx, ev.id, pairs, result.pairs);
+  const changedGivers = await applyPairs(tx, ev.id, "main", pairs, result.pairs);
   return { ok: true as const, changedGivers };
 }
 
@@ -174,6 +240,7 @@ export function notifyParticipants(ev: Event, participantIds: string[], kind: No
       .where(inArray(participant.id, participantIds));
     const url = appUrl(`/events/${ev.id}`);
     const stamp = ev.drawnAt?.getTime() ?? Date.now();
+    const wildcard = ev.drawFormat === "wildcard";
     await sendEmails(
       rows.map((r) => ({
         to: r.email,
@@ -181,10 +248,10 @@ export function notifyParticipants(ev: Event, participantIds: string[], kind: No
         dedupeKey: kind === "changed" ? undefined : `${kind}:${ev.id}:${r.id}:${stamp}`,
         content:
           kind === "drawn"
-            ? namesDrawnEmail({ eventName: ev.name, url, organizerCanView: ev.organizerCanViewMatches })
+            ? namesDrawnEmail({ eventName: ev.name, url, organizerCanView: ev.organizerCanViewMatches, wildcard })
             : kind === "redraw"
-              ? redrawEmail({ eventName: ev.name, url })
-              : matchChangedEmail({ eventName: ev.name, url }),
+              ? redrawEmail({ eventName: ev.name, url, wildcard })
+              : matchChangedEmail({ eventName: ev.name, url, wildcard }),
       })),
     );
   });

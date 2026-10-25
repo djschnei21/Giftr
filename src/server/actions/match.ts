@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { and, count, eq, gt, isNull, ne } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
-import { assignment, message, participant, profile, user, wishlistItem } from "@/db/schema";
+import { assignment, message, participant, profile, user, wishlistItem, type AssignmentSlot } from "@/db/schema";
 import { runAction, UserError } from "@/lib/action";
 import { assertEventAccess } from "@/lib/authz";
 import { sendEmail } from "@/lib/email";
@@ -22,19 +22,20 @@ const MESSAGE_WINDOW_MS = 10 * 60 * 1000;
 /** At most one "new message" email per direction in this window. */
 const EMAIL_WINDOW_MS = 30 * 60 * 1000;
 
+// Chat only ever exists for the main gift — a wildcard match has no wishlist or anonymous thread.
 async function myThread(eventId: string, as: ThreadRole) {
   const access = await assertEventAccess(eventId);
   if (!access.me) throw new UserError("You're not part of this exchange.");
   if (access.event.status !== "drawn") throw new UserError("Messages open once names are drawn.");
-  const a = await findThreadAssignment(access.me.id, as);
+  const a = await findThreadAssignment(access.me.id, as, "main");
   if (!a) throw new UserError(as === "santa" ? "You don't have a match yet." : "You don't have a Secret Santa yet.");
   return { ...access, me: access.me, assignment: a };
 }
 
-async function mySantaAssignment(eventId: string) {
+async function mySantaAssignment(eventId: string, slot: AssignmentSlot) {
   const access = await assertEventAccess(eventId);
   if (!access.me) throw new UserError("You're not part of this exchange.");
-  const a = await findThreadAssignment(access.me.id, "santa");
+  const a = await findThreadAssignment(access.me.id, "santa", slot);
   if (!a) throw new UserError("You don't have a match yet.");
   return { ...access, assignment: a };
 }
@@ -139,11 +140,12 @@ export async function markThreadRead(eventId: string, as: ThreadRole) {
 }
 
 const statusSchema = z.enum(["not_started", "purchased", "shipped", "given"]);
+const slotSchema = z.enum(["main", "wildcard"]);
 
-export async function setGiftStatus(eventId: string, status: z.input<typeof statusSchema>) {
+export async function setGiftStatus(eventId: string, slot: z.input<typeof slotSchema>, status: z.input<typeof statusSchema>) {
   return runAction(async () => {
     const value = statusSchema.parse(status);
-    const { assignment: a } = await mySantaAssignment(eventId);
+    const { assignment: a } = await mySantaAssignment(eventId, slotSchema.parse(slot));
     await db.update(assignment).set({ giftStatus: value }).where(eq(assignment.id, a.id));
     refreshMatch(eventId);
   });
@@ -152,7 +154,8 @@ export async function setGiftStatus(eventId: string, status: z.input<typeof stat
 export async function toggleBoughtItem(eventId: string, itemId: string, bought: boolean) {
   return runAction(async () => {
     const id = z.string().min(1).parse(itemId);
-    const { assignment: a } = await mySantaAssignment(eventId);
+    // Only the main gift has a wishlist to check items off of.
+    const { assignment: a } = await mySantaAssignment(eventId, "main");
     const [giftee] = await db
       .select({ wishlistId: participant.wishlistId })
       .from(participant)
@@ -177,10 +180,10 @@ export async function toggleBoughtItem(eventId: string, itemId: string, bought: 
   });
 }
 
-export async function saveGiverNotes(eventId: string, notes: string) {
+export async function saveGiverNotes(eventId: string, slot: z.input<typeof slotSchema>, notes: string) {
   return runAction(async () => {
     const value = z.string().max(2000, "Keep notes under 2,000 characters.").parse(notes).trim();
-    const { assignment: a } = await mySantaAssignment(eventId);
+    const { assignment: a } = await mySantaAssignment(eventId, slotSchema.parse(slot));
     await db
       .update(assignment)
       .set({ giverNotes: value || null })

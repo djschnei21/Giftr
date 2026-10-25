@@ -67,6 +67,9 @@ export const profile = pgTable("profile", {
 export const eventStatus = pgEnum("event_status", ["open", "drawn", "completed", "cancelled"]);
 export const exchangeType = pgEnum("exchange_type", ["in_person", "shipped"]);
 export const drawMode = pgEnum("draw_mode", ["manual", "scheduled"]);
+/** Classic: one draw. Wildcard: everyone also draws a second, lower-budget "wildcard" recipient with no wishlist. */
+export const drawFormat = pgEnum("draw_format", ["classic", "wildcard"]);
+export const assignmentSlot = pgEnum("assignment_slot", ["main", "wildcard"]);
 
 export const event = pgTable(
   "event",
@@ -81,8 +84,12 @@ export const event = pgTable(
     exchangeDate: date("exchange_date").notNull(),
     exchangeType: exchangeType("exchange_type").notNull().default("in_person"),
     location: text("location"),
+    drawFormat: drawFormat("draw_format").notNull().default("classic"),
     budgetMin: integer("budget_min"),
     budgetMax: integer("budget_max"),
+    /** Only used when drawFormat is "wildcard" — the smaller, no-wishlist second gift. */
+    wildcardBudgetMin: integer("wildcard_budget_min"),
+    wildcardBudgetMax: integer("wildcard_budget_max"),
     currency: text("currency").notNull().default("USD"),
     joinDeadline: date("join_deadline"),
     drawMode: drawMode("draw_mode").notNull().default("manual"),
@@ -225,11 +232,12 @@ export const assignment = pgTable(
       .references(() => event.id, { onDelete: "cascade" }),
     giverId: text("giver_id")
       .notNull()
-      .unique()
       .references(() => participant.id, { onDelete: "cascade" }),
     recipientId: text("recipient_id")
       .notNull()
       .references(() => participant.id, { onDelete: "cascade" }),
+    /** "main" for every classic-exchange gift and the wishlist half of a wildcard exchange. */
+    slot: assignmentSlot("slot").notNull().default("main"),
     giftStatus: giftStatus("gift_status").notNull().default("not_started"),
     giverNotes: text("giver_notes"),
     boughtItemIds: jsonb("bought_item_ids").$type<string[]>().notNull().default([]),
@@ -237,7 +245,11 @@ export const assignment = pgTable(
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
-  (t) => [index("assignment_event_idx").on(t.eventId), index("assignment_recipient_idx").on(t.recipientId)],
+  (t) => [
+    uniqueIndex("assignment_giver_slot_idx").on(t.giverId, t.slot),
+    index("assignment_event_idx").on(t.eventId),
+    index("assignment_recipient_idx").on(t.recipientId),
+  ],
 );
 
 export const senderRole = pgEnum("sender_role", ["santa", "giftee"]);
@@ -311,3 +323,5 @@ export type WishlistItem = typeof wishlistItem.$inferSelect;
 export type Profile = typeof profile.$inferSelect;
 export type Assignment = typeof assignment.$inferSelect;
 export type Invitation = typeof invitation.$inferSelect;
+export type AssignmentSlot = Assignment["slot"];
+export type DrawFormat = Event["drawFormat"];

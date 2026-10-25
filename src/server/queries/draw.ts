@@ -3,7 +3,7 @@ import { and, asc, count, eq, inArray } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db } from "@/db";
 import { assignment, exclusion, invitation, participant, wishlistItem, type Event } from "@/db/schema";
-import { checkDraw } from "@/lib/draw";
+import { checkCoupledDraw, checkDraw } from "@/lib/draw";
 import { todayISO } from "@/lib/format";
 import { loadDrawInputs } from "@/server/draw";
 
@@ -13,10 +13,25 @@ export type DrawCheck = {
 };
 
 export async function getPreDrawChecks(ev: Event) {
-  const { people, rules } = await loadDrawInputs(db, ev);
+  const wildcard = ev.drawFormat === "wildcard";
+  const { people, rules } = await loadDrawInputs(db, ev, "main");
   const checks: DrawCheck[] = [];
 
-  const result = people.length >= 2 ? checkDraw(people, rules) : null;
+  let result: Awaited<ReturnType<typeof checkDraw>> | Awaited<ReturnType<typeof checkCoupledDraw>> | null = null;
+  if (people.length >= 2) {
+    if (wildcard) {
+      const wildcardInputs = await loadDrawInputs(db, ev, "wildcard");
+      result = checkCoupledDraw(people, {
+        exclusions: rules.exclusions,
+        noReciprocal: rules.noReciprocal,
+        singleLoop: rules.singleLoop,
+        mainAvoid: rules.avoid,
+        wildcardAvoid: wildcardInputs.rules.avoid,
+      });
+    } else {
+      result = checkDraw(people, rules);
+    }
+  }
   if (people.length < 3)
     checks.push({
       level: people.length < 2 ? "block" : "warn",
@@ -25,7 +40,13 @@ export async function getPreDrawChecks(ev: Event) {
           ? "You need at least 2 people in the draw (3 or more is more fun)."
           : "Only 2 people are in the draw — they'll just swap gifts.",
     });
-  else checks.push({ level: "ok", message: `${people.length} people are in the draw.` });
+  else
+    checks.push({
+      level: "ok",
+      message: wildcard
+        ? `${people.length} people are in the draw — each one gets two gifts to shop for.`
+        : `${people.length} people are in the draw.`,
+    });
 
   if (result && !result.ok) for (const b of result.blockers) checks.push({ level: "block", message: b.message });
   else if (result?.relaxedSoftRules)
@@ -90,10 +111,15 @@ export async function getAllMatches(eventId: string) {
   const giver = alias(participant, "giver");
   const recipient = alias(participant, "recipient");
   return db
-    .select({ giverName: giver.displayName, recipientName: recipient.displayName, viewed: giver.matchViewedAt })
+    .select({
+      giverName: giver.displayName,
+      recipientName: recipient.displayName,
+      slot: assignment.slot,
+      viewed: giver.matchViewedAt,
+    })
     .from(assignment)
     .innerJoin(giver, eq(giver.id, assignment.giverId))
     .innerJoin(recipient, eq(recipient.id, assignment.recipientId))
     .where(eq(assignment.eventId, eventId))
-    .orderBy(asc(giver.displayName));
+    .orderBy(asc(giver.displayName), asc(assignment.slot));
 }
