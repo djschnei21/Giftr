@@ -33,8 +33,8 @@ export function Segmented<T extends string>({
           <label
             key={o.value}
             className={cn(
-              "relative flex cursor-pointer flex-col gap-0.5 rounded-xl border bg-card px-3.5 py-3 text-left transition outline-none has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/40",
-              checked ? "border-primary bg-accent/50 shadow-[inset_0_0_0_1px_var(--primary)]" : "hover:bg-secondary/60",
+              "relative flex cursor-pointer flex-col gap-1 rounded-xl border bg-card px-4 py-3 text-left transition outline-none active:scale-[0.98] has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-ring/30",
+              checked ? "border-primary bg-accent shadow-[inset_0_0_0_1px_var(--primary)]" : "hover:border-muted-foreground/40 hover:bg-secondary/60",
               disabled && "cursor-not-allowed opacity-60",
             )}
           >
@@ -47,12 +47,12 @@ export function Segmented<T extends string>({
               onChange={() => onChange(o.value)}
               className="sr-only"
             />
-            <span className="flex min-w-0 items-center gap-2 text-sm font-medium [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-primary">
+            <span className="flex min-w-0 items-center gap-2 text-sm font-semibold [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-primary">
               {o.icon}
               <span className="min-w-0 break-words">{o.label}</span>
             </span>
             {o.description ? (
-              <span className="text-[13px] break-words text-muted-foreground">{o.description}</span>
+              <span className="text-xs break-words text-muted-foreground">{o.description}</span>
             ) : null}
           </label>
         );

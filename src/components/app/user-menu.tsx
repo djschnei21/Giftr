@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
-import { MonitorIcon, MoonIcon, SignOutIcon, SunIcon, UserIcon } from "@/components/icons";
+import { SignOutIcon, UserIcon } from "@/components/icons";
 import { authClient } from "@/lib/auth-client";
 import { UserAvatar } from "@/components/ui/avatar";
+import { ThemeToggle } from "@/components/theme-toggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,20 +17,19 @@ import {
 
 export function UserMenu({ user }: { user: { name: string; email: string; image: string | null } }) {
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="cursor-pointer rounded-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+        className="cursor-pointer rounded-full transition outline-none focus-visible:ring-4 focus-visible:ring-ring/30 active:scale-[0.98]"
         aria-label="Account menu"
       >
-        <UserAvatar name={user.name} image={user.image} />
+        <UserAvatar name={user.name} image={user.image} className="rounded-full ring-0" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-60">
+      <DropdownMenuContent align="end" sideOffset={12} className="w-64">
         <DropdownMenuLabel>
-          <p className="truncate font-medium">{user.name}</p>
-          <p className="truncate text-xs font-normal text-muted-foreground">{user.email}</p>
+          <p className="truncate font-semibold">{user.name}</p>
+          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
@@ -39,28 +38,9 @@ export function UserMenu({ user }: { user: { name: string; email: string; image:
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <div className="flex items-center justify-between gap-1 px-2.5 py-1.5">
-          <span className="text-sm">Theme</span>
-          <div className="flex rounded-full bg-secondary p-0.5">
-            {(
-              [
-                ["light", SunIcon],
-                ["system", MonitorIcon],
-                ["dark", MoonIcon],
-              ] as const
-            ).map(([value, Icon]) => (
-              <button
-                key={value}
-                type="button"
-                aria-label={`${value} theme`}
-                aria-pressed={theme === value}
-                onClick={() => setTheme(value)}
-                className="cursor-pointer rounded-full p-1.5 text-muted-foreground transition aria-pressed:bg-card aria-pressed:text-foreground aria-pressed:shadow-sm"
-              >
-                <Icon className="size-3.5" />
-              </button>
-            ))}
-          </div>
+        <div className="grid gap-2 px-3 py-2">
+          <span className="text-xs font-semibold text-muted-foreground">Appearance</span>
+          <ThemeToggle className="w-full" />
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem
