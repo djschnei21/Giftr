@@ -4,26 +4,21 @@ import { useRef, useState, useTransition } from "react";
 import { Link2Icon, Loader2Icon, StarIcon } from "lucide-react";
 import { previewLink } from "@/server/actions/wishlists";
 import { Button } from "@/components/ui/button";
-import { Input, NativeSelect, Textarea } from "@/components/ui/input";
+import { Input, Textarea } from "@/components/ui/input";
 import { Field } from "@/components/ui/label";
-import { currencies } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export type ItemFormState = {
   url: string;
   title: string;
-  price: string;
-  currency: string;
   imageUrl: string;
   notes: string;
   mostWanted: boolean;
 };
 
-export const emptyItem = (currency = "USD"): ItemFormState => ({
+export const emptyItem = (): ItemFormState => ({
   url: "",
   title: "",
-  price: "",
-  currency,
   imageUrl: "",
   notes: "",
   mostWanted: false,
@@ -33,8 +28,8 @@ export function toInput(s: ItemFormState) {
   return {
     url: s.url.trim() || null,
     title: s.title,
-    price: s.price.trim() === "" ? null : s.price,
-    currency: s.currency as (typeof currencies)[number],
+    price: null,
+    currency: null,
     imageUrl: s.imageUrl.trim() || null,
     notes: s.notes,
     mostWanted: s.mostWanted,
@@ -86,8 +81,6 @@ export function ItemForm({
         ...s,
         title: isPlaceholderTitle(s.title) ? p.title || s.title : s.title || p.title || "",
         imageUrl: s.imageUrl || p.imageUrl || "",
-        price: s.price || (p.price !== null ? String(p.price) : ""),
-        currency: p.currency && (currencies as readonly string[]).includes(p.currency) && !s.price ? p.currency : s.currency,
       }));
     });
   }
@@ -98,7 +91,7 @@ export function ItemForm({
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(state, () => {
-          setState(emptyItem(state.currency));
+          setState(emptyItem());
           lastFetched.current = null;
         });
       }}
@@ -106,7 +99,7 @@ export function ItemForm({
       <Field
         label="Link"
         htmlFor={`${idPrefix}-url`}
-        hint={fetching ? "Grabbing the details…" : "Paste a product link and we'll fill in the rest."}
+        hint={fetching ? "Grabbing the details…" : "Paste a product link and we'll fill in the name and picture."}
         error={errors.url}
       >
         <div className="relative">
@@ -124,43 +117,31 @@ export function ItemForm({
             }}
             onBlur={(e) => fetchPreview(e.target.value)}
           />
-          {fetching ? <Loader2Icon className="absolute top-1/2 right-3 size-4 -translate-y-1/2 animate-spin text-muted-foreground" /> : null}
+          {fetching ? (
+            <Loader2Icon className="absolute top-1/2 right-3 size-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+          ) : null}
         </div>
       </Field>
 
-      <div className="grid gap-4 sm:grid-cols-[1fr_auto]">
-        <Field label="What is it?" htmlFor={`${idPrefix}-title`} error={errors.title}>
-          <div className="flex gap-3">
-            {state.imageUrl ? (
-              <img src={state.imageUrl} alt="" referrerPolicy="no-referrer" className="size-11 shrink-0 rounded-lg border object-cover" />
-            ) : null}
-            <Input
-              id={`${idPrefix}-title`}
-              placeholder="e.g. Hand-thrown ceramic mug"
-              value={state.title}
-              onChange={(e) => set({ title: e.target.value })}
-              maxLength={200}
+      <Field label="What is it?" htmlFor={`${idPrefix}-title`} error={errors.title}>
+        <div className="flex gap-3">
+          {state.imageUrl ? (
+            <img
+              src={state.imageUrl}
+              alt=""
+              referrerPolicy="no-referrer"
+              className="size-11 shrink-0 rounded-lg border object-cover"
             />
-          </div>
-        </Field>
-        <Field label="Price" htmlFor={`${idPrefix}-price`} error={errors.price}>
-          <div className="flex gap-2">
-            <Input
-              id={`${idPrefix}-price`}
-              inputMode="numeric"
-              className="w-24"
-              placeholder="30"
-              value={state.price}
-              onChange={(e) => set({ price: e.target.value.replace(/[^\d]/g, "") })}
-            />
-            <NativeSelect aria-label="Currency" className="w-24" value={state.currency} onChange={(e) => set({ currency: e.target.value })}>
-              {currencies.map((c) => (
-                <option key={c}>{c}</option>
-              ))}
-            </NativeSelect>
-          </div>
-        </Field>
-      </div>
+          ) : null}
+          <Input
+            id={`${idPrefix}-title`}
+            placeholder="e.g. Hand-thrown ceramic mug"
+            value={state.title}
+            onChange={(e) => set({ title: e.target.value })}
+            maxLength={200}
+          />
+        </div>
+      </Field>
 
       <Field label="Notes for your Santa" htmlFor={`${idPrefix}-notes`} error={errors.notes}>
         <Textarea

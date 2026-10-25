@@ -85,7 +85,7 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
             </CardHeader>
             <CardContent>
               {match.items.length ? (
-                <BoughtChecklist eventId={id} items={match.items} bought={bought} currency={event.currency} />
+                <BoughtChecklist eventId={id} items={match.items} bought={bought} />
               ) : (
                 <EmptyState
                   icon={<HeartIcon />}

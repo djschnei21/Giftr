@@ -67,25 +67,18 @@ export function GiftStatusPicker({
   );
 }
 
-type Item = Pick<WishlistItem, "id" | "title" | "url" | "imageUrl" | "price" | "currency" | "notes" | "mostWanted">;
+type Item = Pick<WishlistItem, "id" | "title" | "url" | "imageUrl" | "notes" | "mostWanted">;
 
-export function BoughtChecklist({
-  eventId,
-  items,
-  bought,
-  currency,
-}: {
-  eventId: string;
-  items: Item[];
-  bought: string[];
-  currency: string;
-}) {
-  const [optimistic, setOptimistic] = useOptimistic(new Set(bought), (s: Set<string>, change: { id: string; on: boolean }) => {
-    const next = new Set(s);
-    if (change.on) next.add(change.id);
-    else next.delete(change.id);
-    return next;
-  });
+export function BoughtChecklist({ eventId, items, bought }: { eventId: string; items: Item[]; bought: string[] }) {
+  const [optimistic, setOptimistic] = useOptimistic(
+    new Set(bought),
+    (s: Set<string>, change: { id: string; on: boolean }) => {
+      const next = new Set(s);
+      if (change.on) next.add(change.id);
+      else next.delete(change.id);
+      return next;
+    },
+  );
   const [, start] = useTransition();
 
   return (
@@ -96,7 +89,6 @@ export function BoughtChecklist({
           <li key={item.id}>
             <ItemCard
               item={item}
-              fallbackCurrency={currency}
               muted={on}
               className={on ? "bg-accent/30" : undefined}
               actions={

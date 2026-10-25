@@ -49,7 +49,7 @@ const features = [
   {
     icon: HeartIcon,
     title: "Wishlists that help",
-    body: "Paste a link and Giftr fills in the title, picture and price. Add sizes, likes and no-gos, and quietly tick off what you've bought.",
+    body: "Paste a link and Giftr fills in the name and picture. Add sizes, likes and no-gos, and quietly tick off what you've bought.",
   },
 ];
 

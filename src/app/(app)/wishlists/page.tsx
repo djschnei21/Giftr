@@ -31,7 +31,7 @@ export default async function WishlistsPage() {
         <EmptyState
           icon={<ListChecksIcon />}
           title="No wishlists yet"
-          description="Start one and paste links to things you love — we'll fill in the title, picture and price."
+          description="Start one and paste links to things you love — we'll fill in the name and picture."
           action={<NewWishlistButton />}
         />
       ) : (
