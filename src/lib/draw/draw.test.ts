@@ -1,6 +1,19 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { addToDraw, drawNames, removeFromDraw, seededRng, validate, type DrawPerson, type DrawRules, type Pair } from ".";
+import {
+  addToCoupledDraw,
+  addToDraw,
+  drawCoupled,
+  drawNames,
+  removeFromCoupledDraw,
+  removeFromDraw,
+  seededRng,
+  validate,
+  type CoupledPairs,
+  type DrawPerson,
+  type DrawRules,
+  type Pair,
+} from ".";
 
 const people = (n: number, households: (string | null)[] = []): DrawPerson[] =>
   Array.from({ length: n }, (_, i) => ({ id: `p${i}`, name: `P${i}`, householdId: households[i] ?? null }));
@@ -209,5 +222,83 @@ describe("repairs", () => {
     const all = [...ps, { id: "new", name: "New" }];
     const exclusions = ps.map((p) => ({ giverId: "new", recipientId: p.id }));
     expect(addToDraw(all, { exclusions }, pairs, "new").ok).toBe(false);
+  });
+});
+
+function noGiverRepeatsRecipient(pairs: CoupledPairs) {
+  const mainOf = new Map(pairs.main.map((p) => [p.giverId, p.recipientId]));
+  return pairs.wildcard.every((p) => mainOf.get(p.giverId) !== p.recipientId);
+}
+
+const coupledRuleSets = fc.record({ noReciprocal: fc.boolean(), singleLoop: fc.boolean() });
+
+describe("drawCoupled", () => {
+  it("draws two independently valid lanes where nobody's wildcard is their main recipient", () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 3, max: 9 }), coupledRuleSets, fc.integer(), (n, flags, seed) => {
+        const ps = people(n);
+        const rules: DrawRules = flags;
+        const result = drawCoupled(ps, rules, { rng: seededRng(seed), shuffleAttempts: 50 });
+        if (!result.ok) return;
+        expect(validate(ps, rules, result.pairs.main)).toEqual([]);
+        expect(validate(ps, rules, result.pairs.wildcard)).toEqual([]);
+        expect(noGiverRepeatsRecipient(result.pairs)).toBe(true);
+      }),
+      { numRuns: 200 },
+    );
+  });
+
+  it("fails with a clear blocker when only two people are in the draw", () => {
+    // With 2 people, every main draw forces the only possible wildcard recipient to match it.
+    const result = drawCoupled(people(2));
+    expect(result.ok).toBe(false);
+  });
+
+  it("always finds a valid pair of loops for a plain group of 4+", () => {
+    for (let seed = 0; seed < 30; seed++) {
+      const ps = people(4 + (seed % 5));
+      const result = drawCoupled(ps, {}, { rng: seededRng(seed) });
+      expect(result.ok).toBe(true);
+      if (result.ok) expect(noGiverRepeatsRecipient(result.pairs)).toBe(true);
+    }
+  });
+});
+
+describe("coupled repairs", () => {
+  it("removing someone keeps both lanes valid and collision-free", () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 5, max: 10 }), coupledRuleSets, fc.integer(), fc.nat(), (n, flags, seed, pick) => {
+        const ps = people(n);
+        const rules: DrawRules = flags;
+        const drawn = drawCoupled(ps, rules, { rng: seededRng(seed) });
+        if (!drawn.ok) return;
+        const removed = ps[pick % n].id;
+        const result = removeFromCoupledDraw(ps, rules, drawn.pairs, removed, seededRng(seed));
+        if (!result.ok) return;
+        const remaining = ps.filter((p) => p.id !== removed);
+        expect(validate(remaining, rules, result.pairs.main)).toEqual([]);
+        expect(validate(remaining, rules, result.pairs.wildcard)).toEqual([]);
+        expect(noGiverRepeatsRecipient(result.pairs)).toBe(true);
+      }),
+      { numRuns: 150 },
+    );
+  });
+
+  it("a late joiner is spliced into both lanes without a collision", () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 4, max: 10 }), coupledRuleSets, fc.integer(), (n, flags, seed) => {
+        const ps = people(n);
+        const rules: DrawRules = flags;
+        const drawn = drawCoupled(ps, rules, { rng: seededRng(seed) });
+        if (!drawn.ok) return;
+        const all = [...ps, { id: "new", name: "New" }];
+        const result = addToCoupledDraw(all, rules, drawn.pairs, "new", seededRng(seed));
+        if (!result.ok) return;
+        expect(validate(all, rules, result.pairs.main)).toEqual([]);
+        expect(validate(all, rules, result.pairs.wildcard)).toEqual([]);
+        expect(noGiverRepeatsRecipient(result.pairs)).toBe(true);
+      }),
+      { numRuns: 150 },
+    );
   });
 });
