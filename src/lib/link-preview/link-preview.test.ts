@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { isAllowedUrl, isPrivateAddress } from "./net";
-import { parseHtml } from "./parse";
+import { nextProductUrl, parseHtml } from "./parse";
 
 describe("isPrivateAddress", () => {
   it.each([
@@ -80,5 +80,51 @@ describe("parseHtml", () => {
   it("ignores non-http images", () => {
     const html = `<meta property="og:image" content="javascript:alert(1)">`;
     expect(parseHtml(html, "https://example.com").imageUrl).toBeNull();
+  });
+
+  it("skips Amazon's placeholder title and uses the product name", () => {
+    const html = `<html><head>
+      <meta property="og:title" content="Amazon">
+      <meta property="og:title" content="Amazon.com: Compact Mechanical Keyboard : Electronics">
+      <meta property="og:image" content="https://m.media-amazon.com/images/I/keyboard.jpg">
+      <meta property="product:price:amount" content="30.00">
+      <meta property="product:price:currency" content="USD">
+      <title>Amazon</title>
+    </head><body>
+      <span id="productTitle">Compact Mechanical Keyboard</span>
+    </body></html>`;
+    const preview = parseHtml(html, "https://www.amazon.com/dp/B0TEST1234");
+    expect(preview.title).toBe("Compact Mechanical Keyboard");
+    expect(preview.imageUrl).toBe("https://m.media-amazon.com/images/I/keyboard.jpg");
+    expect(preview.price).toBe(30);
+    expect(preview.currency).toBe("USD");
+  });
+
+  it("reads #productTitle when every meta title is just Amazon", () => {
+    const html = `<title>Amazon.com</title>
+      <meta property="og:title" content="Amazon.com">
+      <span id="productTitle">  Wool throw blanket  </span>`;
+    expect(parseHtml(html, "https://a.co/d/0148AYVW").title).toBe("Wool throw blanket");
+  });
+
+  it("uses the Amazon JSON-LD name and strips the store prefix", () => {
+    const html = `<meta property="og:title" content="Amazon">
+      <script type="application/ld+json">{"@type":"Product","name":"Amazon.com: Ceramic mug : Home &amp; Kitchen"}</script>`;
+    expect(parseHtml(html, "https://www.amazon.com/dp/B0MUG12345").title).toBe("Ceramic mug");
+  });
+
+  it("falls back to the product slug in the canonical URL", () => {
+    const html = `<meta property="og:title" content="Amazon">
+      <link rel="canonical" href="https://www.amazon.com/Linen-Table-Runner/dp/B0RUNNER12">`;
+    expect(parseHtml(html, "https://a.co/d/0148AYVW").title).toBe("Linen Table Runner");
+  });
+
+  it("follows an Amazon short-link shell to the product page", () => {
+    const html = `<meta property="og:title" content="Amazon">
+      <link rel="canonical" href="https://www.amazon.com/Linen-Table-Runner/dp/B0RUNNER12">`;
+    expect(nextProductUrl(html, "https://a.co/d/0148AYVW")).toBe(
+      "https://www.amazon.com/Linen-Table-Runner/dp/B0RUNNER12",
+    );
+    expect(nextProductUrl(html, "https://www.amazon.com/Linen-Table-Runner/dp/B0RUNNER12")).toBeNull();
   });
 });

@@ -5,7 +5,7 @@ import https from "node:https";
 import type { LookupFunction } from "node:net";
 import zlib from "node:zlib";
 import { isAllowedUrl, isPrivateAddress } from "./net";
-import { parseHtml, type LinkPreview } from "./parse";
+import { isGenericTitle, nextProductUrl, parseHtml, type LinkPreview } from "./parse";
 
 export type { LinkPreview };
 
@@ -39,10 +39,13 @@ function requestOnce(url: URL, signal: AbortSignal): Promise<RawResponse> {
         lookup: guardedLookup,
         signal,
         headers: {
-          "user-agent": "Mozilla/5.0 (compatible; GiftrBot/1.0; +https://giftr.app)",
+          // A browser agent: storefronts (Amazon especially) answer a bot UA with a
+          // shell page whose title is just the store name.
+          "user-agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
           accept: "text/html,application/xhtml+xml",
           "accept-encoding": "gzip, deflate, br",
-          "accept-language": "en",
+          "accept-language": "en-US,en;q=0.9",
         },
       },
       (res) => {
@@ -104,7 +107,18 @@ export async function fetchLinkPreview(raw: string): Promise<LinkPreview | null>
         continue;
       }
       if (res.status < 200 || res.status >= 300 || res.body.length === 0) return { ...empty(url) };
-      return parseHtml(res.body.toString("utf8"), url.toString());
+      const html = res.body.toString("utf8");
+      const preview = parseHtml(html, url.toString());
+      // a.co sometimes returns 200 with a placeholder title and a canonical product URL.
+      if (isGenericTitle(preview.title) && hop < MAX_REDIRECTS) {
+        const follow = nextProductUrl(html, url.toString());
+        const next = follow ? isAllowedUrl(follow) : null;
+        if (next) {
+          url = next;
+          continue;
+        }
+      }
+      return preview;
     }
     return null;
   } catch {

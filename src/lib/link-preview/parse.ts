@@ -26,6 +26,111 @@ function attrs(tag: string) {
   return out;
 }
 
+function pageHost(pageUrl: string) {
+  try {
+    return new URL(pageUrl).hostname.toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
+function isAmazonHost(hostname: string) {
+  const h = hostname.toLowerCase().replace(/\.$/, "");
+  return h === "a.co" || h === "amzn.to" || h.endsWith(".amzn.to") || /(^|\.)amazon\.[a-z.]+$/.test(h);
+}
+
+/** "Amazon" / "Amazon.com" are the store, not the product. */
+export function isGenericTitle(title: string | null | undefined) {
+  if (!title) return true;
+  const v = title.trim().toLowerCase().replace(/\s+/g, " ");
+  if (!v) return true;
+  if (/^amazon(?:\.com)?$/.test(v) || v === "amzn" || v === "amzn.to") return true;
+  return v.startsWith("amazon.com: online shopping");
+}
+
+/** Turn "Amazon.com: Mug : Home & Kitchen" into "Mug" on Amazon pages only. */
+function polishAmazonTitle(title: string, pageUrl: string) {
+  if (!isAmazonHost(pageHost(pageUrl))) return title;
+  const prefixed = title.match(/^amazon(?:\.com)?\s*:\s*([\s\S]+)$/i);
+  if (!prefixed) return title;
+  const parts = prefixed[1].split(/\s:\s/);
+  if (parts.length >= 2) {
+    const last = parts[parts.length - 1].trim();
+    if (last.length > 0 && last.length <= 48 && !/\d/.test(last)) parts.pop();
+  }
+  return parts.join(" : ").trim();
+}
+
+function usableTitle(raw: string | null | undefined, pageUrl: string) {
+  const c = clean(raw);
+  if (!c) return null;
+  const polished = polishAmazonTitle(c, pageUrl);
+  return polished && !isGenericTitle(polished) ? polished : null;
+}
+
+function firstUsable(list: (string | null | undefined)[], pageUrl: string) {
+  for (const item of list) {
+    const title = usableTitle(item, pageUrl);
+    if (title) return title;
+  }
+  return null;
+}
+
+function titleFromAmazonPath(urls: string[]) {
+  for (const raw of urls) {
+    try {
+      const u = new URL(raw);
+      if (!isAmazonHost(u.hostname)) continue;
+      const slug = u.pathname.match(/\/([^/]+)\/(?:dp|gp\/product|gp\/aw\/d)\//i)?.[1];
+      if (!slug || /^(dp|gp|product)$/i.test(slug)) continue;
+      const decoded = decodeURIComponent(slug).replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim();
+      if (decoded.length < 3 || isGenericTitle(decoded)) continue;
+      return decoded.slice(0, 200);
+    } catch {
+      // Ignore malformed canonical URLs.
+    }
+  }
+  return null;
+}
+
+/**
+ * When a short link returns a shell page (title "Amazon") pointing at the real
+ * product, this is that product URL. Null if we're already on it.
+ */
+export function nextProductUrl(html: string, pageUrl: string) {
+  let current: URL;
+  try {
+    current = new URL(pageUrl);
+  } catch {
+    return null;
+  }
+  const head = html.slice(0, 200_000);
+  const candidates: string[] = [];
+  for (const m of head.matchAll(/<(meta|link)\b[^>]*>/gi)) {
+    const a = attrs(m[0]);
+    if ((a["http-equiv"] ?? "").toLowerCase() === "refresh" && a.content) {
+      const url = a.content.match(/url\s*=\s*['"]?([^'">\s]+)/i)?.[1];
+      if (url) candidates.push(url);
+    }
+    if (a.href && (a.rel ?? "").toLowerCase().split(/\s+/).includes("canonical")) candidates.push(a.href);
+    if ((a.property ?? "").toLowerCase() === "og:url" && a.content) candidates.push(a.content);
+  }
+  for (const raw of candidates) {
+    try {
+      const next = new URL(raw, pageUrl);
+      if (next.protocol !== "http:" && next.protocol !== "https:") continue;
+      if (!isAmazonHost(next.hostname)) continue;
+      if (!/\/(?:dp|gp\/product|gp\/aw\/d)\//i.test(next.pathname)) continue;
+      if (next.hostname === current.hostname && next.pathname.replace(/\/$/, "") === current.pathname.replace(/\/$/, ""))
+        continue;
+      return next.toString();
+    } catch {
+      // Ignore malformed follow-up URLs.
+    }
+  }
+  return null;
+}
+
 function clean(s: string | null | undefined, max = 200) {
   if (!s) return null;
   const v = decodeEntities(s).replace(/\s+/g, " ").trim();
@@ -62,10 +167,19 @@ function findProduct(node: unknown): JsonLd | null {
 export function parseHtml(html: string, pageUrl: string): LinkPreview {
   const head = html.slice(0, 500_000);
   const meta: Record<string, string> = {};
+  const metaAll: Record<string, string[]> = {};
   for (const m of head.matchAll(/<meta\b[^>]*>/gi)) {
     const a = attrs(m[0]);
     const key = (a.property ?? a.name ?? a.itemprop ?? "").toLowerCase();
-    if (key && a.content && !(key in meta)) meta[key] = a.content;
+    if (key && a.content) {
+      (metaAll[key] ??= []).push(a.content);
+      if (!(key in meta)) meta[key] = a.content;
+    }
+  }
+  let canonical: string | null = null;
+  for (const m of head.matchAll(/<link\b[^>]*>/gi)) {
+    const a = attrs(m[0]);
+    if (!canonical && a.href && (a.rel ?? "").toLowerCase().split(/\s+/).includes("canonical")) canonical = a.href;
   }
 
   let product: JsonLd | null = null;
@@ -90,7 +204,18 @@ export function parseHtml(html: string, pageUrl: string): LinkPreview {
         : ((ldImage as JsonLd | undefined)?.url as string | undefined);
 
   const titleTag = head.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1];
-  const title = clean(meta["og:title"] ?? meta["twitter:title"] ?? (product?.name as string | undefined) ?? titleTag);
+  // Amazon (and its a.co short links) often lead with og:title "Amazon" and put the
+  // real name in a later tag, JSON-LD, or #productTitle. Skip placeholders.
+  const productTitle = head
+    .match(/<span[^>]*\bid=["']productTitle["'][^>]*>([\s\S]*?)<\/span>/i)?.[1]
+    ?.replace(/<[^>]+>/g, " ");
+  const title =
+    firstUsable([...(metaAll["og:title"] ?? []), ...(metaAll["twitter:title"] ?? [])], pageUrl) ??
+    firstUsable(
+      [productTitle, typeof product?.name === "string" ? product.name : null, ...(metaAll["title"] ?? []), titleTag],
+      pageUrl,
+    ) ??
+    titleFromAmazonPath([canonical, pageUrl].filter((u): u is string => !!u));
 
   const rawImage = meta["og:image"] ?? meta["og:image:url"] ?? meta["twitter:image"] ?? ldImageUrl;
   let imageUrl: string | null = null;
