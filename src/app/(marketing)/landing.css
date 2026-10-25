@@ -101,9 +101,10 @@
   filter: none;
 }
 
-/* Tagline: `--lit` counts how many words have crossed the trigger line. */
+/* Tagline: `--lit` counts how many words have crossed the trigger line. Unlit words stay at
+   half strength, the lowest that keeps large text above 3:1 contrast in both themes. */
 .tagline-word {
-  opacity: clamp(0.3, calc((var(--lit) - var(--i)) * 100), 1);
+  opacity: clamp(0.5, calc((var(--lit) - var(--i)) * 100), 1);
   transition: opacity 0.7s var(--fluid);
 }
 
