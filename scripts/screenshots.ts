@@ -26,7 +26,7 @@ async function main() {
         headers: { origin: base },
       });
       if (!res.ok()) throw new Error(`magic link failed: ${res.status()}`);
-      await page.goto(await latestEmailLink(email, /magic-link\/verify/, started));
+      await page.goto(new URL(await latestEmailLink(email, /magic-link\/verify/, started), base).toString());
     }
     for (const p of paths) {
       await page.goto(`${base}${p}`);
