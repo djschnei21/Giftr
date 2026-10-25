@@ -8,6 +8,20 @@ import { runAction, UserError } from "@/lib/action";
 import { assertEventAccess } from "@/lib/authz";
 import { lockEvent, notifyParticipants, patchOutOfDraw, performDraw } from "@/server/draw";
 
+/**
+ * Self-service only — there's no organizer equivalent. Only the Santa(s) who
+ * draw this person will ever see that they asked for shipping; nobody else,
+ * including the organizer, is told.
+ */
+export async function setMyShipping(eventId: string, needsShipping: boolean) {
+  return runAction(async () => {
+    const { me } = await assertEventAccess(eventId);
+    if (!me) throw new UserError("You're not a participant in this exchange.");
+    await db.update(participant).set({ needsShipping }).where(eq(participant.id, me.id));
+    revalidatePath(`/events/${eventId}`, "layout");
+  });
+}
+
 async function loadTarget(eventId: string, participantId: string) {
   const { event: ev } = await assertEventAccess(eventId, { organizer: true });
   const [target] = await db
