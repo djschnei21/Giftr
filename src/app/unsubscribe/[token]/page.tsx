@@ -24,7 +24,7 @@ export default async function UnsubscribePage({ params, searchParams }: PageProp
 
   return (
     <main id="main" className="relative isolate flex flex-1 flex-col items-center justify-center px-4 py-12">
-      <Snowfall count={28} seed={37} className="-z-10" />
+      <Snowfall count={42} seed={37} className="-z-10" />
       <div className="grid w-full max-w-md gap-6">
         <Logo className="justify-center" />
         {found ? (

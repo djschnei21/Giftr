@@ -6,13 +6,14 @@ import { toast } from "sonner";
 import { leaveEvent } from "@/server/actions/invites";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
-export function LeaveEventButton({ eventId }: { eventId: string }) {
+export function LeaveEventButton({ eventId, className }: { eventId: string; className?: string }) {
   const router = useRouter();
   return (
     <ConfirmDialog
       trigger={
-        <Button variant="ghost" className="justify-self-start text-muted-foreground">
+        <Button variant="ghost" className={cn("justify-self-start text-muted-foreground", className)}>
           <SignOutIcon /> Leave this exchange
         </Button>
       }

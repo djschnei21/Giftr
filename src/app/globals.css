@@ -70,7 +70,8 @@
   --gold-foreground: #8a5f12;
   --success: #2a7048;
   --pine: #1f5c45;
-  --flake: rgb(176 30 43 / 0.22);
+  --flake: #ffffff;
+  --flake-shadow: 0 1px 2px rgb(92 52 30 / 0.35);
   --shadow-color: rgb(92 52 30 / 0.07);
   --shadow-strong: rgb(92 52 30 / 0.16);
 }
@@ -99,7 +100,8 @@
   --gold-foreground: #e7b65c;
   --success: #5dbb86;
   --pine: #5dbb86;
-  --flake: rgb(255 255 255 / 0.55);
+  --flake: rgb(255 255 255 / 0.85);
+  --flake-shadow: 0 0 3px rgb(255 255 255 / 0.4);
   --shadow-color: rgb(0 0 0 / 0.3);
   --shadow-strong: rgb(0 0 0 / 0.5);
 }
@@ -229,21 +231,37 @@
   }
 }
 
-/* Snow measures its own box (cqh) so it falls the full height of any section. */
+/* Snow measures its own box (cqh) so it falls the full height of any section.
+   Counts are fixed per section, so narrow screens drop a third to keep the same density. */
 @utility snowfall {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
   container-type: size;
+  @media (width < 40rem) {
+    & > :nth-child(3n) {
+      display: none;
+    }
+  }
 }
 @utility flake {
   position: absolute;
   top: 0;
   border-radius: 9999px;
   background: var(--flake);
+  filter: drop-shadow(var(--flake-shadow));
   animation: fall linear infinite;
   will-change: transform;
+  &:is(svg) {
+    background: none;
+    fill: none;
+    stroke: var(--flake);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    animation-name: fall, twirl;
+  }
 }
 @keyframes fall {
   from {
@@ -251,6 +269,11 @@
   }
   to {
     transform: translate3d(var(--drift, 24px), 110cqh, 0);
+  }
+}
+@keyframes twirl {
+  to {
+    rotate: 360deg;
   }
 }
 

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { OgGift, OgSnow, ogColors, ogSize } from "@/lib/og";
 
-export const alt = "Giftr: Secret Santa, beautifully simple";
+export const alt = "Giftr: Secret Santa, simplified";
 export const size = ogSize;
 export const contentType = "image/png";
 
@@ -40,7 +40,7 @@ export default function Image() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           <div style={{ fontSize: 88, fontWeight: 700, color: ogColors.cream, lineHeight: 1.02, letterSpacing: -3 }}>
-            Secret Santa, beautifully simple.
+            Secret Santa, simplified.
           </div>
           <div style={{ fontSize: 32, color: "rgba(255,250,245,0.78)" }}>
             One link to join. Names drawn in a tap. Free, with no ads.

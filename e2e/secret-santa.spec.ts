@@ -181,3 +181,22 @@ test("marketing and legal pages pass an accessibility check", async ({ page }) =
     await expectAccessible(page);
   }
 });
+
+test("signed-in people can get back to the home page and keep their app nav", async ({ browser }) => {
+  const erin = person("Erin");
+  const { context, page } = await newUserContext(browser, erin.email, erin.name);
+  await expect(page).toHaveURL(/\/events$/);
+
+  await page.getByRole("banner").getByRole("link", { name: "Giftr" }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  const nav = page.getByRole("navigation", { name: "Main" });
+  await expect(nav.getByRole("link", { name: "Wishlists" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Account menu" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Sign in" })).toHaveCount(0);
+  await expectAccessible(page);
+
+  await nav.getByRole("link", { name: "Exchanges" }).click();
+  await expect(page).toHaveURL(/\/events$/);
+  await context.close();
+});

@@ -80,7 +80,7 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-        <div className="grid content-start gap-6">
+        <div className="flex min-w-0 flex-col gap-6">
           {me && event.status !== "cancelled" ? (
             <MatchSection
               event={event}
@@ -107,7 +107,7 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
             <ShippingToggle eventId={event.id} initial={me.needsShipping} hasAddress={hasAddress} />
           ) : null}
 
-          <Card>
+          <Card className="flex-1">
             <CardHeader>
               <CardTitle>The details</CardTitle>
             </CardHeader>
@@ -186,44 +186,48 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
           </Card>
         </div>
 
-        <aside className="grid content-start gap-6">
-          {event.status !== "cancelled" ? (
-            <Card>
-              <CardContent className="grid gap-6">
-                <Countdown date={event.exchangeDate} />
-                <Timeline event={event} joined={counts.joined} />
-              </CardContent>
-            </Card>
-          ) : null}
+        <aside className="flex min-w-0 flex-col">
+          <Card className="flex-1">
+            <CardContent className="grid gap-6">
+              {event.status !== "cancelled" ? (
+                <>
+                  <Countdown date={event.exchangeDate} />
+                  <Timeline event={event} joined={counts.joined} />
+                  <div className="h-px bg-border" />
+                </>
+              ) : null}
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{pluralize(counts.joined, "person", "people")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {canSeePeople ? (
-                <ul className="grid gap-3" aria-label="Participants">
-                  {joinedPeople.map((p) => (
-                    <li key={p.id} className="flex min-w-0 items-center gap-3">
-                      <UserAvatar name={p.name} image={p.image} className="size-8 rounded-lg text-xs" />
-                      <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                        <span className="min-w-0 break-words">
-                          {p.name}
-                          {p.userId === user.id ? <span className="text-muted-foreground"> (you)</span> : null}
+              <section className="grid gap-4" aria-labelledby="people-heading">
+                <CardTitle id="people-heading">{pluralize(counts.joined, "person", "people")}</CardTitle>
+                {canSeePeople ? (
+                  <ul className="grid gap-3" aria-label="Participants">
+                    {joinedPeople.map((p) => (
+                      <li key={p.id} className="flex min-w-0 items-center gap-3">
+                        <UserAvatar name={p.name} image={p.image} className="size-8 rounded-lg text-xs" />
+                        <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                          <span className="min-w-0 break-words">
+                            {p.name}
+                            {p.userId === user.id ? <span className="text-muted-foreground"> (you)</span> : null}
+                          </span>
+                          {p.role === "organizer" ? <Badge variant="outline">Organizer</Badge> : null}
+                          {!p.inDraw ? <Badge variant="secondary">Not in draw</Badge> : null}
                         </span>
-                        {p.role === "organizer" ? <Badge variant="outline">Organizer</Badge> : null}
-                        {!p.inDraw ? <Badge variant="secondary">Not in draw</Badge> : null}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm text-muted-foreground">The organizer is keeping the guest list a surprise.</p>
-              )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-muted-foreground">The organizer is keeping the guest list a surprise.</p>
+                )}
+              </section>
+
+              {me && !isOrganizer && open ? (
+                <>
+                  <div className="h-px bg-border" />
+                  <LeaveEventButton eventId={event.id} className="-ml-3" />
+                </>
+              ) : null}
             </CardContent>
           </Card>
-
-          {me && !isOrganizer && open ? <LeaveEventButton eventId={event.id} /> : null}
         </aside>
       </div>
     </div>

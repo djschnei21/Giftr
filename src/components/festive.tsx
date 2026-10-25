@@ -8,37 +8,54 @@ function scatter(count: number, seed: number) {
     s = (s * 16807) % 2147483647;
     return (s - 1) / 2147483646;
   };
-  return Array.from({ length: count }, () => ({
-    x: rand() * 100,
-    y: rand() * 100,
-    size: 2 + rand() * 4,
-    duration: 9 + rand() * 12,
-    delay: rand() * 20,
-    drift: (rand() - 0.5) * 80,
-  }));
+  return Array.from({ length: count }, (_, i) => {
+    const crystal = i % 4 === 3;
+    return {
+      crystal,
+      x: rand() * 100,
+      y: rand() * 100,
+      size: crystal ? 14 + rand() * 8 : 3 + rand() * 5,
+      duration: 9 + rand() * 12,
+      delay: rand() * 20,
+      drift: (rand() - 0.5) * 80,
+      twirl: 6 + rand() * 8,
+    };
+  });
 }
+
+const arms = [0, 60, 120, 180, 240, 300];
 
 export function Snowfall({ count = 36, seed = 7, className }: { count?: number; seed?: number; className?: string }) {
   return (
     <div aria-hidden className={cn("snowfall", className)}>
-      {scatter(count, seed).map((f, i) => (
-        <span
-          key={i}
-          className="flake"
-          style={
-            {
-              left: `${f.x}%`,
-              width: f.size,
-              height: f.size,
-              opacity: 0.4 + f.size / 10,
-              animationDuration: `${f.duration}s`,
-              animationDelay: `-${f.delay}s`,
-              "--drift": `${f.drift}px`,
-              "--y": `${f.y}cqh`,
-            } as CSSProperties
-          }
-        />
-      ))}
+      {scatter(count, seed).map((f, i) => {
+        const style = {
+          left: `${f.x}%`,
+          width: f.size,
+          height: f.size,
+          animationDelay: `-${f.delay}s`,
+          "--drift": `${f.drift}px`,
+          "--y": `${f.y}cqh`,
+        } as CSSProperties;
+        return f.crystal ? (
+          <svg
+            key={i}
+            viewBox="-12 -12 24 24"
+            className="flake"
+            style={{ ...style, animationDuration: `${f.duration}s, ${f.twirl}s` }}
+          >
+            {arms.map((r) => (
+              <path key={r} d="M0 0V-10M-3.5 -7.5L0 -4.5L3.5 -7.5" transform={`rotate(${r})`} />
+            ))}
+          </svg>
+        ) : (
+          <span
+            key={i}
+            className="flake"
+            style={{ ...style, animationDuration: `${f.duration}s`, opacity: 0.55 + f.size / 20 }}
+          />
+        );
+      })}
     </div>
   );
 }

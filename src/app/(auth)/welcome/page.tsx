@@ -15,7 +15,7 @@ export default async function WelcomePage({ searchParams }: PageProps<"/welcome"
 
   return (
     <main id="main" className="relative isolate flex flex-1 flex-col items-center justify-center px-4 py-12">
-      <Snowfall count={32} seed={29} className="-z-10" />
+      <Snowfall count={48} seed={29} className="-z-10" />
       <div className="page-enter w-full max-w-sm">
         <div>
           <Logo className="mb-12 justify-center" />

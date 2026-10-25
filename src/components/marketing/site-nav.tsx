@@ -9,11 +9,13 @@ import { cn } from "@/lib/utils";
 const links = [
   { href: "/#how", label: "How it works" },
   { href: "/#faq", label: "Questions" },
+  { href: "/sign-in", label: "Sign in" },
 ];
+const cta = { href: "/sign-in?next=/events/new", label: "Start your exchange" };
 
 const stagger = ["delay-100", "delay-150", "delay-200", "delay-300"];
 
-export function SiteNav({ signedIn }: { signedIn: boolean }) {
+export function SiteNav() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -29,10 +31,6 @@ export function SiteNav({ signedIn }: { signedIn: boolean }) {
   }, [open]);
 
   const close = () => setOpen(false);
-  const cta = signedIn
-    ? { href: "/events", label: "Open Giftr" }
-    : { href: "/sign-in?next=/events/new", label: "Start your exchange" };
-  const menu = [...links, ...(signedIn ? [] : [{ href: "/sign-in", label: "Sign in" }])];
 
   return (
     <header className="pointer-events-none sticky top-0 z-50 px-4 pt-4 sm:pt-6">
@@ -48,14 +46,6 @@ export function SiteNav({ signedIn }: { signedIn: boolean }) {
               {l.label}
             </Link>
           ))}
-          {signedIn ? null : (
-            <Link
-              href="/sign-in"
-              className="flex h-9 items-center rounded-full px-4 text-sm font-semibold text-muted-foreground transition outline-none hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
-            >
-              Sign in
-            </Link>
-          )}
         </nav>
         <Button asChild size="sm" className="hidden h-9 rounded-full px-4 md:inline-flex">
           <Link href={cta.href}>{cta.label}</Link>
@@ -92,7 +82,7 @@ export function SiteNav({ signedIn }: { signedIn: boolean }) {
         )}
       >
         <nav aria-label="Menu" className="flex h-full flex-col justify-center gap-6 px-8">
-          {menu.map((l, i) => (
+          {links.map((l, i) => (
             <Link
               key={l.href}
               href={l.href}
@@ -108,7 +98,7 @@ export function SiteNav({ signedIn }: { signedIn: boolean }) {
           <div
             className={cn(
               "mt-4 transition duration-700 ease-fluid",
-              open ? cn("translate-y-0 opacity-100", stagger[menu.length]) : "translate-y-12 opacity-0",
+              open ? cn("translate-y-0 opacity-100", stagger[links.length]) : "translate-y-12 opacity-0",
             )}
           >
             <Button asChild size="lg">
