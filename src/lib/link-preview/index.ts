@@ -5,7 +5,7 @@ import https from "node:https";
 import type { LookupFunction } from "node:net";
 import zlib from "node:zlib";
 import { isAllowedUrl, isPrivateAddress } from "./net";
-import { isGenericTitle, nextProductUrl, parseHtml, type LinkPreview } from "./parse";
+import { parseHtml, productPageToOpen, type LinkPreview } from "./parse";
 
 export type { LinkPreview };
 
@@ -93,39 +93,54 @@ function requestOnce(url: URL, signal: AbortSignal): Promise<RawResponse> {
  * addresses are reachable; every redirect hop is re-validated.
  */
 export async function fetchLinkPreview(raw: string): Promise<LinkPreview | null> {
-  let url = isAllowedUrl(raw);
-  if (!url) return null;
+  const start = isAllowedUrl(raw);
+  if (!start) return null;
+  let url: URL = start;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  // A short link can already yield a product name (from the URL slug) and still
+  // have no price. Keep that preview if the product page itself fails to load.
+  let previous: LinkPreview | null = null;
   try {
     for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
       const res = await requestOnce(url, controller.signal);
       if (res.location) {
-        const next = isAllowedUrl(new URL(res.location, url).toString());
-        if (!next) return null;
+        const redirected = isAllowedUrl(new URL(res.location, url).toString());
+        if (!redirected) return previous;
+        url = redirected;
+        continue;
+      }
+      if (res.status < 200 || res.status >= 300 || res.body.length === 0) return previous ?? empty(url);
+      const html = res.body.toString("utf8");
+      const preview = parseHtml(html, url.toString());
+      const merged = mergePreview(previous, preview);
+      const follow: string | null = hop < MAX_REDIRECTS ? productPageToOpen(preview, html, url.toString()) : null;
+      const next = follow ? isAllowedUrl(follow) : null;
+      if (next) {
+        previous = merged;
         url = next;
         continue;
       }
-      if (res.status < 200 || res.status >= 300 || res.body.length === 0) return { ...empty(url) };
-      const html = res.body.toString("utf8");
-      const preview = parseHtml(html, url.toString());
-      // a.co sometimes returns 200 with a placeholder title and a canonical product URL.
-      if (isGenericTitle(preview.title) && hop < MAX_REDIRECTS) {
-        const follow = nextProductUrl(html, url.toString());
-        const next = follow ? isAllowedUrl(follow) : null;
-        if (next) {
-          url = next;
-          continue;
-        }
-      }
-      return preview;
+      return merged;
     }
-    return null;
+    return previous;
   } catch {
-    return null;
+    return previous;
   } finally {
     clearTimeout(timer);
   }
+}
+
+function mergePreview(previous: LinkPreview | null, next: LinkPreview): LinkPreview {
+  if (!previous) return next;
+  return {
+    url: next.url,
+    title: next.title ?? previous.title,
+    imageUrl: next.imageUrl ?? previous.imageUrl,
+    price: next.price ?? previous.price,
+    currency: next.price !== null ? (next.currency ?? previous.currency) : (previous.currency ?? next.currency),
+    siteName: next.siteName ?? previous.siteName,
+  };
 }
 
 function empty(url: URL): LinkPreview {

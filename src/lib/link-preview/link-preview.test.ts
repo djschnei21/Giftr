@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { isAllowedUrl, isPrivateAddress } from "./net";
-import { nextProductUrl, parseHtml } from "./parse";
+import { nextProductUrl, parseHtml, productPageToOpen } from "./parse";
 
 describe("isPrivateAddress", () => {
   it.each([
@@ -126,5 +126,83 @@ describe("parseHtml", () => {
       "https://www.amazon.com/Linen-Table-Runner/dp/B0RUNNER12",
     );
     expect(nextProductUrl(html, "https://www.amazon.com/Linen-Table-Runner/dp/B0RUNNER12")).toBeNull();
+  });
+
+  it("reads the buy-box price when Amazon leaves the price meta tag off", () => {
+    // Current product pages leave .a-offscreen empty and render the amount in aria-hidden spans.
+    // The struck list price sits beside it and must not win. A carousel price further down must not either.
+    const html = `<html><head>
+      <meta property="og:title" content="Amazon.com: Compact Mechanical Keyboard : Electronics">
+      <meta property="product:price:amount" content="80.00">
+      <meta property="product:price:currency" content="USD">
+    </head><body>
+      <span id="productTitle">Compact Mechanical Keyboard</span>
+      <div id="corePriceDisplay_desktop_feature_div">
+        <span class="a-price a-text-price" data-a-strike="true">
+          <span class="a-offscreen">$80.00</span>
+        </span>
+        <span class="a-price aok-align-center reinventPricePriceToPayMargin priceToPay" data-a-size="xl" data-a-color="base">
+          <span class="a-offscreen"></span>
+          <span aria-hidden="true"><span class="a-price-symbol">$</span><span class="a-price-whole">36<span class="a-price-decimal">.</span></span><span class="a-price-fraction">00</span></span>
+        </span>
+      </div>
+      <span class="a-price"><span class="a-offscreen">$9.99</span></span>
+    </body></html>`;
+    const preview = parseHtml(html, "https://www.amazon.com/dp/B0TEST1234");
+    expect(preview.title).toBe("Compact Mechanical Keyboard");
+    expect(preview.price).toBe(36);
+    expect(preview.currency).toBe("USD");
+  });
+
+  it("reads a classic a-offscreen buy-box price", () => {
+    const html = `<span id="productTitle">Wool throw</span>
+      <span class="a-price priceToPay"><span class="a-offscreen">$41.00</span></span>`;
+    const preview = parseHtml(html, "https://www.amazon.com/dp/B0THROW123");
+    expect(preview.price).toBe(41);
+    expect(preview.currency).toBe("USD");
+  });
+
+  it("reads the price block and a Canadian dollar sign", () => {
+    const html = `<span id="priceblock_ourprice" class="a-size-medium a-color-price">$27.15</span>`;
+    const preview = parseHtml(html, "https://www.amazon.ca/dp/B0CAD12345");
+    expect(preview.price).toBe(27);
+    expect(preview.currency).toBe("CAD");
+  });
+
+  it("reads an Amazon.de price from the visible whole and fraction", () => {
+    const html = `<span class="a-price priceToPay"><span class="a-offscreen"></span>
+      <span aria-hidden="true"><span class="a-price-symbol">€</span><span class="a-price-whole">29<span class="a-price-decimal">,</span></span><span class="a-price-fraction">95</span></span></span>`;
+    const preview = parseHtml(html, "https://www.amazon.de/dp/B0EUR12345");
+    expect(preview.price).toBe(30);
+    expect(preview.currency).toBe("EUR");
+  });
+
+  it("reads priceToPay JSON when the buy box markup is missing", () => {
+    const html = `<span id="productTitle">Linen runner</span>
+      <script>var d = {"priceToPay":{"currencySymbol":"$","priceAmount":24.2}};</script>`;
+    const preview = parseHtml(html, "https://www.amazon.com/dp/B0JSON1234");
+    expect(preview.price).toBe(24);
+    expect(preview.currency).toBe("USD");
+  });
+
+  it("opens the product page from a short link that only has a name", () => {
+    const html = `<meta property="og:title" content="Amazon">
+      <link rel="canonical" href="https://www.amazon.com/Linen-Table-Runner/dp/B0RUNNER12">`;
+    const preview = parseHtml(html, "https://a.co/d/0148AYVW");
+    expect(preview.title).toBe("Linen Table Runner");
+    expect(preview.price).toBeNull();
+    expect(productPageToOpen(preview, html, "https://a.co/d/0148AYVW")).toBe(
+      "https://www.amazon.com/Linen-Table-Runner/dp/B0RUNNER12",
+    );
+  });
+
+  it("stays on the product page once the buy-box price is present", () => {
+    const html = `<span id="productTitle">Linen Table Runner</span>
+      <link rel="canonical" href="https://www.amazon.com/Linen-Table-Runner/dp/B0RUNNER12">
+      <span class="a-price priceToPay"><span class="a-offscreen">$22.00</span></span>`;
+    const page = "https://www.amazon.com/dp/B0RUNNER12";
+    const preview = parseHtml(html, page);
+    expect(preview.price).toBe(22);
+    expect(productPageToOpen(preview, html, page)).toBeNull();
   });
 });

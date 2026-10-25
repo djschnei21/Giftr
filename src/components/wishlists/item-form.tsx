@@ -72,7 +72,8 @@ export function ItemForm({
   const set = (p: Partial<ItemFormState>) => setState((s) => ({ ...s, ...p }));
 
   function fetchPreview(url: string) {
-    if (!looksLikeUrl(url) || (lastFetched.current === url && !isPlaceholderTitle(state.title))) return;
+    const filledIn = !isPlaceholderTitle(state.title) && state.price.trim() !== "";
+    if (!looksLikeUrl(url) || (lastFetched.current === url && filledIn)) return;
     lastFetched.current = url;
     startFetch(async () => {
       const res = await previewLink(url.trim());
