@@ -69,8 +69,11 @@ export async function markViewedOnOpen(participantId: string) {
 
 /**
  * Everything a Santa needs to shop. The main slot gets the giftee's shared
- * wishlist and preferences; the wildcard slot only ever gets a name and (for
- * shipped exchanges) an address — no wishlist, likes, dislikes, sizes, or colors.
+ * wishlist and preferences; the wildcard slot only ever gets a name and (when
+ * shipping applies) an address — no wishlist, likes, dislikes, sizes, or colors.
+ * `shipTo` is true for every giver on a shipped exchange, or just for the
+ * giver(s) of someone who asked to have their own gift(s) shipped — nobody
+ * else, including the organizer, learns that from this.
  */
 export async function getMatchDetails(ev: Event, santaParticipantId: string, slot: AssignmentSlot = "main") {
   const mine = await findThreadAssignment(santaParticipantId, "santa", slot);
@@ -82,6 +85,7 @@ export async function getMatchDetails(ev: Event, santaParticipantId: string, slo
       name: participant.displayName,
       image: user.image,
       wishlistId: participant.wishlistId,
+      needsShipping: participant.needsShipping,
       profile,
     })
     .from(participant)
@@ -91,7 +95,9 @@ export async function getMatchDetails(ev: Event, santaParticipantId: string, slo
     .limit(1);
   if (!giftee) return null;
 
-  const address = ev.exchangeType === "shipped" ? (giftee.profile?.address ?? null) : null;
+  /** The giftee's own ask, visible only to the Santa(s) who drew them. */
+  const shipTo = ev.exchangeType === "shipped" || giftee.needsShipping;
+  const address = shipTo ? (giftee.profile?.address ?? null) : null;
   if (slot === "wildcard") {
     return {
       assignment: mine,
@@ -99,6 +105,7 @@ export async function getMatchDetails(ev: Event, santaParticipantId: string, slo
       wishlistName: null as string | null,
       items: [] as WishlistItem[],
       preferences: null as { aboutMe: string | null; likes: string | null; dislikes: string | null; favoriteColors: string | null; sizes: Sizes } | null,
+      shipTo,
       address,
     };
   }
@@ -129,6 +136,7 @@ export async function getMatchDetails(ev: Event, santaParticipantId: string, slo
           sizes: p.sizes,
         }
       : null,
+    shipTo,
     address,
   };
 }

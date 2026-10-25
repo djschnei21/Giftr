@@ -1,0 +1,1 @@
+ALTER TABLE "participant" ADD COLUMN "needs_shipping" boolean DEFAULT false NOT NULL;

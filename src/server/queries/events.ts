@@ -1,7 +1,7 @@
 import "server-only";
 import { and, asc, count, countDistinct, desc, eq, inArray, isNotNull, ne, or, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { assignment, event, household, invitation, participant, user } from "@/db/schema";
+import { assignment, event, household, invitation, participant, profile, user } from "@/db/schema";
 
 export async function listMyEvents(userId: string) {
   const rows = await db
@@ -100,4 +100,10 @@ export async function getEventCounts(eventId: string) {
 /** A participant's gift(s): just the main one for Classic, both for Wildcard. */
 export async function getMyAssignments(participantId: string) {
   return db.select().from(assignment).where(eq(assignment.giverId, participantId));
+}
+
+/** Whether a user has filled in enough of their shipping address to be useful to a Santa. */
+export async function hasShippingAddress(userId: string) {
+  const [row] = await db.select({ address: profile.address }).from(profile).where(eq(profile.userId, userId)).limit(1);
+  return !!row?.address?.line1;
 }

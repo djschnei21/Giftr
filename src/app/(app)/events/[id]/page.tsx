@@ -10,10 +10,11 @@ import { ShareLink } from "@/components/events/share-link";
 import { MatchSection } from "@/components/draw/match-section";
 import { SantaThread } from "@/components/match/santa-thread";
 import { WishlistPicker } from "@/components/wishlists/wishlist-picker";
+import { ShippingToggle } from "@/components/events/shipping-toggle";
 import { LeaveEventButton } from "@/components/events/leave-event-button";
 import { requireEventAccess } from "@/lib/authz";
 import { budgetLabel } from "@/lib/format";
-import { getEventCounts, getEventPeople, getMyAssignments } from "@/server/queries/events";
+import { getEventCounts, getEventPeople, getMyAssignments, hasShippingAddress } from "@/server/queries/events";
 import { listMyWishlists } from "@/server/queries/wishlists";
 import { joinUrl } from "@/server/invites";
 
@@ -26,11 +27,12 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
   const { id } = await params;
   const { created } = await searchParams;
   const { event, me, isOrganizer, user } = await requireEventAccess(id);
-  const [people, counts, myAssignments, wishlists] = await Promise.all([
+  const [people, counts, myAssignments, wishlists, hasAddress] = await Promise.all([
     getEventPeople(id),
     getEventCounts(id),
     me ? getMyAssignments(me.id) : [],
     listMyWishlists(user.id),
+    me && event.exchangeType === "in_person" ? hasShippingAddress(user.id) : false,
   ]);
   const joinedPeople = people.filter((p) => p.status === "joined");
   const mainAssignment = myAssignments.find((a) => a.slot === "main") ?? null;
@@ -90,6 +92,10 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
               selectedId={me.wishlistId}
               wildcard={event.drawFormat === "wildcard"}
             />
+          ) : null}
+
+          {me && event.status !== "cancelled" && event.exchangeType === "in_person" ? (
+            <ShippingToggle eventId={event.id} initial={me.needsShipping} hasAddress={hasAddress} />
           ) : null}
 
           <Card>
