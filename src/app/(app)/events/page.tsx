@@ -22,9 +22,9 @@ export default async function EventsPage() {
   return (
     <div className="grid gap-10">
       <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <p className="text-sm text-muted-foreground">Hi {firstName(user.name)} 👋</p>
-          <h1 className="font-display text-3xl font-semibold sm:text-4xl">Your exchanges</h1>
+          <h1 className="font-display text-3xl font-semibold break-words sm:text-4xl">Your exchanges</h1>
         </div>
         {events.length ? (
           <Button asChild>
@@ -44,7 +44,7 @@ export default async function EventsPage() {
             <Link
               key={invitation.id}
               href={`/join/${event.inviteCode}`}
-              className="group flex items-center gap-4 rounded-2xl border border-gold/40 bg-gold/10 p-4 transition hover:bg-gold/15"
+              className="group flex min-w-0 items-center gap-4 rounded-2xl border border-gold/40 bg-gold/10 p-4 transition hover:bg-gold/15"
             >
               <span className="flex size-10 items-center justify-center rounded-full bg-card">
                 <MailOpenIcon className="size-5 text-gold" />
@@ -108,7 +108,7 @@ function EventCard({ event, me, isOrganizer, people }: Awaited<ReturnType<typeof
   return (
     <Link
       href={`/events/${event.id}`}
-      className="group relative flex flex-col gap-5 rounded-3xl border bg-card p-5 shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgb(0_0_0/0.07)] focus-visible:ring-[3px] focus-visible:ring-ring/40 focus-visible:outline-none sm:p-6"
+      className="group relative flex min-w-0 flex-col gap-5 rounded-3xl border bg-card p-5 shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgb(0_0_0/0.07)] focus-visible:ring-[3px] focus-visible:ring-ring/40 focus-visible:outline-none sm:p-6"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-wrap gap-1.5">
@@ -120,11 +120,13 @@ function EventCard({ event, me, isOrganizer, people }: Awaited<ReturnType<typeof
         ) : null}
       </div>
       <div className="grid gap-1">
-        <h3 className="font-display text-xl leading-snug font-semibold">{event.name}</h3>
-        <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <CalendarDaysIcon className="size-3.5" />
-          {dateLabel(event.exchangeDate)}
-          {budget ? <> · {budget}</> : null}
+        <h3 className="font-display text-xl leading-snug font-semibold break-words">
+          {event.name.replaceAll("/", "/\u200b")}
+        </h3>
+        <p className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5 text-sm text-muted-foreground">
+          <CalendarDaysIcon className="size-3.5 shrink-0" />
+          <span>{dateLabel(event.exchangeDate)}</span>
+          {budget ? <span>· {budget}</span> : null}
         </p>
       </div>
       <div className="mt-auto flex flex-wrap items-center justify-between gap-3">

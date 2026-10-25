@@ -3,7 +3,12 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-type Option<T extends string> = { value: T; label: React.ReactNode; description?: React.ReactNode; icon?: React.ReactNode };
+type Option<T extends string> = {
+  value: T;
+  label: React.ReactNode;
+  description?: React.ReactNode;
+  icon?: React.ReactNode;
+};
 
 export function Segmented<T extends string>({
   value,
@@ -42,11 +47,13 @@ export function Segmented<T extends string>({
               onChange={() => onChange(o.value)}
               className="sr-only"
             />
-            <span className="flex items-center gap-2 text-sm font-medium [&_svg]:size-4 [&_svg]:text-primary">
+            <span className="flex min-w-0 items-center gap-2 text-sm font-medium [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-primary">
               {o.icon}
-              {o.label}
+              <span className="min-w-0 break-words">{o.label}</span>
             </span>
-            {o.description ? <span className="text-[13px] text-muted-foreground">{o.description}</span> : null}
+            {o.description ? (
+              <span className="text-[13px] break-words text-muted-foreground">{o.description}</span>
+            ) : null}
           </label>
         );
       })}

@@ -39,13 +39,13 @@ export function MatchSection({
     const scheduled = event.drawMode === "scheduled" && event.drawDate;
     return (
       <Card className="overflow-hidden">
-        <CardContent className="flex items-center gap-4">
+        <CardContent className="flex min-w-0 items-start gap-4">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gold/15 text-gold">
             {scheduled ? <CalendarClockIcon className="size-6" /> : <HourglassIcon className="size-6" />}
           </span>
-          <div>
+          <div className="min-w-0">
             <p className="font-medium">Names haven&apos;t been drawn yet</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm break-words text-muted-foreground">
               {scheduled
                 ? `Giftr will draw names on ${dateLabel(event.drawDate)}. We'll email you.`
                 : "We'll email you as soon as the organizer draws names."}

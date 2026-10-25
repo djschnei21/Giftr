@@ -33,7 +33,14 @@ export function GiftStatusPicker({
   const current = steps.findIndex((s) => s.value === optimistic);
 
   return (
-    <div role="radiogroup" aria-label="Gift status" className="grid grid-flow-col gap-1.5 rounded-2xl bg-secondary/60 p-1.5">
+    <div
+      role="radiogroup"
+      aria-label="Gift status"
+      className={cn(
+        "grid gap-1.5 rounded-2xl bg-secondary/60 p-1.5",
+        steps.length > 3 ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-3",
+      )}
+    >
       {steps.map((s, i) => {
         const checked = s.value === optimistic;
         return (
@@ -50,7 +57,7 @@ export function GiftStatusPicker({
               })
             }
             className={cn(
-              "flex flex-col items-center gap-1 rounded-xl px-2 py-2.5 text-xs font-medium transition outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40 sm:flex-row sm:justify-center sm:text-sm [&_svg]:size-4",
+              "flex min-w-0 flex-col items-center gap-1 rounded-xl px-1.5 py-2.5 text-center text-[11px] leading-tight font-medium break-words transition outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40 sm:flex-row sm:justify-center sm:px-2 sm:text-sm sm:leading-normal [&_svg]:size-4 [&_svg]:shrink-0",
               checked
                 ? "bg-card text-foreground shadow-sm"
                 : i < current
