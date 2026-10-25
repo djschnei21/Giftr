@@ -2,7 +2,7 @@
 
 import { useOptimistic, useTransition } from "react";
 import Link from "next/link";
-import { GiftIcon } from "lucide-react";
+import { GiftIcon } from "@/components/icons";
 import { toast } from "sonner";
 import { setSharedWishlist } from "@/server/actions/wishlists";
 import { Card, CardContent } from "@/components/ui/card";

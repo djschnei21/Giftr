@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import { LogOutIcon, MonitorIcon, MoonIcon, SunIcon, UserRoundIcon } from "lucide-react";
+import { MonitorIcon, MoonIcon, SignOutIcon, SunIcon, UserIcon } from "@/components/icons";
 import { authClient } from "@/lib/auth-client";
 import { UserAvatar } from "@/components/ui/avatar";
 import {
@@ -35,7 +35,7 @@ export function UserMenu({ user }: { user: { name: string; email: string; image:
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href="/profile">
-            <UserRoundIcon /> Profile & preferences
+            <UserIcon /> Profile & preferences
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
@@ -70,7 +70,7 @@ export function UserMenu({ user }: { user: { name: string; email: string; image:
             router.refresh();
           }}
         >
-          <LogOutIcon /> Sign out
+          <SignOutIcon /> Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

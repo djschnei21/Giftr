@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
-import { CheckIcon, CopyIcon, Share2Icon } from "lucide-react";
+import { CheckIcon, CopyIcon, ShareNetworkIcon } from "@/components/icons";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -50,7 +50,7 @@ export function ShareLink({ url, title, className }: { url: string; title: strin
             onClick={() => navigator.share({ title, text: `Join ${title} on Giftr`, url }).catch(() => {})}
             aria-label="Share invite link"
           >
-            <Share2Icon /> Share
+            <ShareNetworkIcon /> Share
           </Button>
         ) : null}
       </div>

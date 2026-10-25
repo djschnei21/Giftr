@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import {
-  CalendarIcon,
+  CalendarBlankIcon,
   GiftIcon,
   HeartIcon,
   MapPinIcon,
   PaletteIcon,
   RulerIcon,
   ThumbsDownIcon,
-  UserRoundIcon,
+  UserIcon,
   WalletIcon,
-} from "lucide-react";
+} from "@/components/icons";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAvatar } from "@/components/ui/avatar";
 import { EventHeader } from "@/components/events/event-header";
@@ -25,7 +25,13 @@ import { countUnread, getMatchDetails, getThread, markViewedOnOpen } from "@/ser
 
 export const metadata: Metadata = { title: "Your match", robots: { index: false } };
 
-const sizeLabels: Record<keyof Sizes, string> = { top: "Tops", bottom: "Bottoms", shoe: "Shoes", ring: "Ring", other: "Other" };
+const sizeLabels: Record<keyof Sizes, string> = {
+  top: "Tops",
+  bottom: "Bottoms",
+  shoe: "Shoes",
+  ring: "Ring",
+  other: "Other",
+};
 
 export default async function MatchPage({ params }: PageProps<"/events/[id]/match">) {
   const { id } = await params;
@@ -50,17 +56,31 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
   const days = daysUntil(event.exchangeDate);
   const bought = match.assignment.boughtItemIds.filter((b) => match.items.some((i) => i.id === b));
   const prefs = match.preferences;
-  const sizes = prefs ? (Object.entries(prefs.sizes) as [keyof Sizes, string | undefined][]).filter(([, v]) => v?.trim()) : [];
-  const hasPrefs = !!prefs && (prefs.aboutMe || prefs.likes || prefs.dislikes || prefs.favoriteColors || sizes.length > 0);
+  const sizes = prefs
+    ? (Object.entries(prefs.sizes) as [keyof Sizes, string | undefined][]).filter(([, v]) => v?.trim())
+    : [];
+  const hasPrefs =
+    !!prefs && (prefs.aboutMe || prefs.likes || prefs.dislikes || prefs.favoriteColors || sizes.length > 0);
   const drawn = event.status === "drawn";
 
   return (
     <div className="grid gap-8">
-      <EventHeader event={event} isOrganizer={isOrganizer} back={{ href: `/events/${id}`, label: "Back to exchange" }} showManage={false} />
+      <EventHeader
+        event={event}
+        isOrganizer={isOrganizer}
+        back={{ href: `/events/${id}`, label: "Back to exchange" }}
+        showManage={false}
+      />
 
       {wildcard ? <SectionLabel icon={<GiftIcon />} label="Main gift" /> : null}
 
-      <MatchHero giftee={match.giftee} subtitle="You're Secret Santa for" budget={budget ?? "No set budget"} days={days} event={event} />
+      <MatchHero
+        giftee={match.giftee}
+        subtitle="You're Secret Santa for"
+        budget={budget ?? "No set budget"}
+        days={days}
+        event={event}
+      />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="grid content-start gap-6">
@@ -103,10 +123,14 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
             <CardContent>
               {hasPrefs && prefs ? (
                 <dl className="grid gap-4 text-sm">
-                  {prefs.aboutMe ? <Pref icon={<UserRoundIcon />} label="About" value={prefs.aboutMe} /> : null}
+                  {prefs.aboutMe ? <Pref icon={<UserIcon />} label="About" value={prefs.aboutMe} /> : null}
                   {prefs.likes ? <Pref icon={<HeartIcon />} label="Loves" value={prefs.likes} /> : null}
-                  {prefs.dislikes ? <Pref icon={<ThumbsDownIcon />} label="Please avoid" value={prefs.dislikes} /> : null}
-                  {prefs.favoriteColors ? <Pref icon={<PaletteIcon />} label="Favorite colors" value={prefs.favoriteColors} /> : null}
+                  {prefs.dislikes ? (
+                    <Pref icon={<ThumbsDownIcon />} label="Please avoid" value={prefs.dislikes} />
+                  ) : null}
+                  {prefs.favoriteColors ? (
+                    <Pref icon={<PaletteIcon />} label="Favorite colors" value={prefs.favoriteColors} />
+                  ) : null}
                   {sizes.length ? (
                     <Pref
                       icon={<RulerIcon />}
@@ -116,7 +140,9 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
                   ) : null}
                 </dl>
               ) : (
-                <p className="text-sm text-muted-foreground">{first} hasn&apos;t filled in their gift preferences yet.</p>
+                <p className="text-sm text-muted-foreground">
+                  {first} hasn&apos;t filled in their gift preferences yet.
+                </p>
               )}
             </CardContent>
           </Card>
@@ -126,7 +152,9 @@ export default async function MatchPage({ params }: PageProps<"/events/[id]/matc
           <Card id="chat" className="scroll-mt-24">
             <CardHeader>
               <CardTitle>Ask {first} anonymously</CardTitle>
-              <CardDescription>They&apos;ll see your messages from &ldquo;Your Secret Santa&rdquo; — never your name.</CardDescription>
+              <CardDescription>
+                They&apos;ll see your messages from &ldquo;Your Secret Santa&rdquo; — never your name.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {drawn ? (
@@ -222,8 +250,14 @@ function MatchHero({
             <WalletIcon className="size-4" /> {budget}
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <CalendarIcon className="size-4" />
-            {days > 1 ? `${days} days to go` : days === 1 ? "Tomorrow!" : days === 0 ? "Today!" : longDateLabel(event.exchangeDate)}
+            <CalendarBlankIcon className="size-4" />
+            {days > 1
+              ? `${days} days to go`
+              : days === 1
+                ? "Tomorrow!"
+                : days === 0
+                  ? "Today!"
+                  : longDateLabel(event.exchangeDate)}
           </span>
         </div>
       </div>
@@ -251,7 +285,13 @@ function WildcardSection({
   return (
     <>
       <SectionLabel icon={<GiftIcon />} label="Wildcard gift" />
-      <MatchHero giftee={match.giftee} subtitle="Your wildcard is for" budget={budget ?? "No set budget"} days={days} event={event} />
+      <MatchHero
+        giftee={match.giftee}
+        subtitle="Your wildcard is for"
+        budget={budget ?? "No set budget"}
+        days={days}
+        event={event}
+      />
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <Card>
           <CardHeader>
@@ -259,7 +299,12 @@ function WildcardSection({
             <CardDescription>No wishlist for this one — it&apos;s the surprise.</CardDescription>
           </CardHeader>
           <CardContent>
-            <GiftStatusPicker eventId={eventId} slot="wildcard" status={match.assignment.giftStatus} shipped={match.shipTo} />
+            <GiftStatusPicker
+              eventId={eventId}
+              slot="wildcard"
+              status={match.assignment.giftStatus}
+              shipped={match.shipTo}
+            />
           </CardContent>
         </Card>
 
@@ -302,13 +347,21 @@ function Pref({ icon, label, value }: { icon: React.ReactNode; label: string; va
       <span className="mt-0.5 text-primary [&_svg]:size-4">{icon}</span>
       <div className="grid min-w-0 gap-0.5">
         <dt className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{label}</dt>
-        <dd className="leading-relaxed whitespace-pre-line break-words">{value}</dd>
+        <dd className="leading-relaxed break-words whitespace-pre-line">{value}</dd>
       </div>
     </div>
   );
 }
 
-function AddressBlock({ address, name, canNudge = true }: { address: Address | null; name: string; canNudge?: boolean }) {
+function AddressBlock({
+  address,
+  name,
+  canNudge = true,
+}: {
+  address: Address | null;
+  name: string;
+  canNudge?: boolean;
+}) {
   const lines = address
     ? [
         address.name || name,

@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, Loader2Icon, XIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, CircleNotchIcon, XIcon } from "@/components/icons";
 import { toast } from "sonner";
 import { createEvent } from "@/server/actions/events";
 import { Button } from "@/components/ui/button";
@@ -269,7 +269,7 @@ export function CreateEventWizard({
           )}
           {isLast ? (
             <Button size="lg" onClick={submit} disabled={pending}>
-              {pending ? <Loader2Icon className="animate-spin" /> : null}
+              {pending ? <CircleNotchIcon className="animate-spin" /> : null}
               Create exchange
             </Button>
           ) : (

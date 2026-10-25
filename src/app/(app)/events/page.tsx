@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRightIcon, CalendarDaysIcon, MailOpenIcon, PlusIcon, SparklesIcon } from "lucide-react";
+import { ArrowRightIcon, CalendarDotsIcon, EnvelopeSimpleOpenIcon, PlusIcon, SparkleIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AvatarStack } from "@/components/ui/avatar";
@@ -47,7 +47,7 @@ export default async function EventsPage() {
               className="group flex min-w-0 items-center gap-4 rounded-2xl border border-gold/40 bg-gold/10 p-4 transition hover:bg-gold/15"
             >
               <span className="flex size-10 items-center justify-center rounded-full bg-card">
-                <MailOpenIcon className="size-5 text-gold" />
+                <EnvelopeSimpleOpenIcon className="size-5 text-gold" />
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-medium">{event.name}</span>
@@ -63,7 +63,7 @@ export default async function EventsPage() {
 
       {events.length === 0 ? (
         <EmptyState
-          icon={<SparklesIcon />}
+          icon={<SparkleIcon />}
           title="Start your first gift exchange"
           description="Set a date and budget, invite people with a link, and Giftr handles the draw. It takes about a minute."
           action={
@@ -124,7 +124,7 @@ function EventCard({ event, me, isOrganizer, people }: Awaited<ReturnType<typeof
           {event.name.replaceAll("/", "/\u200b")}
         </h3>
         <p className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5 text-sm text-muted-foreground">
-          <CalendarDaysIcon className="size-3.5 shrink-0" />
+          <CalendarDotsIcon className="size-3.5 shrink-0" />
           <span>{dateLabel(event.exchangeDate)}</span>
           {budget ? <span>· {budget}</span> : null}
         </p>

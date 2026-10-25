@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, GiftIcon, StarIcon } from "lucide-react";
+import { ArrowSquareOutIcon, GiftIcon, StarIcon } from "@/components/icons";
 import type { WishlistItem } from "@/db/schema";
 import { cn } from "@/lib/utils";
 
@@ -52,7 +52,7 @@ export function ItemCard({
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             {item.mostWanted ? (
               <span className="inline-flex items-center gap-1 rounded-full bg-gold/15 px-2 py-0.5 text-[11px] font-medium whitespace-nowrap text-[color-mix(in_oklch,var(--gold),black_35%)] dark:text-gold">
-                <StarIcon className="size-3 fill-current" /> Most wanted
+                <StarIcon weight="fill" className="size-3" /> Most wanted
               </span>
             ) : null}
           </div>
@@ -72,7 +72,7 @@ export function ItemCard({
                 rel="noopener noreferrer nofollow"
                 className="inline-flex items-center gap-1 underline-offset-2 hover:text-foreground hover:underline"
               >
-                {host} <ExternalLinkIcon className="size-3" />
+                {host} <ArrowSquareOutIcon className="size-3" />
               </a>
             ) : null}
           </div>

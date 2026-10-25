@@ -1,4 +1,4 @@
-import { CheckIcon } from "lucide-react";
+import { CheckIcon } from "@/components/icons";
 import type { Event } from "@/db/schema";
 import { dateLabel } from "@/lib/format";
 import { cn } from "@/lib/utils";

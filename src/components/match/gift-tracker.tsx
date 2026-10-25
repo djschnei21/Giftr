@@ -1,7 +1,7 @@
 "use client";
 
 import { useOptimistic, useState, useTransition } from "react";
-import { CheckIcon, GiftIcon, PackageCheckIcon, ShoppingBagIcon, TruckIcon } from "lucide-react";
+import { BagSimpleIcon, CheckIcon, GiftIcon, ShoppingBagIcon, TruckIcon } from "@/components/icons";
 import { toast } from "sonner";
 import type { AssignmentSlot, WishlistItem } from "@/db/schema";
 import { saveGiverNotes, setGiftStatus, toggleBoughtItem } from "@/server/actions/match";
@@ -26,7 +26,7 @@ export function GiftStatusPicker({
   const [, start] = useTransition();
   const steps: { value: GiftStatus; label: string; icon: React.ReactNode }[] = [
     { value: "not_started", label: "Still looking", icon: <ShoppingBagIcon /> },
-    { value: "purchased", label: "Bought it", icon: <PackageCheckIcon /> },
+    { value: "purchased", label: "Bought it", icon: <BagSimpleIcon /> },
     ...(shipped ? [{ value: "shipped" as const, label: "Shipped", icon: <TruckIcon /> }] : []),
     { value: "given", label: "Given", icon: <GiftIcon /> },
   ];

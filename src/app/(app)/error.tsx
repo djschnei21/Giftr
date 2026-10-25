@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { RotateCcwIcon, SnowflakeIcon } from "lucide-react";
+import { ArrowCounterClockwiseIcon, SnowflakeIcon } from "@/components/icons";
 import { EmptyState } from "@/components/app/empty-state";
 import { Button } from "@/components/ui/button";
 
@@ -19,7 +19,7 @@ export default function AppError({ error, reset }: { error: Error & { digest?: s
       action={
         <div className="flex flex-wrap justify-center gap-2">
           <Button onClick={reset}>
-            <RotateCcwIcon /> Try again
+            <ArrowCounterClockwiseIcon /> Try again
           </Button>
           <Button asChild variant="outline">
             <Link href="/events">Back to my exchanges</Link>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GiftIcon } from "lucide-react";
+import { GiftIcon } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { EmptyState } from "@/components/app/empty-state";
 import { Button } from "@/components/ui/button";

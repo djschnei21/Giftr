@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2Icon } from "lucide-react";
+import { CircleNotchIcon } from "@/components/icons";
 import { toast } from "sonner";
 import type { Event } from "@/db/schema";
 import { cancelEvent, setOrganizerInDraw, updateEvent } from "@/server/actions/events";
@@ -58,7 +58,9 @@ export function SettingsForm({ event, organizerInDraw }: { event: Event; organiz
           <CardHeader>
             <CardTitle>Budget, dates & rules</CardTitle>
             {locked ? (
-              <CardDescription>Names are drawn, so draw settings are locked. Budget, dates and notes can still change.</CardDescription>
+              <CardDescription>
+                Names are drawn, so draw settings are locked. Budget, dates and notes can still change.
+              </CardDescription>
             ) : null}
           </CardHeader>
           <CardContent className="grid gap-5">
@@ -72,7 +74,9 @@ export function SettingsForm({ event, organizerInDraw }: { event: Event; organiz
                   <SwitchRow
                     id="organizerInDraw"
                     label="I'm taking part too"
-                    description={locked ? "Locked after the draw." : "Turn off to organize without giving or getting a gift."}
+                    description={
+                      locked ? "Locked after the draw." : "Turn off to organize without giving or getting a gift."
+                    }
                     checked={inDraw}
                     disabled={locked}
                     onCheckedChange={async (v) => {
@@ -91,7 +95,7 @@ export function SettingsForm({ event, organizerInDraw }: { event: Event; organiz
         </Card>
         <div className="sticky bottom-20 z-10 flex justify-end sm:bottom-4">
           <Button type="submit" size="lg" disabled={pending} className="shadow-lg">
-            {pending ? <Loader2Icon className="animate-spin" /> : null}
+            {pending ? <CircleNotchIcon className="animate-spin" /> : null}
             Save changes
           </Button>
         </div>
@@ -105,7 +109,11 @@ export function SettingsForm({ event, organizerInDraw }: { event: Event; organiz
           </CardHeader>
           <CardContent>
             <ConfirmDialog
-              trigger={<Button variant="outline" className="border-destructive/40 text-destructive">Cancel exchange</Button>}
+              trigger={
+                <Button variant="outline" className="border-destructive/40 text-destructive">
+                  Cancel exchange
+                </Button>
+              }
               title="Cancel this exchange?"
               description="Participants will be notified and the exchange will be closed for good."
               confirmLabel="Cancel exchange"

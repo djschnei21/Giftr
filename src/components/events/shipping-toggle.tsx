@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { TruckIcon } from "lucide-react";
+import { TruckIcon } from "@/components/icons";
 import { toast } from "sonner";
 import { setMyShipping } from "@/server/actions/participants";
 import { Card, CardContent } from "@/components/ui/card";

@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowRightIcon, GiftIcon, MessageCircleIcon } from "lucide-react";
+import { ArrowRightIcon, ChatCircleIcon, GiftIcon } from "@/components/icons";
 import { markMatchViewed } from "@/server/actions/draw";
 import { UserAvatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -89,7 +89,9 @@ export function RevealCard({
               transition={{ duration: 0.35 }}
             >
               {changed ? (
-                <p className="rounded-full bg-gold/15 px-3 py-1 text-xs font-medium">The group changed — you have a new match</p>
+                <p className="rounded-full bg-gold/15 px-3 py-1 text-xs font-medium">
+                  The group changed — you have a new match
+                </p>
               ) : null}
               <motion.button
                 type="button"
@@ -140,7 +142,7 @@ export function RevealCard({
                 {cta === "wishlist" ? (
                   <Button asChild variant="outline">
                     <Link href={`/events/${eventId}/match#chat`}>
-                      <MessageCircleIcon /> Ask anonymously
+                      <ChatCircleIcon /> Ask anonymously
                     </Link>
                   </Button>
                 ) : null}

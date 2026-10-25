@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MailXIcon } from "lucide-react";
+import { BellSlashIcon } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { NotificationPrefsForm } from "@/components/profile/notification-prefs";
@@ -31,11 +31,12 @@ export default async function UnsubscribePage({ params, searchParams }: PageProp
             <Card>
               <CardHeader>
                 <div className="mb-2 flex size-11 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
-                  <MailXIcon className="size-5" />
+                  <BellSlashIcon className="size-5" />
                 </div>
                 <CardTitle>Stop {typeCopy[type]}?</CardTitle>
                 <CardDescription>
-                  For <span className="font-medium text-foreground">{found.email}</span>. You can turn them back on any time.
+                  For <span className="font-medium text-foreground">{found.email}</span>. You can turn them back on any
+                  time.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -61,7 +62,10 @@ export default async function UnsubscribePage({ params, searchParams }: PageProp
               <CardTitle>This link doesn&apos;t work anymore</CardTitle>
               <CardDescription>
                 You can still change which emails you get from your{" "}
-                <Link href="/profile#notifications" className="font-medium text-foreground underline underline-offset-2">
+                <Link
+                  href="/profile#notifications"
+                  className="font-medium text-foreground underline underline-offset-2"
+                >
                   profile
                 </Link>
                 .

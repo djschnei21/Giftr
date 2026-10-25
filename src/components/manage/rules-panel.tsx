@@ -3,14 +3,14 @@
 import { useState } from "react";
 import {
   ArrowRightIcon,
-  ArrowLeftRightIcon,
-  HomeIcon,
+  ArrowsLeftRightIcon,
+  HouseIcon,
   LockIcon,
-  PencilIcon,
+  PencilSimpleIcon,
   PlusIcon,
-  Trash2Icon,
+  TrashIcon,
   XIcon,
-} from "lucide-react";
+} from "@/components/icons";
 import { addExclusion, deleteHousehold, removeExclusion, saveHousehold } from "@/server/actions/draw";
 import { useAction } from "@/components/use-action";
 import { Badge } from "@/components/ui/badge";
@@ -116,7 +116,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
                 return (
                   <li key={h.id} className="flex min-w-0 items-center gap-3 rounded-xl border p-3">
                     <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-                      <HomeIcon className="size-4" />
+                      <HouseIcon className="size-4" />
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{h.name}</p>
@@ -130,7 +130,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
                           aria-label={`Edit ${h.name}`}
                           onClick={() => openHousehold(h)}
                         >
-                          <PencilIcon />
+                          <PencilSimpleIcon />
                         </Button>
                         <Button
                           variant="ghost"
@@ -139,7 +139,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
                           disabled={pending}
                           onClick={() => run(() => deleteHousehold(eventId, h.id), { success: "Household removed" })}
                         >
-                          <Trash2Icon />
+                          <TrashIcon />
                         </Button>
                       </>
                     ) : null}
@@ -166,7 +166,7 @@ export function RulesPanel({ eventId, locked, people, households, exclusions, bl
                   <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1">
                     <span className="font-medium break-words">{r.a}</span>
                     {r.mutual ? (
-                      <ArrowLeftRightIcon className="size-4 shrink-0 text-muted-foreground" aria-label="and" />
+                      <ArrowsLeftRightIcon className="size-4 shrink-0 text-muted-foreground" aria-label="and" />
                     ) : (
                       <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground" aria-label="won't draw" />
                     )}

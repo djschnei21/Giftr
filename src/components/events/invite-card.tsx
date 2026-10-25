@@ -1,4 +1,4 @@
-import { CalendarDaysIcon, MapPinIcon, PackageIcon, SparklesIcon, WalletIcon } from "lucide-react";
+import { CalendarDotsIcon, MapPinIcon, PackageIcon, SparkleIcon, WalletIcon } from "@/components/icons";
 import { LogoMark } from "@/components/logo";
 import { budgetLabel, longDateLabel } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -61,7 +61,7 @@ export function InviteCard({ data, className }: { data: InviteCardData; classNam
         ) : null}
         <ul className="grid gap-2 text-left text-sm">
           <li className="flex min-w-0 items-start gap-2.5">
-            <CalendarDaysIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+            <CalendarDotsIcon className="mt-0.5 size-4 shrink-0 text-primary" />
             <span className="min-w-0">{data.exchangeDate ? longDateLabel(data.exchangeDate) : "Pick a date"}</span>
           </li>
           <li className="flex min-w-0 items-start gap-2.5">
@@ -88,7 +88,7 @@ export function InviteCard({ data, className }: { data: InviteCardData; classNam
           ) : null}
           {data.drawFormat === "wildcard" ? (
             <li className="flex min-w-0 items-start gap-2.5">
-              <SparklesIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+              <SparkleIcon className="mt-0.5 size-4 shrink-0 text-primary" />
               <span className="min-w-0">
                 {wildcardBudget ? `${wildcardBudget} wild card gift` : "Plus a surprise wild card gift"}
               </span>

@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRightIcon,
-  EyeOffIcon,
+  ChatCircleIcon,
+  DetectiveIcon,
+  EyeSlashIcon,
   HeartIcon,
   LinkIcon,
-  MessageCircleIcon,
-  SparklesIcon,
-  WandSparklesIcon,
+  MagicWandIcon,
   ShuffleIcon,
-  VenetianMaskIcon,
-} from "lucide-react";
+  SparkleIcon,
+} from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { InviteCard } from "@/components/events/invite-card";
 import { getCurrentUser } from "@/lib/authz";
@@ -32,17 +32,17 @@ const features = [
     body: "Keep couples and housemates apart, block specific pairs, skip two-person swaps, or make one big loop. If it can't work, Giftr tells you exactly why.",
   },
   {
-    icon: WandSparklesIcon,
+    icon: MagicWandIcon,
     title: "Painless changes",
     body: "Someone drops out or joins late? Giftr patches the chain so only one person's match changes — no awkward full redraw.",
   },
   {
-    icon: EyeOffIcon,
+    icon: EyeSlashIcon,
     title: "Real secrecy",
     body: "Organizers can't peek at matches unless they turn that on, and if they do, everyone can see it's on.",
   },
   {
-    icon: VenetianMaskIcon,
+    icon: DetectiveIcon,
     title: "Ask anonymously",
     body: "Not sure about sizes? Message your giftee without giving yourself away. They can reply, and your name never shows.",
   },
@@ -78,14 +78,14 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
         <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 pt-12 pb-20 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-20 lg:pb-28">
           <div className="grid gap-6">
             <p className="inline-flex w-fit items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
-              <SparklesIcon className="size-3.5 text-gold" /> Free, no ads, no spreadsheets
+              <SparkleIcon className="size-3.5 text-gold" /> Free, no ads, no spreadsheets
             </p>
             <h1 className="font-display text-5xl leading-[1.05] font-semibold tracking-tight text-balance sm:text-6xl">
               Secret Santa, <span className="text-primary">beautifully simple.</span>
             </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-muted-foreground text-pretty">
-              Invite everyone with one link, share wishlists, set the rules, and let Giftr draw names. Everyone finds out
-              who they&apos;re shopping for — and nobody else does.
+            <p className="max-w-xl text-lg leading-relaxed text-pretty text-muted-foreground">
+              Invite everyone with one link, share wishlists, set the rules, and let Giftr draw names. Everyone finds
+              out who they&apos;re shopping for — and nobody else does.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -123,7 +123,7 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
             </div>
             <div className="absolute -right-2 -bottom-24 max-w-52 rotate-[-1deg] rounded-2xl rounded-br-md bg-primary px-4 py-2.5 text-sm text-primary-foreground shadow-lg sm:-right-6">
               <span className="mb-0.5 flex items-center gap-1 text-[11px] opacity-80">
-                <MessageCircleIcon className="size-3" /> Your Secret Santa
+                <ChatCircleIcon className="size-3" /> Your Secret Santa
               </span>
               Medium or large for the sweater?
             </div>
@@ -134,7 +134,9 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
       <section className="border-y bg-card/50">
         <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-20 sm:px-6">
           <div className="grid max-w-2xl gap-3">
-            <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">Everything a gift exchange needs</h2>
+            <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+              Everything a gift exchange needs
+            </h2>
             <p className="text-muted-foreground">And nothing it doesn&apos;t.</p>
           </div>
           <ul className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
@@ -153,7 +155,9 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
 
       <section id="how-it-works" className="scroll-mt-20">
         <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-20 sm:px-6">
-          <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">Up and running in three steps</h2>
+          <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+            Up and running in three steps
+          </h2>
           <ol className="grid gap-6 md:grid-cols-3">
             {steps.map((s, i) => (
               <li key={s.title} className="grid content-start gap-3 rounded-3xl border bg-card p-6">

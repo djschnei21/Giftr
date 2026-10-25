@@ -1,4 +1,4 @@
-import { CalendarClockIcon, HourglassIcon } from "lucide-react";
+import { CalendarCheckIcon, HourglassIcon } from "@/components/icons";
 import type { Assignment, Event, Participant } from "@/db/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { dateLabel } from "@/lib/format";
@@ -41,7 +41,7 @@ export function MatchSection({
       <Card className="overflow-hidden">
         <CardContent className="flex min-w-0 items-start gap-4">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gold/15 text-gold">
-            {scheduled ? <CalendarClockIcon className="size-6" /> : <HourglassIcon className="size-6" />}
+            {scheduled ? <CalendarCheckIcon className="size-6" /> : <HourglassIcon className="size-6" />}
           </span>
           <div className="min-w-0">
             <p className="font-medium">Names haven&apos;t been drawn yet</p>

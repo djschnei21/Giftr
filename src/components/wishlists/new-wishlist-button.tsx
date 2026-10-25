@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon } from "@/components/icons";
 import { createWishlist } from "@/server/actions/wishlists";
 import { useAction } from "@/components/use-action";
 import { Button } from "@/components/ui/button";

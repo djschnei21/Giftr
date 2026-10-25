@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2Icon, PartyPopperIcon } from "lucide-react";
+import { CircleNotchIcon, ConfettiIcon } from "@/components/icons";
 import { toast } from "sonner";
 import { declineInvite, joinEvent } from "@/server/actions/invites";
 import { Button } from "@/components/ui/button";
@@ -34,7 +34,7 @@ export function JoinActions({ code, token }: { code: string; token?: string }) {
           })
         }
       >
-        {pending ? <Loader2Icon className="animate-spin" /> : <PartyPopperIcon />}
+        {pending ? <CircleNotchIcon className="animate-spin" /> : <ConfettiIcon />}
         Count me in
       </Button>
       <Button

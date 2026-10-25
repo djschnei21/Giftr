@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { Loader2Icon } from "lucide-react";
+import { CircleNotchIcon } from "@/components/icons";
 import { setDisplayName } from "@/server/actions/profile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +18,7 @@ export function WelcomeForm({ next }: { next: string }) {
       <Input id="name" name="name" required autoFocus autoComplete="name" placeholder="Your name" maxLength={60} />
       {state && !state.ok ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" size="lg" disabled={pending}>
-        {pending ? <Loader2Icon className="animate-spin" /> : null}
+        {pending ? <CircleNotchIcon className="animate-spin" /> : null}
         Continue
       </Button>
     </form>

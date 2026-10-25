@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDownIcon, HandshakeIcon, PackageIcon, GiftIcon, SparklesIcon } from "lucide-react";
+import { CaretDownIcon, GiftIcon, HandshakeIcon, PackageIcon, SparkleIcon } from "@/components/icons";
 import { Field } from "@/components/ui/label";
 import { Input, NativeSelect, Textarea } from "@/components/ui/input";
 import { SwitchRow } from "@/components/ui/misc";
@@ -42,7 +42,9 @@ export function eventToFormState(ev: Event): EventFormState {
     budgetMax: ev.budgetMax?.toString() ?? "",
     wildcardBudgetMin: ev.wildcardBudgetMin?.toString() ?? "",
     wildcardBudgetMax: ev.wildcardBudgetMax?.toString() ?? "",
-    currency: (currencies as readonly string[]).includes(ev.currency) ? (ev.currency as EventFormState["currency"]) : "USD",
+    currency: (currencies as readonly string[]).includes(ev.currency)
+      ? (ev.currency as EventFormState["currency"])
+      : "USD",
     joinDeadline: ev.joinDeadline ?? "",
     drawMode: ev.drawMode,
     drawDate: ev.drawDate ?? "",
@@ -132,7 +134,12 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
           onChange={(drawFormat) => onChange({ drawFormat })}
           options={[
             { value: "classic", label: "Classic", icon: <GiftIcon />, description: "One match each, wishlists on" },
-            { value: "wildcard", label: "Wild card", icon: <SparklesIcon />, description: "Two matches: a main gift + a surprise" },
+            {
+              value: "wildcard",
+              label: "Wild card",
+              icon: <SparkleIcon />,
+              description: "Two matches: a main gift + a surprise",
+            },
           ]}
         />
       </div>
@@ -195,8 +202,18 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
         </div>
       ) : null}
 
-      <Field label="Join by" htmlFor="joinDeadline" hint="Optional. We'll remind people who haven't joined." error={errors.joinDeadline}>
-        <Input id="joinDeadline" type="date" value={value.joinDeadline} onChange={(e) => onChange({ joinDeadline: e.target.value })} />
+      <Field
+        label="Join by"
+        htmlFor="joinDeadline"
+        hint="Optional. We'll remind people who haven't joined."
+        error={errors.joinDeadline}
+      >
+        <Input
+          id="joinDeadline"
+          type="date"
+          value={value.joinDeadline}
+          onChange={(e) => onChange({ joinDeadline: e.target.value })}
+        />
       </Field>
 
       <div className="grid gap-2">
@@ -239,17 +256,12 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
   );
 }
 
-export function AdvancedFields({
-  value,
-  onChange,
-  locked,
-  extra,
-}: FieldsProps & { extra?: React.ReactNode }) {
+export function AdvancedFields({ value, onChange, locked, extra }: FieldsProps & { extra?: React.ReactNode }) {
   return (
     <details className="group rounded-2xl border bg-card">
       <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3.5 text-sm font-medium [&::-webkit-details-marker]:hidden">
         Advanced options
-        <ChevronDownIcon className="size-4 text-muted-foreground transition-transform group-open:rotate-180" />
+        <CaretDownIcon className="size-4 text-muted-foreground transition-transform group-open:rotate-180" />
       </summary>
       <div className="grid gap-4 border-t px-4 py-4">
         {extra}

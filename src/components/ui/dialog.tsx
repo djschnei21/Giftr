@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Dialog as DialogPrimitive, AlertDialog as AlertDialogPrimitive } from "radix-ui";
 import { Drawer as DrawerPrimitive } from "vaul";
-import { XIcon } from "lucide-react";
+import { XIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -26,7 +26,15 @@ type ResponsiveDialogProps = {
   className?: string;
 };
 
-function ResponsiveDialog({ open, onOpenChange, trigger, title, description, children, className }: ResponsiveDialogProps) {
+function ResponsiveDialog({
+  open,
+  onOpenChange,
+  trigger,
+  title,
+  description,
+  children,
+  className,
+}: ResponsiveDialogProps) {
   const isDesktop = useMediaQuery("(min-width: 640px)");
 
   if (isDesktop) {
@@ -75,7 +83,7 @@ function ResponsiveDialog({ open, onOpenChange, trigger, title, description, chi
               {description ?? title}
             </DrawerPrimitive.Description>
           </div>
-          <div className="pb-safe grid gap-5 overflow-y-auto px-5 pt-5">{children}</div>
+          <div className="grid gap-5 overflow-y-auto px-5 pt-5 pb-safe">{children}</div>
         </DrawerPrimitive.Content>
       </DrawerPrimitive.Portal>
     </DrawerPrimitive.Root>
@@ -93,7 +101,16 @@ type ConfirmProps = {
   onConfirm: () => void | Promise<void>;
 };
 
-function ConfirmDialog({ trigger, open, onOpenChange, title, description, confirmLabel, destructive, onConfirm }: ConfirmProps) {
+function ConfirmDialog({
+  trigger,
+  open,
+  onOpenChange,
+  title,
+  description,
+  confirmLabel,
+  destructive,
+  onConfirm,
+}: ConfirmProps) {
   return (
     <AlertDialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       {trigger ? <AlertDialogPrimitive.Trigger asChild>{trigger}</AlertDialogPrimitive.Trigger> : null}
@@ -101,13 +118,17 @@ function ConfirmDialog({ trigger, open, onOpenChange, title, description, confir
         <AlertDialogPrimitive.Overlay className={overlayClass} />
         <AlertDialogPrimitive.Content className={cn(contentClass, "max-w-md")}>
           <div className="grid gap-2">
-            <AlertDialogPrimitive.Title className="font-display text-xl font-semibold">{title}</AlertDialogPrimitive.Title>
+            <AlertDialogPrimitive.Title className="font-display text-xl font-semibold">
+              {title}
+            </AlertDialogPrimitive.Title>
             <AlertDialogPrimitive.Description className="text-sm leading-relaxed text-muted-foreground">
               {description}
             </AlertDialogPrimitive.Description>
           </div>
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <AlertDialogPrimitive.Cancel className={buttonVariants({ variant: "outline" })}>Cancel</AlertDialogPrimitive.Cancel>
+            <AlertDialogPrimitive.Cancel className={buttonVariants({ variant: "outline" })}>
+              Cancel
+            </AlertDialogPrimitive.Cancel>
             <AlertDialogPrimitive.Action
               className={buttonVariants({ variant: destructive ? "destructive" : "default" })}
               onClick={() => void onConfirm()}

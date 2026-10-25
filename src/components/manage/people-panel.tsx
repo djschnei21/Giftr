@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { CrownIcon, EyeIcon, MoreHorizontalIcon, UserMinusIcon, UserRoundXIcon, UsersIcon, UserCheckIcon } from "lucide-react";
+import {
+  CrownIcon,
+  DotsThreeIcon,
+  EyeIcon,
+  UserCheckIcon,
+  UserCircleMinusIcon,
+  UserMinusIcon,
+  UsersIcon,
+} from "@/components/icons";
 import { toast } from "sonner";
 import type { EventPerson } from "@/server/queries/events";
 import { removeParticipant, setParticipantInDraw } from "@/server/actions/participants";
@@ -71,7 +79,9 @@ export function PeoplePanel({ eventId, status, people, householdNames, viewed }:
               <p className="font-medium" data-testid="viewed-total">
                 {viewed.viewed} of {viewed.assigned} have opened their match
               </p>
-              <p className="text-sm text-muted-foreground">You only see totals, so nobody&apos;s match is given away.</p>
+              <p className="text-sm text-muted-foreground">
+                You only see totals, so nobody&apos;s match is given away.
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -79,9 +89,7 @@ export function PeoplePanel({ eventId, status, people, householdNames, viewed }:
 
       <Card>
         <CardHeader>
-          <CardTitle>
-            {pluralize(joined.length, "person", "people")} joined
-          </CardTitle>
+          <CardTitle>{pluralize(joined.length, "person", "people")} joined</CardTitle>
           <CardDescription>
             {inDraw} in the draw{joined.length - inDraw > 0 ? ` · ${joined.length - inDraw} sitting out` : ""}
           </CardDescription>
@@ -110,7 +118,7 @@ export function PeoplePanel({ eventId, status, people, householdNames, viewed }:
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" aria-label={`Options for ${p.name}`} disabled={pending}>
-                        <MoreHorizontalIcon />
+                        <DotsThreeIcon />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -122,7 +130,7 @@ export function PeoplePanel({ eventId, status, people, householdNames, viewed }:
                             })
                           }
                         >
-                          {p.inDraw ? <UserRoundXIcon /> : <UserCheckIcon />}
+                          {p.inDraw ? <UserCircleMinusIcon /> : <UserCheckIcon />}
                           {p.inDraw ? "Leave out of the draw" : "Include in the draw"}
                         </DropdownMenuItem>
                       ) : null}

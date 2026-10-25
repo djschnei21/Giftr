@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { LogOutIcon } from "lucide-react";
+import { SignOutIcon } from "@/components/icons";
 import { toast } from "sonner";
 import { leaveEvent } from "@/server/actions/invites";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ export function LeaveEventButton({ eventId }: { eventId: string }) {
     <ConfirmDialog
       trigger={
         <Button variant="ghost" className="justify-self-start text-muted-foreground">
-          <LogOutIcon /> Leave this exchange
+          <SignOutIcon /> Leave this exchange
         </Button>
       }
       title="Leave this exchange?"

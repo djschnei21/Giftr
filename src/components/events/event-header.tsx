@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronLeftIcon, Settings2Icon } from "lucide-react";
+import { CaretLeftIcon, SlidersHorizontalIcon } from "@/components/icons";
 import type { Event } from "@/db/schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ export function EventHeader({
         href={back.href}
         className="-ml-1 flex w-fit items-center gap-1 rounded-lg text-sm text-muted-foreground transition hover:text-foreground"
       >
-        <ChevronLeftIcon className="size-4" /> {back.label}
+        <CaretLeftIcon className="size-4" /> {back.label}
       </Link>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="grid w-full min-w-0 gap-2 sm:w-auto">
@@ -40,7 +40,7 @@ export function EventHeader({
         {isOrganizer && showManage && event.status !== "cancelled" ? (
           <Button asChild variant="outline">
             <Link href={`/events/${event.id}/manage`}>
-              <Settings2Icon /> Manage
+              <SlidersHorizontalIcon /> Manage
             </Link>
           </Button>
         ) : null}

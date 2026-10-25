@@ -2,7 +2,15 @@
 
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { CheckIcon, HistoryIcon, Loader2Icon, MailIcon, RefreshCwIcon, SendIcon, XIcon } from "lucide-react";
+import {
+  ArrowsClockwiseIcon,
+  CheckIcon,
+  CircleNotchIcon,
+  ClockCounterClockwiseIcon,
+  EnvelopeSimpleIcon,
+  PaperPlaneTiltIcon,
+  XIcon,
+} from "@/components/icons";
 import { toast } from "sonner";
 import type { Invitation } from "@/db/schema";
 import {
@@ -45,7 +53,15 @@ const statusBadge = {
   accepted: <Badge>Joined</Badge>,
 } as const;
 
-export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLinkEnabled, invitations, pastPeople }: Props) {
+export function InvitesPanel({
+  eventId,
+  eventName,
+  status,
+  inviteUrl,
+  inviteLinkEnabled,
+  invitations,
+  pastPeople,
+}: Props) {
   const [pending, run] = useAction();
   const [emails, setEmails] = useState("");
   const [picked, setPicked] = useState<Set<string>>(new Set());
@@ -56,7 +72,9 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
   if (closed) {
     return (
       <Card>
-        <CardContent className="text-sm text-muted-foreground">This exchange is closed, so invites are off.</CardContent>
+        <CardContent className="text-sm text-muted-foreground">
+          This exchange is closed, so invites are off.
+        </CardContent>
       </Card>
     );
   }
@@ -86,13 +104,15 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
             description="Turn it off to stop new people joining by link."
             checked={inviteLinkEnabled}
             disabled={pending}
-            onCheckedChange={(v) => run(() => setInviteLinkEnabled(eventId, v), { success: v ? "Invite link is on" : "Invite link is off" })}
+            onCheckedChange={(v) =>
+              run(() => setInviteLinkEnabled(eventId, v), { success: v ? "Invite link is on" : "Invite link is off" })
+            }
           />
           <div>
             <ConfirmDialog
               trigger={
                 <Button variant="outline" size="sm" disabled={pending}>
-                  <RefreshCwIcon /> Get a new link
+                  <ArrowsClockwiseIcon /> Get a new link
                 </Button>
               }
               title="Replace the invite link?"
@@ -135,9 +155,11 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
               rows={3}
             />
             <div className="flex items-center justify-end gap-3">
-              {count ? <span className="text-sm text-muted-foreground">{pluralize(count, "address", "addresses")}</span> : null}
+              {count ? (
+                <span className="text-sm text-muted-foreground">{pluralize(count, "address", "addresses")}</span>
+              ) : null}
               <Button type="submit" disabled={pending || count === 0}>
-                {pending ? <Loader2Icon className="animate-spin" /> : <SendIcon />}
+                {pending ? <CircleNotchIcon className="animate-spin" /> : <PaperPlaneTiltIcon />}
                 Send invites
               </Button>
             </div>
@@ -149,7 +171,7 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <HistoryIcon className="size-4 text-muted-foreground" /> From your past exchanges
+              <ClockCounterClockwiseIcon className="size-4 text-muted-foreground" /> From your past exchanges
             </CardTitle>
             <CardDescription>Tap people to invite them again.</CardDescription>
           </CardHeader>
@@ -203,7 +225,7 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
                   })
                 }
               >
-                <MailIcon /> Invite {picked.size || ""}
+                <EnvelopeSimpleIcon /> Invite {picked.size || ""}
               </Button>
             </div>
           </CardContent>
@@ -233,9 +255,11 @@ export function InvitesPanel({ eventId, eventName, status, inviteUrl, inviteLink
                         variant="ghost"
                         size="sm"
                         disabled={pending}
-                        onClick={() => run(() => resendInvite(eventId, inv.id), { success: `Invite resent to ${inv.email}` })}
+                        onClick={() =>
+                          run(() => resendInvite(eventId, inv.id), { success: `Invite resent to ${inv.email}` })
+                        }
                       >
-                        <RefreshCwIcon /> Resend
+                        <ArrowsClockwiseIcon /> Resend
                       </Button>
                       {inv.status === "pending" ? (
                         <Button

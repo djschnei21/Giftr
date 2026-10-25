@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNowStrict } from "date-fns";
-import { LoaderCircleIcon, SendHorizonalIcon, VenetianMaskIcon } from "lucide-react";
+import { CircleNotchIcon, DetectiveIcon, PaperPlaneRightIcon } from "@/components/icons";
 import { toast } from "sonner";
 import { loadThread, markThreadRead, sendMessage } from "@/server/actions/match";
 import type { ThreadMessage, ThreadRole } from "@/server/queries/match";
@@ -108,7 +108,7 @@ export function AnonymousChat({
       >
         {messages.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-6 text-center text-sm text-muted-foreground">
-            <VenetianMaskIcon className="size-6 text-primary" />
+            <DetectiveIcon className="size-6 text-primary" />
             <p className="max-w-xs">{emptyHint}</p>
           </div>
         ) : (
@@ -161,7 +161,7 @@ export function AnonymousChat({
           className="max-h-40 min-h-11 resize-none"
         />
         <Button type="submit" size="icon" aria-label="Send message" disabled={!draft.trim() || sending}>
-          {sending ? <LoaderCircleIcon className="animate-spin" /> : <SendHorizonalIcon />}
+          {sending ? <CircleNotchIcon className="animate-spin" /> : <PaperPlaneRightIcon />}
         </Button>
       </form>
     </div>

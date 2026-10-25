@@ -19,7 +19,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVerticalIcon, PencilIcon, PlusIcon, StarIcon, Trash2Icon } from "lucide-react";
+import { DotsSixVerticalIcon, PencilSimpleIcon, PlusIcon, StarIcon, TrashIcon } from "@/components/icons";
 import { toast } from "sonner";
 import type { WishlistItem } from "@/db/schema";
 import {
@@ -69,7 +69,7 @@ function SortableItem({
             {...attributes}
             {...listeners}
           >
-            <GripVerticalIcon className="size-4" />
+            <DotsSixVerticalIcon className="size-4" />
           </button>
         }
         actions={
@@ -81,13 +81,25 @@ function SortableItem({
               onClick={onStar}
               aria-label={item.mostWanted ? "Unmark most wanted" : "Mark most wanted"}
             >
-              <StarIcon className={cn(item.mostWanted && "fill-gold text-gold")} />
+              <StarIcon weight={item.mostWanted ? "fill" : "bold"} className={cn(item.mostWanted && "text-gold")} />
             </Button>
-            <Button variant="ghost" size="icon-sm" className="sm:size-10" onClick={onEdit} aria-label={`Edit ${item.title}`}>
-              <PencilIcon />
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className="sm:size-10"
+              onClick={onEdit}
+              aria-label={`Edit ${item.title}`}
+            >
+              <PencilSimpleIcon />
             </Button>
-            <Button variant="ghost" size="icon-sm" className="sm:size-10" onClick={onDelete} aria-label={`Delete ${item.title}`}>
-              <Trash2Icon />
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className="sm:size-10"
+              onClick={onDelete}
+              aria-label={`Delete ${item.title}`}
+            >
+              <TrashIcon />
             </Button>
           </>
         }

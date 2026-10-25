@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { GiftIcon, ListChecksIcon, StarIcon } from "lucide-react";
+import { GiftIcon, ListChecksIcon, StarIcon } from "@/components/icons";
 import { EmptyState } from "@/components/app/empty-state";
 import { Badge } from "@/components/ui/badge";
 import { NewWishlistButton } from "@/components/wishlists/new-wishlist-button";
@@ -62,9 +62,16 @@ export default async function WishlistsPage() {
                         className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-secondary text-muted-foreground"
                       >
                         {item?.imageUrl ? (
-                          <img src={item.imageUrl} alt="" referrerPolicy="no-referrer" className="size-full object-cover" />
+                          <img
+                            src={item.imageUrl}
+                            alt=""
+                            referrerPolicy="no-referrer"
+                            className="size-full object-cover"
+                          />
                         ) : item ? (
-                          <span className="line-clamp-3 px-1.5 text-center text-[10px] leading-tight">{item.title}</span>
+                          <span className="line-clamp-3 px-1.5 text-center text-[10px] leading-tight">
+                            {item.title}
+                          </span>
                         ) : (
                           <GiftIcon className="size-4 opacity-40" />
                         )}

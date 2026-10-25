@@ -6,9 +6,9 @@ import {
   PackageIcon,
   RepeatIcon,
   ShuffleIcon,
-  SparklesIcon,
+  SparkleIcon,
   WalletIcon,
-} from "lucide-react";
+} from "@/components/icons";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAvatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -140,7 +140,7 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
                 </li>
                 {event.drawFormat === "wildcard" ? (
                   <li className="flex items-start gap-3">
-                    <SparklesIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+                    <SparkleIcon className="mt-0.5 size-4 shrink-0 text-primary" />
                     <span className="min-w-0">
                       {wildcardBudget ? `Wildcard budget: ${wildcardBudget}` : "Wildcard budget not set"}
                     </span>
@@ -159,7 +159,7 @@ export default async function EventPage({ params, searchParams }: PageProps<"/ev
               <div className="flex flex-wrap gap-2">
                 {event.drawFormat === "wildcard" ? (
                   <Badge variant="gold">
-                    <SparklesIcon /> Wild Card exchange
+                    <SparkleIcon /> Wild Card exchange
                   </Badge>
                 ) : null}
                 {event.noReciprocal ? (

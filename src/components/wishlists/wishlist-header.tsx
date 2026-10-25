@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronLeftIcon, MoreHorizontalIcon, PencilIcon, StarIcon, Trash2Icon } from "lucide-react";
+import { CaretLeftIcon, DotsThreeIcon, PencilSimpleIcon, StarIcon, TrashIcon } from "@/components/icons";
 import { deleteWishlist, makeDefaultWishlist, renameWishlist } from "@/server/actions/wishlists";
 import { useAction } from "@/components/use-action";
 import { Badge } from "@/components/ui/badge";
@@ -28,8 +28,11 @@ export function WishlistHeader({
 
   return (
     <header className="grid grid-cols-1 gap-3">
-      <Link href="/wishlists" className="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ChevronLeftIcon className="size-4" /> All wishlists
+      <Link
+        href="/wishlists"
+        className="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+      >
+        <CaretLeftIcon className="size-4" /> All wishlists
       </Link>
       <div className="flex items-start justify-between gap-3">
         <div className="grid min-w-0 gap-2">
@@ -52,23 +55,22 @@ export function WishlistHeader({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon" aria-label="Wishlist options" disabled={pending}>
-              <MoreHorizontalIcon />
+              <DotsThreeIcon />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onSelect={() => setRenaming(true)}>
-              <PencilIcon /> Rename
+              <PencilSimpleIcon /> Rename
             </DropdownMenuItem>
             {!wishlist.isDefault ? (
               <>
-                <DropdownMenuItem onSelect={() => run(() => makeDefaultWishlist(wishlist.id), { success: "Default wishlist updated" })}>
+                <DropdownMenuItem
+                  onSelect={() => run(() => makeDefaultWishlist(wishlist.id), { success: "Default wishlist updated" })}
+                >
                   <StarIcon /> Make default
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  destructive
-                  onSelect={() => setDeleting(true)}
-                >
-                  <Trash2Icon /> Delete
+                <DropdownMenuItem destructive onSelect={() => setDeleting(true)}>
+                  <TrashIcon /> Delete
                 </DropdownMenuItem>
               </>
             ) : null}
@@ -84,7 +86,10 @@ export function WishlistHeader({
         confirmLabel="Delete wishlist"
         destructive
         onConfirm={() =>
-          run(() => deleteWishlist(wishlist.id), { success: "Wishlist deleted", onSuccess: () => router.push("/wishlists") })
+          run(() => deleteWishlist(wishlist.id), {
+            success: "Wishlist deleted",
+            onSuccess: () => router.push("/wishlists"),
+          })
         }
       />
 
@@ -97,7 +102,13 @@ export function WishlistHeader({
           }}
         >
           <Field label="Name" htmlFor="rename-wishlist">
-            <Input id="rename-wishlist" value={name} onChange={(e) => setName(e.target.value)} maxLength={60} autoFocus />
+            <Input
+              id="rename-wishlist"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              maxLength={60}
+              autoFocus
+            />
           </Field>
           <Button type="submit" disabled={pending || !name.trim()}>
             Save

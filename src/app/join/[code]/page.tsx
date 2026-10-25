@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { and, count, eq } from "drizzle-orm";
-import { LockIcon } from "lucide-react";
+import { LockIcon } from "@/components/icons";
 import { db } from "@/db";
 import { participant, user } from "@/db/schema";
 import { Logo } from "@/components/logo";
@@ -116,8 +116,11 @@ export default async function JoinPage({ params, searchParams }: PageProps<"/joi
             <div className="grid gap-1.5">
               <h1 className="font-display text-2xl font-semibold">Join {ev.name}?</h1>
               <p className="text-sm text-muted-foreground">
-                You&apos;ll join as <span className="font-medium text-foreground">{current.name}</span> ({current.email}).
-                {ev.status === "drawn" ? " Names are already drawn — you'll be slotted in without spoiling anyone else's match." : null}
+                You&apos;ll join as <span className="font-medium text-foreground">{current.name}</span> ({current.email}
+                ).
+                {ev.status === "drawn"
+                  ? " Names are already drawn — you'll be slotted in without spoiling anyone else's match."
+                  : null}
               </p>
             </div>
             <JoinActions code={code} token={token} />

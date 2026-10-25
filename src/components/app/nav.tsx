@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { GiftIcon, ListChecksIcon, UserRoundIcon } from "lucide-react";
+import { GiftIcon, ListChecksIcon, UserIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
 const items = [
   { href: "/events", label: "Exchanges", icon: GiftIcon },
   { href: "/wishlists", label: "Wishlists", icon: ListChecksIcon },
-  { href: "/profile", label: "Profile", icon: UserRoundIcon },
+  { href: "/profile", label: "Profile", icon: UserIcon },
 ];
 
 export function MainNav() {
@@ -40,7 +40,7 @@ export function MobileNav() {
   return (
     <nav
       aria-label="Main"
-      className="pb-safe fixed inset-x-0 bottom-0 z-40 border-t bg-background/90 backdrop-blur-lg sm:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/90 pb-safe backdrop-blur-lg sm:hidden"
     >
       <div className="mx-auto grid max-w-md grid-cols-3">
         {items.map((item) => {
