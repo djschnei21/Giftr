@@ -63,12 +63,14 @@ export async function updateEvent(eventId: string, input: UpdateEventInput) {
         throw new UserError("Draw rules can't change after names are drawn. Redraw first if you need different rules.");
       if (data.organizerCanViewMatches && !ev.organizerCanViewMatches)
         throw new UserError("Organizer access to matches can't be turned on after the draw.");
+      if (data.drawFormat !== ev.drawFormat) throw new UserError("The exchange format can't change after names are drawn.");
     }
 
     await db
       .update(event)
       .set({
         ...data,
+        drawFormat: drawn ? ev.drawFormat : data.drawFormat,
         drawMode: drawn ? ev.drawMode : data.drawMode,
         drawDate: drawn ? ev.drawDate : data.drawMode === "scheduled" ? data.drawDate : null,
       })
