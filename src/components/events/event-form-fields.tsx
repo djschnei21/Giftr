@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDownIcon, HandshakeIcon, PackageIcon } from "lucide-react";
+import { ChevronDownIcon, HandshakeIcon, PackageIcon, GiftIcon, SparklesIcon } from "lucide-react";
 import { Field } from "@/components/ui/label";
 import { Input, NativeSelect, Textarea } from "@/components/ui/input";
 import { SwitchRow } from "@/components/ui/misc";
@@ -14,8 +14,11 @@ export type EventFormState = {
   exchangeDate: string;
   exchangeType: "in_person" | "shipped";
   location: string;
+  drawFormat: "classic" | "wildcard";
   budgetMin: string;
   budgetMax: string;
+  wildcardBudgetMin: string;
+  wildcardBudgetMax: string;
   currency: (typeof currencies)[number];
   joinDeadline: string;
   drawMode: "manual" | "scheduled";
@@ -34,8 +37,11 @@ export function eventToFormState(ev: Event): EventFormState {
     exchangeDate: ev.exchangeDate,
     exchangeType: ev.exchangeType,
     location: ev.location ?? "",
+    drawFormat: ev.drawFormat,
     budgetMin: ev.budgetMin?.toString() ?? "",
     budgetMax: ev.budgetMax?.toString() ?? "",
+    wildcardBudgetMin: ev.wildcardBudgetMin?.toString() ?? "",
+    wildcardBudgetMax: ev.wildcardBudgetMax?.toString() ?? "",
     currency: (currencies as readonly string[]).includes(ev.currency) ? (ev.currency as EventFormState["currency"]) : "USD",
     joinDeadline: ev.joinDeadline ?? "",
     drawMode: ev.drawMode,
@@ -114,20 +120,35 @@ export function BasicsFields({ value, onChange, errors = {} }: FieldsProps) {
 }
 
 export function BudgetRulesFields({ value, onChange, errors = {}, locked }: FieldsProps) {
+  const wildcard = value.drawFormat === "wildcard";
   return (
     <div className="grid gap-5">
       <div className="grid gap-2">
-        <span className="text-sm font-medium">Budget</span>
+        <span className="text-sm font-medium">Exchange format</span>
+        <Segmented
+          name="drawFormat"
+          value={value.drawFormat}
+          disabled={locked}
+          onChange={(drawFormat) => onChange({ drawFormat })}
+          options={[
+            { value: "classic", label: "Classic", icon: <GiftIcon />, description: "One match each, wishlists on" },
+            { value: "wildcard", label: "Wild card", icon: <SparklesIcon />, description: "Two matches: a main gift + a surprise" },
+          ]}
+        />
+      </div>
+
+      <div className="grid gap-2">
+        <span className="text-sm font-medium">{wildcard ? "Main gift budget" : "Budget"}</span>
         <div className="grid grid-cols-[1fr_1fr_6.5rem] gap-2">
           <Input
-            aria-label="Minimum budget"
+            aria-label={wildcard ? "Minimum main gift budget" : "Minimum budget"}
             inputMode="numeric"
             placeholder="Min"
             value={value.budgetMin}
             onChange={(e) => onChange({ budgetMin: e.target.value.replace(/\D/g, "") })}
           />
           <Input
-            aria-label="Maximum budget"
+            aria-label={wildcard ? "Maximum main gift budget" : "Maximum budget"}
             inputMode="numeric"
             placeholder="Max"
             value={value.budgetMax}
@@ -146,6 +167,33 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
         </div>
         {errors.budgetMax ? <p className="text-[13px] text-destructive">{errors.budgetMax}</p> : null}
       </div>
+
+      {wildcard ? (
+        <div className="grid gap-2">
+          <span className="text-sm font-medium">Wild card gift budget</span>
+          <div className="grid grid-cols-[1fr_1fr] gap-2">
+            <Input
+              aria-label="Minimum wild card budget"
+              inputMode="numeric"
+              placeholder="Min"
+              value={value.wildcardBudgetMin}
+              onChange={(e) => onChange({ wildcardBudgetMin: e.target.value.replace(/\D/g, "") })}
+            />
+            <Input
+              aria-label="Maximum wild card budget"
+              inputMode="numeric"
+              placeholder="Max"
+              value={value.wildcardBudgetMax}
+              onChange={(e) => onChange({ wildcardBudgetMax: e.target.value.replace(/\D/g, "") })}
+              aria-invalid={Boolean(errors.wildcardBudgetMax)}
+            />
+          </div>
+          {errors.wildcardBudgetMax ? <p className="text-[13px] text-destructive">{errors.wildcardBudgetMax}</p> : null}
+          <p className="text-[13px] text-muted-foreground">
+            No wishlist here — just a name and this budget, so it stays a fun surprise.
+          </p>
+        </div>
+      ) : null}
 
       <Field label="Join by" htmlFor="joinDeadline" hint="Optional. We'll remind people who haven't joined." error={errors.joinDeadline}>
         <Input id="joinDeadline" type="date" value={value.joinDeadline} onChange={(e) => onChange({ joinDeadline: e.target.value })} />
@@ -246,6 +294,8 @@ export function formStateToInput(v: EventFormState) {
     ...v,
     budgetMin: v.budgetMin === "" ? null : Number(v.budgetMin),
     budgetMax: v.budgetMax === "" ? null : Number(v.budgetMax),
+    wildcardBudgetMin: v.drawFormat === "wildcard" && v.wildcardBudgetMin !== "" ? Number(v.wildcardBudgetMin) : null,
+    wildcardBudgetMax: v.drawFormat === "wildcard" && v.wildcardBudgetMax !== "" ? Number(v.wildcardBudgetMax) : null,
     joinDeadline: v.joinDeadline || null,
     drawDate: v.drawDate || null,
     location: v.exchangeType === "in_person" ? v.location : "",

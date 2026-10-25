@@ -1,4 +1,4 @@
-import { CalendarDaysIcon, MapPinIcon, PackageIcon, WalletIcon } from "lucide-react";
+import { CalendarDaysIcon, MapPinIcon, PackageIcon, SparklesIcon, WalletIcon } from "lucide-react";
 import { LogoMark } from "@/components/logo";
 import { budgetLabel, longDateLabel } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -9,8 +9,11 @@ export type InviteCardData = {
   exchangeDate: string;
   exchangeType: "in_person" | "shipped";
   location?: string | null;
+  drawFormat?: "classic" | "wildcard";
   budgetMin: number | null;
   budgetMax: number | null;
+  wildcardBudgetMin?: number | null;
+  wildcardBudgetMax?: number | null;
   currency: string;
   description?: string | null;
   participantCount?: number;
@@ -18,6 +21,8 @@ export type InviteCardData = {
 
 export function InviteCard({ data, className }: { data: InviteCardData; className?: string }) {
   const budget = budgetLabel(data.budgetMin, data.budgetMax, data.currency);
+  const wildcardBudget =
+    data.drawFormat === "wildcard" ? budgetLabel(data.wildcardBudgetMin ?? null, data.wildcardBudgetMax ?? null, data.currency) : null;
   return (
     <div
       className={cn(
@@ -71,6 +76,13 @@ export function InviteCard({ data, className }: { data: InviteCardData; classNam
           {budget ? (
             <li className="flex items-center gap-2.5">
               <WalletIcon className="size-4 shrink-0 text-primary" /> {budget}
+              {data.drawFormat === "wildcard" ? " main gift" : ""}
+            </li>
+          ) : null}
+          {data.drawFormat === "wildcard" ? (
+            <li className="flex items-center gap-2.5">
+              <SparklesIcon className="size-4 shrink-0 text-primary" />
+              {wildcardBudget ? `${wildcardBudget} wild card gift` : "Plus a surprise wild card gift"}
             </li>
           ) : null}
         </ul>
