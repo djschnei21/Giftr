@@ -127,12 +127,14 @@ function EventCard({ event, me, isOrganizer, people }: Awaited<ReturnType<typeof
           {budget ? <> · {budget}</> : null}
         </p>
       </div>
-      <div className="mt-auto flex items-center justify-between gap-3">
+      <div className="mt-auto flex flex-wrap items-center justify-between gap-3">
         <AvatarStack people={people} />
         {needsReveal ? (
-          <span className="rounded-full bg-berry px-3 py-1 text-xs font-semibold text-berry-foreground">Reveal your match</span>
+          <span className="shrink-0 rounded-full bg-berry px-3 py-1 text-xs font-semibold whitespace-nowrap text-berry-foreground">
+            Reveal your match
+          </span>
         ) : (
-          <span className="text-xs text-muted-foreground">{people.length} joined</span>
+          <span className="shrink-0 text-xs whitespace-nowrap text-muted-foreground">{people.length} joined</span>
         )}
       </div>
     </Link>
