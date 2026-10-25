@@ -32,7 +32,7 @@ export default async function WishlistPage({ params }: PageProps<"/wishlists/[id
       ),
   ]);
   return (
-    <div className="mx-auto grid w-full max-w-2xl gap-8">
+    <div className="mx-auto grid w-full max-w-2xl grid-cols-1 gap-8">
       <WishlistHeader wishlist={list} sharedIn={shared.map((s) => s.name)} />
       <WishlistEditor wishlistId={id} items={items} />
     </div>
