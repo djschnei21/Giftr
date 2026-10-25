@@ -56,12 +56,12 @@ function AvatarStack({
   const shown = people.slice(0, max);
   const extra = people.length - shown.length;
   return (
-    <div className={cn("flex items-center -space-x-2", className)}>
+    <div className={cn("flex items-center -space-x-1", className)}>
       {shown.map((p) => (
-        <UserAvatar key={p.id} name={p.name} image={p.image} className="size-8 rounded-lg text-xs" />
+        <UserAvatar key={p.id} name={p.name} image={p.image} className="size-8 rounded-lg text-xs ring-card" />
       ))}
       {extra > 0 ? (
-        <span className="flex size-8 items-center justify-center rounded-lg bg-secondary text-xs font-semibold ring-2 ring-background">
+        <span className="flex size-8 items-center justify-center rounded-lg bg-secondary text-xs font-semibold ring-2 ring-card">
           +{extra}
         </span>
       ) : null}
