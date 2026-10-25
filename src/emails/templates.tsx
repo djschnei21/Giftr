@@ -53,18 +53,26 @@ export function namesDrawnEmail(p: {
   eventName: string;
   url: string;
   organizerCanView: boolean;
+  wildcard?: boolean;
 }): EmailContent {
   return {
-    subject: `Names are drawn for ${p.eventName}`,
+    subject: p.wildcard ? `Names are drawn for ${p.eventName} — you have two matches` : `Names are drawn for ${p.eventName}`,
     react: (
       <EmailLayout
-        preview="Find out who you're shopping for"
+        preview={p.wildcard ? "Find out who you're shopping for — you drew two people" : "Find out who you're shopping for"}
         heading="Names have been drawn"
-        cta={{ label: "Reveal my match", href: p.url }}
+        cta={{ label: "Reveal my match" + (p.wildcard ? "es" : ""), href: p.url }}
       >
         <P>
-          The draw for <strong>{p.eventName}</strong> is done. Your match is waiting for you — along with their wishlist
-          and gift preferences.
+          The draw for <strong>{p.eventName}</strong> is done.{" "}
+          {p.wildcard ? (
+            <>
+              You have two matches waiting for you: a main gift with their wishlist and gift preferences, and a
+              lower-budget wildcard gift with just a name.
+            </>
+          ) : (
+            <>Your match is waiting for you — along with their wishlist and gift preferences.</>
+          )}
         </P>
         <Muted>
           {p.organizerCanView
@@ -76,7 +84,7 @@ export function namesDrawnEmail(p: {
   };
 }
 
-export function matchChangedEmail(p: { eventName: string; url: string }): EmailContent {
+export function matchChangedEmail(p: { eventName: string; url: string; wildcard?: boolean }): EmailContent {
   return {
     subject: `Your match changed in ${p.eventName}`,
     react: (
@@ -87,20 +95,21 @@ export function matchChangedEmail(p: { eventName: string; url: string }): EmailC
       >
         <P>
           Someone joined or left <strong>{p.eventName}</strong>, so Giftr adjusted the draw. You&apos;re now shopping
-          for someone new. Everyone else&apos;s match stayed the same.
+          for someone new{p.wildcard ? " for one of your two gifts" : ""}. Everyone else&apos;s match stayed the same.
         </P>
       </EmailLayout>
     ),
   };
 }
 
-export function redrawEmail(p: { eventName: string; url: string }): EmailContent {
+export function redrawEmail(p: { eventName: string; url: string; wildcard?: boolean }): EmailContent {
   return {
     subject: `Names were redrawn for ${p.eventName}`,
     react: (
       <EmailLayout preview="The organizer redrew names" heading="Names were redrawn" cta={{ label: "See my match", href: p.url }}>
         <P>
-          The organizer of <strong>{p.eventName}</strong> redrew names for everyone. Please check your new match.
+          The organizer of <strong>{p.eventName}</strong> redrew names for everyone. Please check your new match
+          {p.wildcard ? "es" : ""}.
         </P>
       </EmailLayout>
     ),
