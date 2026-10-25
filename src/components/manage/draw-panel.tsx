@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { Snowfall } from "@/components/festive";
 import { dateLabel, pluralize } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -35,8 +36,8 @@ type Props = {
 };
 
 const icons = {
-  ok: <CheckCircleIcon className="size-4 text-primary" />,
-  warn: <WarningIcon className="size-4 text-gold" />,
+  ok: <CheckCircleIcon className="size-4 text-success" />,
+  warn: <WarningIcon className="size-4 text-gold-foreground" />,
   block: <XCircleIcon className="size-4 text-destructive" />,
 };
 
@@ -67,10 +68,11 @@ export function DrawPanel({ eventId, status, format, scheduledFor, checks, canDr
           </CardContent>
         </Card>
 
-        <Card className="overflow-hidden">
-          <CardContent className="grid gap-4 bg-gradient-to-br from-accent/60 to-transparent sm:grid-cols-[1fr_auto] sm:items-center">
+        <Card className="relative isolate overflow-hidden">
+          <Snowfall count={18} seed={3} className="-z-10" />
+          <CardContent className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
             <div className="grid gap-1">
-              <p className="font-display text-xl font-semibold">Ready when you are</p>
+              <p className="font-display text-2xl">Ready when you are</p>
               <p className="text-sm text-muted-foreground">
                 {scheduledFor
                   ? `Giftr will draw names automatically on ${dateLabel(scheduledFor)}. You can also draw now.`
@@ -95,8 +97,8 @@ export function DrawPanel({ eventId, status, format, scheduledFor, checks, canDr
                   onSuccess: (d) => {
                     toast.success(
                       wildcard
-                        ? `Names drawn! ${d.count} people now have two matches.`
-                        : `Names drawn! ${d.count} matches sent.`,
+                        ? `Names drawn. ${d.count} people now have two matches.`
+                        : `Names drawn. ${d.count} matches sent.`,
                     );
                     if (d.relaxedSoftRules) toast.warning("Some people got the same match as last time.");
                   },
@@ -126,11 +128,11 @@ export function DrawPanel({ eventId, status, format, scheduledFor, checks, canDr
     <div className="grid gap-6">
       <Card>
         <CardContent className="flex items-center gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-accent text-accent-foreground">
             <SparkleIcon className="size-6" />
           </span>
           <div>
-            <p className="font-display text-xl font-semibold">Names are drawn</p>
+            <p className="font-display text-2xl">Names are drawn</p>
             <p className="text-sm text-muted-foreground" data-testid="draw-viewed">
               {viewed.viewed} of {viewed.assigned} have opened their match.
             </p>
@@ -152,15 +154,15 @@ export function DrawPanel({ eventId, status, format, scheduledFor, checks, canDr
             <ul className="grid gap-2 text-sm">
               {matches.map((m) => (
                 <li key={m.giverName + m.recipientName + m.slot} className="flex items-center gap-2">
-                  <span className="font-medium">{m.giverName}</span>
+                  <span className="font-semibold">{m.giverName}</span>
                   <span className="text-muted-foreground">→</span>
                   <span>{m.recipientName}</span>
                   {wildcard ? (
                     <Badge variant={m.slot === "main" ? "secondary" : "outline"} className="ml-1">
-                      {m.slot === "main" ? "Main" : "Wildcard"}
+                      {m.slot === "main" ? "Main" : "Wild card"}
                     </Badge>
                   ) : null}
-                  {m.viewed ? <CheckCircleIcon className="ml-auto size-4 text-primary" aria-label="Viewed" /> : null}
+                  {m.viewed ? <CheckCircleIcon className="ml-auto size-4 text-success" aria-label="Viewed" /> : null}
                 </li>
               ))}
             </ul>

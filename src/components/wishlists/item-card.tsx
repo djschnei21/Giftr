@@ -29,7 +29,7 @@ export function ItemCard({
   return (
     <div
       className={cn(
-        "flex min-w-0 flex-col gap-2 rounded-2xl border bg-card p-3 sm:flex-row sm:items-start sm:gap-3 sm:p-4",
+        "flex min-w-0 flex-col gap-2 rounded-2xl border bg-card p-3 shadow-xs transition sm:flex-row sm:items-start sm:gap-3 sm:p-4",
         className,
       )}
     >
@@ -51,14 +51,14 @@ export function ItemCard({
         <div className="grid min-w-0 flex-1 gap-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             {item.mostWanted ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-gold/15 px-2 py-0.5 text-xs font-medium whitespace-nowrap text-[color-mix(in_oklch,var(--gold),black_35%)] dark:text-gold">
+              <span className="inline-flex items-center gap-1 rounded-md bg-gold/15 px-2 py-0.5 text-xs font-semibold whitespace-nowrap text-gold-foreground">
                 <StarIcon weight="fill" className="size-3" /> Most wanted
               </span>
             ) : null}
           </div>
           <p
             className={cn(
-              " font-medium break-words",
+              "font-semibold break-words",
               muted && "text-muted-foreground line-through decoration-1",
             )}
           >
@@ -70,7 +70,7 @@ export function ItemCard({
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
-                className="inline-flex items-center gap-1 underline-offset-2 hover:text-foreground hover:underline"
+                className="inline-flex items-center gap-1 font-medium underline-offset-4 transition hover:text-foreground hover:underline"
               >
                 {host} <ArrowSquareOutIcon className="size-3" />
               </a>

@@ -7,6 +7,7 @@ import { toProfileFormValue } from "@/components/profile/profile-value";
 import { NotificationPrefsForm } from "@/components/profile/notification-prefs";
 import { DeleteAccount } from "@/components/profile/delete-account";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { UserAvatar } from "@/components/ui/avatar";
 import { requireUser } from "@/lib/authz";
 
 export const metadata: Metadata = { title: "Profile" };
@@ -17,11 +18,19 @@ export default async function ProfilePage() {
 
   return (
     <div className="mx-auto grid w-full max-w-2xl gap-8">
-      <header>
-        <h1 className="font-display text-3xl font-semibold sm:text-4xl">Your profile</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Signed in as {user.email}. Help your Santa pick something you&apos;ll actually love.
-        </p>
+      <header className="flex min-w-0 items-center gap-4 sm:gap-6">
+        <UserAvatar
+          name={user.name}
+          image={user.image}
+          className="size-16 shrink-0 rounded-2xl text-xl ring-4 ring-gold/40 sm:size-20 sm:text-2xl"
+        />
+        <div className="grid min-w-0 gap-2">
+          <h1 className="font-display text-4xl sm:text-5xl">Your profile</h1>
+          <p className="text-muted-foreground">
+            Signed in as <span className="font-semibold break-all text-foreground">{user.email}</span>. Help your Santa
+            pick something you&apos;ll actually love.
+          </p>
+        </div>
       </header>
       <ProfileForm initial={toProfileFormValue(user.name, row ?? null)} />
       <Card id="notifications" className="scroll-mt-24">

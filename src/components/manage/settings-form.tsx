@@ -102,7 +102,7 @@ export function SettingsForm({ event, organizerInDraw }: { event: Event; organiz
       </form>
 
       {event.status !== "cancelled" ? (
-        <Card className="border-destructive/30">
+        <Card className="ring-1 ring-destructive/20">
           <CardHeader>
             <CardTitle>Cancel this exchange</CardTitle>
             <CardDescription>Everyone who joined gets a short note. This can&apos;t be undone.</CardDescription>
@@ -110,7 +110,7 @@ export function SettingsForm({ event, organizerInDraw }: { event: Event; organiz
           <CardContent>
             <ConfirmDialog
               trigger={
-                <Button variant="outline" className="border-destructive/40 text-destructive">
+                <Button variant="outline" className="border-destructive/40 text-destructive hover:bg-destructive/10">
                   Cancel exchange
                 </Button>
               }

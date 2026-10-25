@@ -1,5 +1,6 @@
 import { CalendarDotsIcon, MapPinIcon, PackageIcon, SparkleIcon, WalletIcon } from "@/components/icons";
 import { LogoMark } from "@/components/logo";
+import { StarPattern } from "@/components/festive";
 import { budgetLabel, longDateLabel } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -28,38 +29,29 @@ export function InviteCard({ data, className }: { data: InviteCardData; classNam
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-3xl border bg-card shadow-[0_12px_40px_rgb(0_0_0/0.08)]",
+        "relative overflow-hidden rounded-3xl bg-card shadow-xl",
         className,
       )}
     >
-      <div className="relative h-28 overflow-hidden bg-primary">
-        <svg className="absolute inset-0 size-full opacity-[0.14]" aria-hidden>
-          <defs>
-            <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1.6" fill="white" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#dots)" />
-        </svg>
-        <div className="absolute top-0 bottom-0 left-1/2 w-5 -translate-x-1/2 bg-berry" />
-        <div className="absolute top-1/2 right-0 left-0 h-5 -translate-y-1/2 bg-berry" />
-        <div className="absolute top-1/2 left-1/2 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-card shadow-md">
-          <LogoMark className="size-8" />
+      <div className="relative h-32 overflow-hidden bg-primary text-white/15">
+        <StarPattern id="invite-card-stars" />
+        <div className="absolute inset-y-0 left-1/2 w-4 -translate-x-1/2 bg-gold" />
+        <div className="absolute inset-x-0 top-1/2 h-4 -translate-y-1/2 bg-gold" />
+        <div className="absolute top-1/2 left-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-card shadow-lg">
+          <LogoMark className="size-10" />
         </div>
       </div>
-      <div className="grid gap-4 p-6 text-center">
+      <div className="grid gap-6 p-6 text-center">
         <div className="grid gap-1">
-          <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-            {data.organizerName || "You"} invited you to
-          </p>
-          <h2 className="font-display text-2xl font-semibold break-words">
+          <p className="text-sm font-medium text-muted-foreground">{data.organizerName || "You"} invited you to</p>
+          <h2 className="font-display text-3xl break-words">
             {data.name || "Your exchange"}
           </h2>
         </div>
         {data.description ? (
           <p className="line-clamp-3 text-sm whitespace-pre-line text-muted-foreground">{data.description}</p>
         ) : null}
-        <ul className="grid gap-2 text-left text-sm">
+        <ul className="grid gap-2 rounded-2xl bg-secondary p-4 text-left text-sm font-medium">
           <li className="flex min-w-0 items-start gap-2">
             <CalendarDotsIcon className="mt-0.5 size-4 shrink-0 text-primary" />
             <span className="min-w-0">{data.exchangeDate ? longDateLabel(data.exchangeDate) : "Pick a date"}</span>
@@ -96,7 +88,7 @@ export function InviteCard({ data, className }: { data: InviteCardData; classNam
           ) : null}
         </ul>
         {typeof data.participantCount === "number" && data.participantCount > 0 ? (
-          <p className="text-xs text-muted-foreground">
+          <p className="-mt-2 text-xs font-medium text-muted-foreground">
             {data.participantCount} {data.participantCount === 1 ? "person has" : "people have"} joined
           </p>
         ) : null}

@@ -37,7 +37,7 @@ export function GiftStatusPicker({
       role="radiogroup"
       aria-label="Gift status"
       className={cn(
-        "grid gap-2 rounded-2xl bg-secondary/60 p-2",
+        "grid gap-1 rounded-2xl bg-secondary p-1",
         steps.length > 3 ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-3",
       )}
     >
@@ -57,11 +57,11 @@ export function GiftStatusPicker({
               })
             }
             className={cn(
-              "flex min-w-0 flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-xs font-medium break-words transition outline-none focus-visible:ring-4 focus-visible:ring-ring/40 sm:flex-row sm:justify-center sm:px-2 sm:text-sm sm: [&_svg]:size-4 [&_svg]:shrink-0",
+              "flex min-w-0 flex-col items-center gap-1 rounded-xl px-2 py-3 text-center text-xs font-semibold break-words transition outline-none focus-visible:ring-4 focus-visible:ring-ring/40 sm:flex-row sm:justify-center sm:gap-2 sm:text-sm [&_svg]:size-4 [&_svg]:shrink-0",
               checked
                 ? "bg-card text-foreground shadow-sm"
                 : i < current
-                  ? "text-primary hover:bg-card/60"
+                  ? "text-accent-foreground hover:bg-card/60"
                   : "text-muted-foreground hover:bg-card/60",
             )}
           >
@@ -97,7 +97,7 @@ export function BoughtChecklist({ eventId, items, bought }: { eventId: string; i
             <ItemCard
               item={item}
               muted={on}
-              className={on ? "bg-accent/30" : undefined}
+              className={on ? "bg-accent" : undefined}
               actions={
                 <button
                   type="button"
@@ -111,11 +111,11 @@ export function BoughtChecklist({ eventId, items, bought }: { eventId: string; i
                     })
                   }
                   className={cn(
-                    "flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-medium transition outline-none focus-visible:ring-4 focus-visible:ring-ring/40",
-                    on ? "border-primary bg-primary text-primary-foreground" : "hover:bg-secondary",
+                    "flex h-8 items-center gap-2 rounded-lg border px-3 text-sm font-semibold transition outline-none focus-visible:ring-4 focus-visible:ring-ring/40 active:scale-[0.98]",
+                    on ? "border-primary bg-primary text-primary-foreground" : "bg-card hover:bg-secondary",
                   )}
                 >
-                  <CheckIcon className="size-3.5" />
+                  <CheckIcon className="size-4" />
                   <span className="hidden sm:inline">{on ? "Bought" : "Mark bought"}</span>
                 </button>
               }

@@ -59,13 +59,13 @@ function SortableItem({
     >
       <ItemCard
         item={item}
-        className={cn(isDragging && "shadow-lg ring-2 ring-primary/30")}
+        className={cn(isDragging && "scale-[1.02] shadow-xl ring-2 ring-primary/30")}
         leading={
           <button
             ref={setActivatorNodeRef}
             type="button"
             aria-label={`Reorder ${item.title}`}
-            className="-ml-1 flex h-16 w-6 shrink-0 cursor-grab touch-none items-center justify-center rounded-md text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none active:cursor-grabbing sm:h-20"
+            className="-ml-1 flex h-16 w-6 shrink-0 cursor-grab touch-none items-center justify-center rounded-md text-muted-foreground transition hover:text-foreground focus-visible:ring-4 focus-visible:ring-ring/30 focus-visible:outline-none active:cursor-grabbing sm:h-20"
             {...attributes}
             {...listeners}
           >

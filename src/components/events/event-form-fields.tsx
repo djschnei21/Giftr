@@ -86,7 +86,7 @@ export function BasicsFields({ value, onChange, errors = {} }: FieldsProps) {
         />
       </Field>
       <div className="grid gap-2">
-        <span className="text-sm font-medium">How are gifts exchanged?</span>
+        <span className="text-sm font-semibold">How are gifts exchanged?</span>
         <Segmented
           name="exchangeType"
           value={value.exchangeType}
@@ -126,7 +126,7 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
   return (
     <div className="grid gap-6">
       <div className="grid gap-2">
-        <span className="text-sm font-medium">Exchange format</span>
+        <span className="text-sm font-semibold">Exchange format</span>
         <Segmented
           name="drawFormat"
           value={value.drawFormat}
@@ -138,14 +138,14 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
               value: "wildcard",
               label: "Wild card",
               icon: <SparkleIcon />,
-              description: "Two matches: a main gift + a surprise",
+              description: "Two matches: a main gift and a surprise",
             },
           ]}
         />
       </div>
 
       <div className="grid gap-2">
-        <span className="text-sm font-medium">{wildcard ? "Main gift budget" : "Budget"}</span>
+        <span className="text-sm font-semibold">{wildcard ? "Main gift budget" : "Budget"}</span>
         <div className="grid grid-cols-[1fr_1fr_6.5rem] gap-2">
           <Input
             aria-label={wildcard ? "Minimum main gift budget" : "Minimum budget"}
@@ -177,8 +177,8 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
 
       {wildcard ? (
         <div className="grid gap-2">
-          <span className="text-sm font-medium">Wild card gift budget</span>
-          <div className="grid grid-cols-[1fr_1fr] gap-2">
+          <span className="text-sm font-semibold">Wild card gift budget</span>
+          <div className="grid grid-cols-2 gap-2">
             <Input
               aria-label="Minimum wild card budget"
               inputMode="numeric"
@@ -217,7 +217,7 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
       </Field>
 
       <div className="grid gap-2">
-        <span className="text-sm font-medium">When should names be drawn?</span>
+        <span className="text-sm font-semibold">When should names be drawn?</span>
         <Segmented
           name="drawMode"
           value={value.drawMode}
@@ -229,7 +229,7 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
           ]}
         />
         {value.drawMode === "scheduled" ? (
-          <div className="mt-1 grid gap-2">
+          <div className="grid gap-2">
             <Input
               aria-label="Draw date"
               type="date"
@@ -258,12 +258,12 @@ export function BudgetRulesFields({ value, onChange, errors = {}, locked }: Fiel
 
 export function AdvancedFields({ value, onChange, locked, extra }: FieldsProps & { extra?: React.ReactNode }) {
   return (
-    <details className="group rounded-2xl border bg-card">
-      <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-4 text-sm font-medium [&::-webkit-details-marker]:hidden">
+    <details className="group rounded-xl border bg-card">
+      <summary className="flex cursor-pointer list-none items-center justify-between rounded-xl p-4 text-sm font-semibold transition hover:bg-secondary [&::-webkit-details-marker]:hidden">
         Advanced options
-        <CaretDownIcon className="size-4 text-muted-foreground transition-transform group-open:rotate-180" />
+        <CaretDownIcon className="size-4 text-muted-foreground transition-transform duration-500 group-open:rotate-180" />
       </summary>
-      <div className="grid gap-4 border-t px-4 py-4">
+      <div className="grid gap-4 border-t p-4">
         {extra}
         <SwitchRow
           id="noReciprocal"

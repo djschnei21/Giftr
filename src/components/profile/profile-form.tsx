@@ -162,7 +162,7 @@ export function ProfileForm({ initial }: { initial: ProfileFormValue }) {
         <CardHeader>
           <CardTitle>Shipping address</CardTitle>
           <CardDescription>
-            Only shown to your Santa, and only in exchanges where gifts are shipped, or in-person exchanges where
+            Only shown to your Santa, and only in exchanges where gifts are shipped, or in person exchanges where
             you&apos;ve asked to have yours shipped.
           </CardDescription>
         </CardHeader>

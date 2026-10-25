@@ -94,7 +94,7 @@ export function InvitesPanel({
           {inviteLinkEnabled ? (
             <ShareLink url={inviteUrl} title={eventName} />
           ) : (
-            <p className="rounded-xl bg-secondary p-3 text-sm text-muted-foreground">
+            <p className="rounded-xl bg-secondary p-4 text-sm text-muted-foreground">
               The link is off. People who open it are told to ask you for an invite.
             </p>
           )}
@@ -193,18 +193,18 @@ export function InvitesPanel({
                         })
                       }
                       className={cn(
-                        "flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 text-left transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-                        on && "border-primary bg-accent/60",
+                        "flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 text-left transition hover:bg-secondary focus-visible:ring-4 focus-visible:ring-ring/30 focus-visible:outline-none active:scale-[0.98]",
+                        on && "border-primary bg-accent hover:bg-accent",
                       )}
                     >
-                      <UserAvatar name={p.name} image={p.image} className="size-8" />
+                      <UserAvatar name={p.name} image={p.image} className="size-8 rounded-lg" />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-medium">{p.name}</span>
+                        <span className="block truncate text-sm font-semibold">{p.name}</span>
                         <span className="block truncate text-xs text-muted-foreground">{p.eventName}</span>
                       </span>
                       <span
                         className={cn(
-                          "flex size-5 items-center justify-center rounded-full border",
+                          "flex size-5 items-center justify-center rounded-md border transition",
                           on && "border-primary bg-primary text-primary-foreground",
                         )}
                       >
@@ -243,7 +243,7 @@ export function InvitesPanel({
               {invitations.map((inv) => (
                 <li key={inv.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-4 py-3 sm:px-6">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{inv.email}</p>
+                    <p className="truncate text-sm font-semibold">{inv.email}</p>
                     <p className="text-xs text-muted-foreground">
                       Sent {formatDistanceToNow(new Date(inv.lastSentAt), { addSuffix: true })}
                     </p>

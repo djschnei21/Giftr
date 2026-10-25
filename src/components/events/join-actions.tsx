@@ -14,7 +14,7 @@ export function JoinActions({ code, token }: { code: string; token?: string }) {
 
   if (declined) {
     return (
-      <p className="rounded-2xl bg-secondary p-4 text-sm text-muted-foreground">
+      <p className="rounded-xl bg-secondary p-4 text-sm text-muted-foreground">
         No problem. We let the organizer know you can&apos;t make it this time.
       </p>
     );
@@ -29,7 +29,7 @@ export function JoinActions({ code, token }: { code: string; token?: string }) {
           startTransition(async () => {
             const res = await joinEvent(code, token);
             if (!res.ok) return void toast.error(res.error);
-            toast.success("You're in! Add a few wishlist ideas while you wait.");
+            toast.success("You're in. Add a few wishlist ideas while you wait.");
             router.push(`/events/${res.data.eventId}`);
           })
         }

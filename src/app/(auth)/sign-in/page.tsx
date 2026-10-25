@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Logo } from "@/components/logo";
+import { Ornament, Snowfall } from "@/components/festive";
 import { SignInCard } from "@/components/auth/sign-in-card";
 import { enabledSocialProviders } from "@/lib/auth";
 import { getCurrentUser } from "@/lib/authz";
@@ -15,16 +16,21 @@ export default async function SignInPage({ searchParams }: PageProps<"/sign-in">
   if (await getCurrentUser()) redirect(next);
 
   return (
-    <main id="main" className="relative flex flex-1 flex-col items-center justify-center px-4 py-12">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-accent/60 to-transparent" />
-      <div className="relative w-full max-w-sm">
-        <Logo className="mb-10 justify-center" />
+    <main id="main" className="relative isolate flex flex-1 flex-col items-center justify-center px-4 py-12">
+      <Snowfall count={40} seed={23} className="-z-10" />
+      <Ornament className="left-[12%] hidden sm:flex" length={64} />
+      <Ornament className="left-[22%] hidden sm:flex" tone="gold" length={112} style={{ animationDelay: "-2s" }} />
+      <Ornament className="right-[16%] hidden sm:flex" length={88} style={{ animationDelay: "-1s" }} />
+      <div className="page-enter w-full max-w-sm">
+        <div>
+        <Logo className="mb-12 justify-center" />
         <SignInCard
           next={next}
           providers={enabledSocialProviders}
           devOutbox={devOutboxEnabled()}
           error={typeof params.error === "string" ? params.error : undefined}
         />
+        </div>
       </div>
     </main>
   );

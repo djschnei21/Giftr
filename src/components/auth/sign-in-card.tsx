@@ -61,23 +61,24 @@ export function SignInCard({ next, providers, devOutbox, error, heading, subhead
   const hasSocial = providers.google || providers.facebook;
 
   return (
-    <div className="rounded-3xl border bg-card p-6 shadow-[0_8px_30px_rgb(0_0_0/0.06)] sm:p-8">
+    <div className="rounded-3xl bg-card p-6 shadow-xl sm:p-8">
       <AnimatePresence mode="wait" initial={false}>
         {sentTo ? (
           <motion.div
             key="sent"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
+            initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
+            transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
             className="grid gap-4 text-center"
           >
-            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-accent text-accent-foreground">
-              <EnvelopeSimpleIcon className="size-6" />
+            <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+              <EnvelopeSimpleIcon className="size-8" />
             </div>
             <div className="grid gap-2">
-              <h1 className="font-display text-2xl font-semibold">Check your email</h1>
+              <h1 className="font-display text-3xl">Check your email</h1>
               <p className="text-sm text-muted-foreground">
-                We sent a sign-in link to <span className="font-medium text-foreground">{sentTo}</span>. It expires in
+                We sent a sign-in link to <span className="font-semibold text-foreground">{sentTo}</span>. It expires in
                 15 minutes.
               </p>
             </div>
@@ -95,13 +96,14 @@ export function SignInCard({ next, providers, devOutbox, error, heading, subhead
         ) : (
           <motion.div
             key="form"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
+            initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
+            transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
             className="grid gap-6"
           >
             <div className="grid gap-2 text-center">
-              <h1 className="font-display text-2xl font-semibold">{heading ?? "Welcome to Giftr"}</h1>
+              <h1 className="font-display text-3xl">{heading ?? "Welcome to Giftr"}</h1>
               <p className="text-sm text-muted-foreground">
                 {subheading ?? "Sign in or create an account in one tap."}
               </p>
@@ -125,7 +127,7 @@ export function SignInCard({ next, providers, devOutbox, error, heading, subhead
             ) : null}
 
             {hasSocial ? (
-              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+              <div className="flex items-center gap-3 text-xs font-medium text-muted-foreground">
                 <span className="h-px flex-1 bg-border" />
                 or use your email
                 <span className="h-px flex-1 bg-border" />
@@ -160,11 +162,11 @@ export function SignInCard({ next, providers, devOutbox, error, heading, subhead
 
             <p className="text-center text-xs text-muted-foreground">
               By continuing you agree to our{" "}
-              <Link href="/terms" className="underline underline-offset-2">
+              <Link href="/terms" className="underline decoration-current/30 underline-offset-4 hover:decoration-current">
                 Terms
               </Link>{" "}
               and{" "}
-              <Link href="/privacy" className="underline underline-offset-2">
+              <Link href="/privacy" className="underline decoration-current/30 underline-offset-4 hover:decoration-current">
                 Privacy Policy
               </Link>
               .

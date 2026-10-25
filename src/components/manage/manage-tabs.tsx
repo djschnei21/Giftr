@@ -38,7 +38,7 @@ export function ManageTabs({
           <TabsTrigger key={key} value={key}>
             {labels[key]}
             {badges[key] ? (
-              <span className="rounded-full bg-secondary px-2 py-0.5 text-xs text-muted-foreground">{badges[key]}</span>
+              <span className="rounded-md bg-secondary px-2 py-0.5 font-mono text-xs text-muted-foreground tabular-nums">{badges[key]}</span>
             ) : null}
           </TabsTrigger>
         ))}

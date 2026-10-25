@@ -6,6 +6,7 @@ import { LockIcon } from "@/components/icons";
 import { db } from "@/db";
 import { participant, user } from "@/db/schema";
 import { Logo } from "@/components/logo";
+import { Snowfall } from "@/components/festive";
 import { Button } from "@/components/ui/button";
 import { InviteCard } from "@/components/events/invite-card";
 import { SignInCard } from "@/components/auth/sign-in-card";
@@ -96,14 +97,15 @@ export default async function JoinPage({ params, searchParams }: PageProps<"/joi
   );
 
   return (
-    <main id="main" className="relative flex flex-1 flex-col items-center px-4 py-10 sm:py-16">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-accent/60 to-transparent" />
-      <Logo className="relative mb-8" />
-      <div className="relative grid w-full max-w-4xl items-start gap-8 md:grid-cols-2">
+    <main id="main" className="relative isolate flex flex-1 flex-col items-center px-4 py-12 sm:py-16">
+      <Snowfall count={44} seed={19} className="-z-10" />
+      <Logo className="mb-12" />
+      <div className="page-enter w-full max-w-4xl">
+      <div className="grid items-start gap-8 md:grid-cols-2">
         {card}
         {closedReason ? (
-          <div className="grid gap-4 rounded-3xl border bg-card p-6 text-center sm:p-8">
-            <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-secondary">
+          <div className="grid gap-4 rounded-3xl bg-card p-6 text-center shadow-lg sm:p-8">
+            <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-secondary">
               <LockIcon className="size-5 text-muted-foreground" />
             </div>
             <p className="text-sm text-muted-foreground">{closedReason}</p>
@@ -112,11 +114,11 @@ export default async function JoinPage({ params, searchParams }: PageProps<"/joi
             </Button>
           </div>
         ) : current ? (
-          <div className="grid gap-6 rounded-3xl border bg-card p-6 sm:p-8">
+          <div className="grid gap-6 rounded-3xl bg-card p-6 shadow-lg sm:p-8">
             <div className="grid gap-2">
-              <h1 className="font-display text-2xl font-semibold">Join {ev.name}?</h1>
+              <h1 className="font-display text-3xl">Join {ev.name}?</h1>
               <p className="text-sm text-muted-foreground">
-                You&apos;ll join as <span className="font-medium text-foreground">{current.name}</span> ({current.email}
+                You&apos;ll join as <span className="font-semibold text-foreground">{current.name}</span> ({current.email}
                 ).
                 {ev.status === "drawn"
                   ? " Names are already drawn. You'll be slotted in without spoiling anyone else's match."
@@ -134,6 +136,7 @@ export default async function JoinPage({ params, searchParams }: PageProps<"/joi
             subheading="Sign in to join. It takes one tap."
           />
         )}
+      </div>
       </div>
     </main>
   );

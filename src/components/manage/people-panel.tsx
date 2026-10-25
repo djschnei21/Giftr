@@ -72,11 +72,11 @@ export function PeoplePanel({ eventId, status, people, householdNames, viewed }:
       {status === "drawn" ? (
         <Card>
           <CardContent className="flex items-center gap-4">
-            <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent text-accent-foreground">
               <EyeIcon className="size-5" />
             </span>
             <div className="grid gap-0.5">
-              <p className="font-medium" data-testid="viewed-total">
+              <p className="font-semibold" data-testid="viewed-total">
                 {viewed.viewed} of {viewed.assigned} have opened their match
               </p>
               <p className="text-sm text-muted-foreground">
@@ -100,7 +100,7 @@ export function PeoplePanel({ eventId, status, people, householdNames, viewed }:
               <li key={p.id} className="flex items-center gap-3 px-4 py-3 sm:px-6">
                 <UserAvatar name={p.name} image={p.image} />
                 <div className="min-w-0 flex-1">
-                  <p className="flex flex-wrap items-center gap-2 font-medium">
+                  <p className="flex flex-wrap items-center gap-2 font-semibold">
                     <span className="truncate">{p.name}</span>
                     {p.role === "organizer" ? (
                       <Badge variant="gold">

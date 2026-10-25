@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 
 const steps = [
   { id: "basics", title: "The basics", subtitle: "Name it and pick a day." },
-  { id: "rules", title: "Budget & rules", subtitle: "Set expectations so nobody overspends." },
+  { id: "rules", title: "Budget and rules", subtitle: "Set expectations so nobody overspends." },
   { id: "invite", title: "Invite people", subtitle: "Add emails now, or share a link after." },
 ] as const;
 
@@ -153,16 +153,16 @@ export function CreateEventWizard({
             <li key={s.id} className="flex flex-1 items-center gap-2">
               <span
                 className={cn(
-                  "flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors",
+                  "flex size-8 shrink-0 items-center justify-center rounded-lg font-mono text-xs font-semibold transition",
                   i < step && "bg-primary text-primary-foreground",
                   i === step && "bg-foreground text-background",
                   i > step && "bg-secondary text-muted-foreground",
                 )}
                 aria-current={i === step ? "step" : undefined}
               >
-                {i < step ? <CheckIcon className="size-3.5" /> : i + 1}
+                {i < step ? <CheckIcon className="size-4" /> : i + 1}
               </span>
-              <span className={cn("hidden text-sm sm:inline", i === step ? "font-medium" : "text-muted-foreground")}>
+              <span className={cn("hidden text-sm sm:inline", i === step ? "font-semibold" : "text-muted-foreground")}>
                 {s.title}
               </span>
               {i < steps.length - 1 ? <span className="h-px flex-1 bg-border" /> : null}
@@ -170,18 +170,18 @@ export function CreateEventWizard({
           ))}
         </ol>
 
-        <header className="mb-6">
-          <h1 className="font-display text-3xl font-semibold">{current.title}</h1>
-          <p className="mt-1 text-muted-foreground">{current.subtitle}</p>
+        <header className="mb-8 grid gap-2">
+          <h1 className="font-display text-4xl">{current.title}</h1>
+          <p className="text-muted-foreground">{current.subtitle}</p>
         </header>
 
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={step}
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -16 }}
-            transition={{ duration: 0.18 }}
+            initial={{ opacity: 0, x: 16, filter: "blur(4px)" }}
+            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, x: -16, filter: "blur(4px)" }}
+            transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
           >
             {step === 0 ? <BasicsFields value={form} onChange={patch} errors={errors} /> : null}
             {step === 1 ? (
@@ -204,7 +204,7 @@ export function CreateEventWizard({
             ) : null}
             {step === 2 ? (
               <div className="grid gap-4">
-                <label htmlFor="emails" className="text-sm font-medium">
+                <label htmlFor="emails" className="text-sm font-semibold">
                   Email addresses
                 </label>
                 <Textarea
@@ -231,27 +231,27 @@ export function CreateEventWizard({
                     {emails.map((email) => (
                       <li
                         key={email}
-                        className="flex max-w-full items-center gap-1 rounded-full bg-secondary py-1 pr-1 pl-3 text-sm break-all"
+                        className="flex max-w-full items-center gap-1 rounded-lg bg-secondary py-1 pr-1 pl-3 text-sm font-medium break-all"
                       >
                         {email}
                         <button
                           type="button"
                           aria-label={`Remove ${email}`}
-                          className="cursor-pointer rounded-full p-1 text-muted-foreground hover:bg-background hover:text-foreground"
+                          className="cursor-pointer rounded-md p-1 text-muted-foreground hover:bg-background hover:text-foreground"
                           onClick={() => setEmails((prev) => prev.filter((e) => e !== email))}
                         >
-                          <XIcon className="size-3.5" />
+                          <XIcon className="size-4" />
                         </button>
                       </li>
                     ))}
                   </ul>
                 ) : null}
-                <p className="rounded-2xl bg-accent/50 p-4 text-sm text-accent-foreground">
+                <p className="rounded-xl bg-accent p-4 text-sm font-medium text-accent-foreground">
                   You&apos;ll also get a link to share in your group chat. Anyone with it can join until names are
                   drawn.
                 </p>
                 <div className="lg:hidden">
-                  <p className="mb-3 text-sm font-medium">Preview</p>
+                  <p className="mb-3 text-sm font-semibold">Preview</p>
                   <InviteCard data={{ ...previewData(form), organizerName }} />
                 </div>
               </div>
@@ -282,7 +282,7 @@ export function CreateEventWizard({
 
       <aside className="hidden lg:block">
         <div className="sticky top-24">
-          <p className="mb-3 text-sm font-medium text-muted-foreground">Invite preview</p>
+          <p className="mb-3 text-sm font-semibold text-muted-foreground">Invite preview</p>
           <InviteCard data={{ ...previewData(form), organizerName }} />
         </div>
       </aside>

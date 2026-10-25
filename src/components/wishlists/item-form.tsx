@@ -130,12 +130,12 @@ export function ItemForm({
               src={state.imageUrl}
               alt=""
               referrerPolicy="no-referrer"
-              className="size-11 shrink-0 rounded-lg border object-cover"
+              className="size-10 shrink-0 rounded-lg border object-cover"
             />
           ) : null}
           <Input
             id={`${idPrefix}-title`}
-            placeholder="e.g. Hand-thrown ceramic mug"
+            placeholder="Hand thrown ceramic mug"
             value={state.title}
             onChange={(e) => set({ title: e.target.value })}
             maxLength={200}
@@ -147,7 +147,7 @@ export function ItemForm({
         <Textarea
           id={`${idPrefix}-notes`}
           rows={2}
-          placeholder="e.g. Size M, any color but orange"
+          placeholder="Size M, any color but orange"
           value={state.notes}
           onChange={(e) => set({ notes: e.target.value })}
           maxLength={1000}
@@ -160,8 +160,8 @@ export function ItemForm({
           aria-pressed={state.mostWanted}
           onClick={() => set({ mostWanted: !state.mostWanted })}
           className={cn(
-            "inline-flex cursor-pointer items-center gap-2 rounded-full border px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-            state.mostWanted ? "border-gold bg-gold/15 text-foreground" : "text-muted-foreground hover:text-foreground",
+            "inline-flex h-10 cursor-pointer items-center gap-2 rounded-xl border px-3 text-sm font-semibold transition focus-visible:ring-4 focus-visible:ring-ring/30 focus-visible:outline-none active:scale-[0.98]",
+            state.mostWanted ? "border-gold bg-gold/15 text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground",
           )}
         >
           <StarIcon weight={state.mostWanted ? "fill" : "bold"} className={cn("size-4", state.mostWanted && "text-gold")} /> Most wanted

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BellSlashIcon } from "@/components/icons";
 import { Logo } from "@/components/logo";
+import { Snowfall } from "@/components/festive";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { NotificationPrefsForm } from "@/components/profile/notification-prefs";
 import { UnsubscribeButton } from "@/components/profile/unsubscribe-button";
@@ -22,20 +23,20 @@ export default async function UnsubscribePage({ params, searchParams }: PageProp
   const found = await findByUnsubscribeToken(token);
 
   return (
-    <main id="main" className="relative flex flex-1 flex-col items-center justify-center px-4 py-12">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-accent/60 to-transparent" />
-      <div className="relative grid w-full max-w-md gap-6">
+    <main id="main" className="relative isolate flex flex-1 flex-col items-center justify-center px-4 py-12">
+      <Snowfall count={28} seed={37} className="-z-10" />
+      <div className="grid w-full max-w-md gap-6">
         <Logo className="justify-center" />
         {found ? (
           <>
             <Card>
               <CardHeader>
-                <div className="mb-2 flex size-11 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
-                  <BellSlashIcon className="size-5" />
+                <div className="mb-2 flex size-12 items-center justify-center rounded-xl bg-accent text-accent-foreground">
+                  <BellSlashIcon className="size-6" />
                 </div>
                 <CardTitle>Stop {typeCopy[type]}?</CardTitle>
                 <CardDescription>
-                  For <span className="font-medium text-foreground">{found.email}</span>. You can turn them back on any
+                  For <span className="font-semibold text-foreground">{found.email}</span>. You can turn them back on any
                   time.
                 </CardDescription>
               </CardHeader>
@@ -64,7 +65,7 @@ export default async function UnsubscribePage({ params, searchParams }: PageProp
                 You can still change which emails you get from your{" "}
                 <Link
                   href="/profile#notifications"
-                  className="font-medium text-foreground underline underline-offset-2"
+                  className="font-semibold text-foreground underline decoration-current/30 underline-offset-4 hover:decoration-current"
                 >
                   profile
                 </Link>

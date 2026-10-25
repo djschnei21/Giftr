@@ -27,16 +27,16 @@ export function WishlistHeader({
   const [deleting, setDeleting] = useState(false);
 
   return (
-    <header className="grid grid-cols-1 gap-3">
+    <header className="grid grid-cols-1 gap-4">
       <Link
         href="/wishlists"
-        className="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+        className="-ml-1 inline-flex w-fit items-center gap-1 rounded-lg text-sm text-muted-foreground transition hover:text-foreground"
       >
         <CaretLeftIcon className="size-4" /> All wishlists
       </Link>
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-4">
         <div className="grid min-w-0 gap-2">
-          <h1 className="font-display text-3xl font-semibold break-words sm:text-4xl">{wishlist.name}</h1>
+          <h1 className="font-display text-4xl break-words sm:text-5xl">{wishlist.name}</h1>
           <div className="flex flex-wrap gap-2">
             {wishlist.isDefault ? (
               <Badge variant="gold">

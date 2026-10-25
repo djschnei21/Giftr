@@ -23,7 +23,7 @@ export function DeleteAccount({ email }: { email: string }) {
         if (!o) setTyped("");
       }}
       trigger={
-        <Button variant="outline" className="w-fit border-destructive/40 text-destructive hover:bg-destructive/5">
+        <Button variant="outline" className="w-fit border-destructive/40 text-destructive hover:bg-destructive/10">
           Delete account
         </Button>
       }
@@ -41,7 +41,7 @@ export function DeleteAccount({ email }: { email: string }) {
           });
         }}
       >
-        <div className="flex gap-3 rounded-2xl bg-destructive/5 p-4 text-sm">
+        <div className="flex gap-3 rounded-xl bg-destructive/10 p-4 text-sm">
           <WarningIcon className="mt-0.5 size-4 shrink-0 text-destructive" />
           <ul className="grid gap-1">
             <li>Your wishlists, profile and sign-in connections are deleted.</li>
