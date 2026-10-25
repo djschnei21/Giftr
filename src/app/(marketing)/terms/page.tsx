@@ -31,7 +31,7 @@ export default function TermsPage() {
       <h2>Gifts and links</h2>
       <p>
         Giftr organizes exchanges; it doesn&apos;t sell, buy, or deliver gifts. Product links on wishlists point to other
-        websites, which have their own terms. Prices and pictures from links may be out of date.
+        websites, which have their own terms. Pictures from links may be out of date.
       </p>
 
       <h2>Organizers</h2>

@@ -1,6 +1,5 @@
 import { ExternalLinkIcon, GiftIcon, StarIcon } from "lucide-react";
 import type { WishlistItem } from "@/db/schema";
-import { money } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export function hostname(url: string | null) {
@@ -15,14 +14,12 @@ export function hostname(url: string | null) {
 /** Presentational item row shared by the editor and the match page. */
 export function ItemCard({
   item,
-  fallbackCurrency = "USD",
   leading,
   actions,
   className,
   muted,
 }: {
-  item: Pick<WishlistItem, "id" | "title" | "url" | "imageUrl" | "price" | "currency" | "notes" | "mostWanted">;
-  fallbackCurrency?: string;
+  item: Pick<WishlistItem, "id" | "title" | "url" | "imageUrl" | "notes" | "mostWanted">;
   leading?: React.ReactNode;
   actions?: React.ReactNode;
   className?: string;
@@ -34,7 +31,13 @@ export function ItemCard({
       {leading}
       <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-secondary text-muted-foreground sm:size-20">
         {item.imageUrl ? (
-          <img src={item.imageUrl} alt="" referrerPolicy="no-referrer" loading="lazy" className="size-full object-cover" />
+          <img
+            src={item.imageUrl}
+            alt=""
+            referrerPolicy="no-referrer"
+            loading="lazy"
+            className="size-full object-cover"
+          />
         ) : (
           <GiftIcon className="size-6 opacity-50" />
         )}
@@ -47,11 +50,15 @@ export function ItemCard({
             </span>
           ) : null}
         </div>
-        <p className={cn("font-medium leading-snug break-words", muted && "text-muted-foreground line-through decoration-1")}>
+        <p
+          className={cn(
+            "leading-snug font-medium break-words",
+            muted && "text-muted-foreground line-through decoration-1",
+          )}
+        >
           {item.title}
         </p>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-          {item.price !== null ? <span className="font-medium text-foreground">{money(item.price, item.currency ?? fallbackCurrency)}</span> : null}
           {item.url && host ? (
             <a
               href={item.url}

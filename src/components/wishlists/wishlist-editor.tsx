@@ -11,7 +11,13 @@ import {
   useSensors,
   type DragEndEvent,
 } from "@dnd-kit/core";
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVerticalIcon, PencilIcon, PlusIcon, StarIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
@@ -42,7 +48,9 @@ function SortableItem({
   onDelete: () => void;
   onStar: () => void;
 }) {
-  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({ id: item.id });
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
+    id: item.id,
+  });
   return (
     <li
       ref={setNodeRef}
@@ -66,7 +74,12 @@ function SortableItem({
         }
         actions={
           <>
-            <Button variant="ghost" size="icon" onClick={onStar} aria-label={item.mostWanted ? "Unmark most wanted" : "Mark most wanted"}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onStar}
+              aria-label={item.mostWanted ? "Unmark most wanted" : "Mark most wanted"}
+            >
               <StarIcon className={cn(item.mostWanted && "fill-gold text-gold")} />
             </Button>
             <Button variant="ghost" size="icon" onClick={onEdit} aria-label={`Edit ${item.title}`}>
@@ -82,19 +95,17 @@ function SortableItem({
   );
 }
 
-function toState(item: WishlistItem, fallback: string): ItemFormState {
+function toState(item: WishlistItem): ItemFormState {
   return {
     url: item.url ?? "",
     title: item.title,
-    price: item.price !== null ? String(item.price) : "",
-    currency: item.currency ?? fallback,
     imageUrl: item.imageUrl ?? "",
     notes: item.notes ?? "",
     mostWanted: item.mostWanted,
   };
 }
 
-export function WishlistEditor({ wishlistId, items: serverItems, currency }: { wishlistId: string; items: WishlistItem[]; currency: string }) {
+export function WishlistEditor({ wishlistId, items: serverItems }: { wishlistId: string; items: WishlistItem[] }) {
   const [items, setItems] = useState(serverItems);
   const [pending, run] = useAction();
   const [, startReorder] = useTransition();
@@ -142,7 +153,7 @@ export function WishlistEditor({ wishlistId, items: serverItems, currency }: { w
           <CardContent>
             <ItemForm
               idPrefix="new-item"
-              initial={emptyItem(currency)}
+              initial={emptyItem()}
               submitLabel="Add to wishlist"
               pending={pending}
               errors={errors}
@@ -201,7 +212,7 @@ export function WishlistEditor({ wishlistId, items: serverItems, currency }: { w
             <ItemForm
               key={editing.id}
               idPrefix="edit-item"
-              initial={toState(editing, currency)}
+              initial={toState(editing)}
               submitLabel="Save"
               pending={pending}
               errors={errors}
