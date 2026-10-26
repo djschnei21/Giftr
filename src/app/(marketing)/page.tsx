@@ -106,6 +106,10 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
   return (
     <div className="landing">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {/* Pinned to the viewport: flakes cross their box at a fixed rate, so a page-tall box would make them race. */}
+      <div className="fixed inset-0 -z-1">
+        <Snowfall count={48} />
+      </div>
 
       {deleted ? (
         <div role="status" className="mx-auto mt-6 w-full max-w-6xl px-4 sm:px-6">
@@ -116,7 +120,6 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
       ) : null}
 
       <section className="relative isolate overflow-hidden">
-        <Snowfall count={60} className="-z-10" />
         <Ornament className="left-[4%] sm:left-[8%]" length={24} />
         <Ornament className="left-[18%] hidden lg:flex" tone="gold" length={88} style={{ animationDelay: "-2s" }} />
         <Ornament className="right-[18%] hidden lg:flex" length={56} style={{ animationDelay: "-3s" }} />

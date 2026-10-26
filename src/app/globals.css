@@ -252,7 +252,7 @@
   background: var(--flake);
   filter: drop-shadow(var(--flake-shadow));
   animation: fall linear infinite;
-  will-change: transform;
+  will-change: translate, rotate;
   &:is(svg) {
     background: none;
     fill: none;
@@ -260,15 +260,18 @@
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
+    transform-origin: center;
     animation-name: fall, twirl;
   }
 }
+/* Falls on `translate`, not `transform`: crystals twirl on `rotate`, which composes outside `transform`
+   and would swing the whole fall around an axis. */
 @keyframes fall {
   from {
-    transform: translate3d(0, -10cqh, 0);
+    translate: 0 -10cqh;
   }
   to {
-    transform: translate3d(var(--drift, 24px), 110cqh, 0);
+    translate: var(--drift, 24px) 110cqh;
   }
 }
 @keyframes twirl {
@@ -298,6 +301,6 @@
   }
   .flake {
     animation: none !important;
-    transform: translate3d(0, var(--y, 50cqh), 0);
+    translate: 0 var(--y, 50cqh);
   }
 }

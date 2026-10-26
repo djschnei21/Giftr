@@ -53,10 +53,10 @@ function BentoCard({
 }
 
 const joins = [
-  { name: "Ama Owusu", detail: "Added four wishlist ideas" },
-  { name: "Tomás Ortega", detail: "Signed in with Google" },
-  { name: "Priya Raman", detail: "Tapped the group chat link" },
-  { name: "Lena Fischer", detail: "Signed in with her email" },
+  { name: "Jim Porter", detail: "Added four wishlist ideas" },
+  { name: "Dan Walsh", detail: "Signed in with Google" },
+  { name: "Mel Ridley", detail: "Tapped the group chat link" },
+  { name: "Dylan Hart", detail: "Signed in with his email" },
 ];
 
 function JoinStack() {
@@ -99,7 +99,7 @@ function RuleCheck() {
         </div>
       ))}
       <p className="rule-ok story mt-2 flex items-center justify-center gap-2 text-sm font-semibold text-success">
-        <SealCheckIcon className="size-4" /> Works for all 8 people
+        <SealCheckIcon className="size-4" /> Works for all 6 people
       </p>
     </div>
   );
@@ -110,8 +110,8 @@ function Unwrap() {
     <div className="gift-box story relative h-44 w-36">
       <div className="absolute inset-x-0 bottom-6 flex justify-center">
         <div className="gift-tag story flex items-center gap-2 rounded-xl bg-card py-2 pr-3 pl-2 shadow-lg">
-          <UserAvatar name="Jordan Ellis" className="size-6 rounded-md text-xs ring-0" />
-          <span className="text-sm font-bold">Jordan</span>
+          <UserAvatar name="Chris Dean" className="size-6 rounded-md text-xs ring-0" />
+          <span className="text-sm font-bold">Chris</span>
         </div>
       </div>
       <div className="absolute inset-x-3 bottom-0 z-10 h-20 rounded-lg bg-primary shadow-md">
@@ -134,7 +134,7 @@ function AnonymousChat() {
   return (
     <div className="grid w-full max-w-80 gap-2 text-sm">
       <p className="mb-2 flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-        <DetectiveIcon className="size-4" /> Jordan sees you as Your Secret Santa
+        <DetectiveIcon className="size-4" /> Chris sees you as Your Secret Santa
       </p>
       <p className={cn("chat-1 story", santa)}>Is your morning more coffee or tea?</p>
       <div className="relative grid">
@@ -212,17 +212,17 @@ function ChainPatch() {
           />
         </svg>
         <div className="flex items-center gap-2">
-          <Person name="Maya Chen" />
+          <Person name="Shannon Ross" />
           <Arrow className="chain-fade story" />
-          <Person name="Priya Raman" className="chain-leave story" />
+          <Person name="Mel Ridley" className="chain-leave story" />
           <Arrow className="chain-fade story" />
-          <Person name="Jordan Ellis" />
+          <Person name="Chris Dean" />
           <Arrow />
-          <Person name="Lena Fischer" />
+          <Person name="Dylan Hart" />
         </div>
       </div>
       <p className="chain-note story rounded-md bg-card px-2 py-1 text-xs font-semibold shadow-sm">
-        Priya left. Only Maya gets a new match.
+        Mel left. Only Shannon gets a new match.
       </p>
     </div>
   );
