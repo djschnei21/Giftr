@@ -15,13 +15,13 @@ import { AvatarStack, UserAvatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-const people = ["Maya Chen", "Jordan Ellis", "Priya Raman", "Tomás Ortega", "Ama Owusu", "Lena Fischer", "Sam Okafor", "Alex Kim"];
+const people = ["Shannon Ross", "Chris Dean", "Mel Ridley", "Dan Walsh", "Jim Porter", "Dylan Hart"];
 
 const roster = [
-  { name: "Maya Chen", note: "Organizer", done: true },
-  { name: "Priya Raman", note: "Wishlist ready", done: true },
-  { name: "Tomás Ortega", note: "Gift bought", done: true },
-  { name: "Ama Owusu", note: "Still deciding", done: false },
+  { name: "Shannon Ross", note: "Organizer", done: true },
+  { name: "Mel Ridley", note: "Wishlist ready", done: true },
+  { name: "Dan Walsh", note: "Gift bought", done: true },
+  { name: "Jim Porter", note: "Still deciding", done: false },
 ];
 
 const wishes = [
@@ -47,7 +47,7 @@ export function HeroMockup({ className }: { className?: string }) {
   return (
     <div
       role="img"
-      aria-label="Preview of a Giftr exchange called Friendsmas 2026: eight people have joined, your match is Jordan, and you are chatting with Jordan anonymously."
+      aria-label="Preview of a Giftr exchange called Friendsmas 2026: six people have joined, your match is Chris, and you are chatting with Chris anonymously."
       className={cn("rounded-3xl border bg-card/70 p-2 shadow-2xl backdrop-blur-sm", className)}
     >
       <div className="grid gap-4 rounded-2xl border bg-background p-4">
@@ -73,7 +73,7 @@ export function HeroMockup({ className }: { className?: string }) {
                 Saturday, Dec 19
               </Fact>
               <Fact icon={<MapPinIcon />} delay={800}>
-                Maya&apos;s place
+                Shannon&apos;s place
               </Fact>
               <Fact icon={<WalletIcon />} delay={840}>
                 $25 to $40
@@ -81,7 +81,7 @@ export function HeroMockup({ className }: { className?: string }) {
             </ul>
             <div className="h-px bg-border" />
             <p className="m-up text-xs font-semibold text-muted-foreground" style={at(900)}>
-              8 people joined
+              6 people joined
             </p>
             <ul className="grid gap-3">
               {roster.map((p, i) => (
@@ -105,8 +105,8 @@ export function HeroMockup({ className }: { className?: string }) {
             <Snowfall count={14} seed={23} className="-z-10 [--flake:rgb(255_255_255/0.75)]" />
             <div className="m-up grid justify-items-center gap-2 text-center" style={at(1000)}>
               <span className="text-sm opacity-80">You&apos;re Secret Santa for</span>
-              <UserAvatar name="Jordan Ellis" className="size-14 rounded-2xl text-lg ring-4 ring-gold/60" />
-              <span className="text-3xl font-bold tracking-tight">Jordan</span>
+              <UserAvatar name="Chris Dean" className="size-14 rounded-2xl text-lg ring-4 ring-gold/60" />
+              <span className="text-3xl font-bold tracking-tight">Chris</span>
               <span className="rounded-md bg-white/15 px-2 py-0.5 text-xs font-semibold">$25 to $40</span>
             </div>
             <ul className="grid gap-2">
@@ -134,7 +134,7 @@ export function HeroMockup({ className }: { className?: string }) {
                 <DetectiveIcon className="size-4" />
               </span>
               <span className="grid min-w-0">
-                <span className="truncate text-sm font-semibold">Ask Jordan</span>
+                <span className="truncate text-sm font-semibold">Ask Chris</span>
                 <span className="truncate text-xs text-muted-foreground">Your name stays hidden</span>
               </span>
             </div>
