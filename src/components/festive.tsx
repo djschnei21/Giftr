@@ -100,15 +100,23 @@ export function StarPattern({ className, id = "giftr-stars" }: { className?: str
   );
 }
 
+const ornamentTones = {
+  primary: "bg-primary",
+  gold: "bg-gold",
+  pine: "bg-pine",
+};
+
 export function Ornament({
   className,
   tone = "primary",
   length = 48,
+  size = "md",
   style,
 }: {
   className?: string;
-  tone?: "primary" | "gold";
+  tone?: keyof typeof ornamentTones;
   length?: number;
+  size?: "md" | "lg";
   style?: CSSProperties;
 }) {
   return (
@@ -117,16 +125,197 @@ export function Ornament({
       className={cn("pointer-events-none absolute top-0 flex origin-top flex-col items-center", className)}
       style={{ animation: "bob 5s var(--ease-fluid) infinite", ...style }}
     >
-      <span className="w-px bg-border" style={{ height: length }} />
-      <span className="h-1 w-2 rounded-sm bg-gold" />
+      <span className="w-px bg-gold/60" style={{ height: length }} />
+      <span className="h-1.5 w-3 rounded-t-sm bg-gradient-to-b from-gold to-gold-foreground" />
       <span
         className={cn(
-          "relative size-7 rounded-full shadow-md",
-          tone === "primary" ? "bg-primary" : "bg-gold",
+          "relative overflow-hidden rounded-full shadow-lg",
+          size === "lg" ? "size-11" : "size-8",
+          ornamentTones[tone],
         )}
       >
-        <span className="absolute top-1 left-1 size-2 rounded-full bg-white/40" />
+        <span className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 bg-white/25" />
+        <span className="absolute inset-x-0 top-1/2 mt-1.5 h-px bg-white/30" />
+        <span className="absolute top-1 left-1.5 size-2.5 rounded-full bg-white/50 blur-[1px]" />
       </span>
     </span>
+  );
+}
+
+const bulbColors = ["#e0303f", "#f2b632", "#2fa86a", "#4aa3e8", "#fff1c9"];
+
+/** A string of fairy lights draped along the top of the page. Purely decorative. */
+export function StringLights({ className }: { className?: string }) {
+  return (
+    <div
+      aria-hidden
+      className={cn(
+        "pointer-events-none absolute inset-x-0 top-0 z-30 flex h-12 justify-center overflow-hidden",
+        className,
+      )}
+    >
+      {Array.from({ length: 32 }, (_, i) => {
+        const color = bulbColors[i % bulbColors.length];
+        return (
+          <svg key={i} viewBox="0 0 80 48" className="h-12 w-20 flex-none">
+            <path d="M0 4Q40 26 80 4" fill="none" className="stroke-holly" strokeWidth="1.5" />
+            <g transform="translate(40 15) rotate(8)">
+              <rect x="-3" y="0" width="6" height="6" rx="1" className="fill-holly" />
+              <path
+                d="M0 5c-6 0-8 7-8 12 0 6 4 10 8 10s8-4 8-10c0-5-2-12-8-12Z"
+                fill={color}
+                className="twinkle"
+                style={{ "--bulb": color, "--tw": `${-((i * 0.37) % 2.4)}s` } as CSSProperties}
+              />
+              <ellipse cx="-3" cy="12" rx="1.6" ry="3" fill="white" opacity="0.55" />
+            </g>
+          </svg>
+        );
+      })}
+    </div>
+  );
+}
+
+export function HollySprig({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 64 40" aria-hidden className={cn("h-8 w-auto", className)}>
+      <path
+        d="M30 22C22 10 10 8 2 12c5 1 6 5 4 8 4-1 7 2 6 6 4-2 8 0 9 3 1-4 5-6 9-7Z"
+        className="fill-holly"
+      />
+      <path
+        d="M34 22c8-12 20-14 28-10-5 1-6 5-4 8-4-1-7 2-6 6-4-2-8 0-9 3-1-4-5-6-9-7Z"
+        className="fill-pine"
+      />
+      <path d="M30 22C22 14 14 13 8 14M34 22c8-8 16-9 22-8" fill="none" stroke="white" strokeOpacity="0.25" />
+      <circle cx="28" cy="25" r="5" className="fill-primary" />
+      <circle cx="36" cy="25" r="5" className="fill-primary" />
+      <circle cx="32" cy="31" r="5" className="fill-primary" />
+      <circle cx="26.5" cy="23.5" r="1.4" fill="white" opacity="0.6" />
+      <circle cx="34.5" cy="23.5" r="1.4" fill="white" opacity="0.6" />
+      <circle cx="30.5" cy="29.5" r="1.4" fill="white" opacity="0.6" />
+    </svg>
+  );
+}
+
+/** Heading flourish: holly flanked by tinsel. */
+export function HollyDivider({ className }: { className?: string }) {
+  return (
+    <div aria-hidden className={cn("flex w-full max-w-xs items-center gap-3", className)}>
+      <span className="tinsel h-px flex-1" />
+      <HollySprig className="h-7" />
+      <span className="tinsel h-px flex-1" />
+    </div>
+  );
+}
+
+export function TwinkleStar({ className, style }: { className?: string; style?: CSSProperties }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden className={cn("twinkle size-4 fill-gold", className)} style={style}>
+      <path d="M12 1.5l2.2 7.3 7.3 2.2-7.3 2.2L12 20.5l-2.2-7.3L2.5 11l7.3-2.2Z" />
+    </svg>
+  );
+}
+
+export function ChristmasTree({ className, lit = true }: { className?: string; lit?: boolean }) {
+  return (
+    <svg viewBox="0 0 80 110" aria-hidden className={cn("h-28 w-auto", className)}>
+      <rect x="34" y="92" width="12" height="14" rx="2" className="fill-gold-foreground" />
+      <path d="M40 14 8 60h14L4 92h72L58 60h14Z" className="fill-pine" />
+      <path d="M40 14 20 44h10L14 70h52L50 44h10Z" className="fill-holly" opacity="0.55" />
+      <path d="M18 74c14 6 30 6 46-4M24 52c10 5 22 4 32-3" fill="none" className="stroke-gold" strokeWidth="2" />
+      {lit
+        ? (
+            [
+              [28, 58, "#e0303f"],
+              [52, 52, "#f2b632"],
+              [40, 40, "#4aa3e8"],
+              [22, 82, "#f2b632"],
+              [58, 80, "#e0303f"],
+              [40, 76, "#fff1c9"],
+            ] as const
+          ).map(([cx, cy, c], i) => (
+            <circle
+              key={i}
+              cx={cx}
+              cy={cy}
+              r="3"
+              fill={c}
+              className="twinkle"
+              style={{ "--bulb": c, "--tw": `${-i * 0.4}s` } as CSSProperties}
+            />
+          ))
+        : null}
+      <path d="M40 2l3 7 7 .6-5.4 4.6 1.7 7L40 17.4 33.7 21l1.7-7L30 9.6l7-.6Z" className="twinkle fill-gold" />
+    </svg>
+  );
+}
+
+/** Snowy hills with a little pine forest. Sits along the bottom edge of a section. */
+export function SnowyTreeline({ className }: { className?: string }) {
+  const trees = [6, 12, 17, 31, 36, 58, 64, 70, 83, 89, 95];
+  return (
+    <svg
+      viewBox="0 0 100 14"
+      preserveAspectRatio="none"
+      aria-hidden
+      className={cn("pointer-events-none absolute inset-x-0 bottom-0 h-20 w-full sm:h-28", className)}
+    >
+      {trees.map((x, i) => {
+        const h = 5 + ((i * 7) % 5);
+        return <path key={x} d={`M${x} ${12 - h}l2.2 ${h}h-4.4Z`} className="fill-pine" opacity={0.35 + (i % 3) * 0.15} />;
+      })}
+      <path d="M0 11C14 8 26 12 40 10s30-3 44 0 12 1 16 0V14H0Z" fill="var(--card)" />
+      <path d="M0 12.5c18-2 34 1 52-1s32-1 48 0V14H0Z" fill="var(--background)" />
+    </svg>
+  );
+}
+
+export function CandyCane({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 32 64" aria-hidden className={cn("h-14 w-auto", className)}>
+      <defs>
+        <pattern id="cane-stripes" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="8" height="8" fill="#fffaf2" />
+          <rect width="4" height="8" className="fill-primary" />
+        </pattern>
+      </defs>
+      <path
+        d="M22 62V18a8 8 0 0 0-16 0"
+        fill="none"
+        stroke="url(#cane-stripes)"
+        strokeWidth="7"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function daysUntilChristmas(now = new Date()) {
+  const year = now.getMonth() === 11 && now.getDate() > 25 ? now.getFullYear() + 1 : now.getFullYear();
+  const christmas = Date.UTC(year, 11, 25);
+  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((christmas - today) / 86_400_000);
+}
+
+/** "N sleeps until Christmas" chip. Server-rendered so it matches on hydration. */
+export function ChristmasCountdown({ className }: { className?: string }) {
+  const days = daysUntilChristmas();
+  return (
+    <p
+      className={cn(
+        "inline-flex items-center gap-2 rounded-full border border-gold/40 bg-card/80 px-3 py-1 text-sm font-semibold text-foreground shadow-xs",
+        className,
+      )}
+    >
+      <TwinkleStar className="size-3.5" />
+      {days === 0 ? (
+        "Merry Christmas!"
+      ) : (
+        <span>
+          <span className="tabular-nums">{days}</span> {days === 1 ? "sleep" : "sleeps"} until Christmas
+        </span>
+      )}
+    </p>
   );
 }

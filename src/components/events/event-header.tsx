@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CaretLeftIcon, SlidersHorizontalIcon } from "@/components/icons";
 import type { Event } from "@/db/schema";
+import { HollySprig } from "@/components/festive";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { longDateLabel } from "@/lib/format";
@@ -32,10 +33,13 @@ export function EventHeader({
             <Badge variant={badge.variant}>{badge.label}</Badge>
             {isOrganizer ? <Badge variant="outline">You&apos;re organizing</Badge> : null}
           </div>
-          <h1 className="max-w-full font-display text-4xl break-words sm:text-5xl">
+          <h1 className="max-w-full font-display text-4xl break-words sm:text-6xl">
             {event.name.replaceAll("/", "/\u200b")}
           </h1>
-          <p className="font-medium text-muted-foreground">{longDateLabel(event.exchangeDate)}</p>
+          <p className="flex items-center gap-2 font-medium text-muted-foreground">
+            <HollySprig className="h-5 shrink-0" />
+            {longDateLabel(event.exchangeDate)}
+          </p>
         </div>
         {isOrganizer && showManage && event.status !== "cancelled" ? (
           <Button asChild variant="outline">

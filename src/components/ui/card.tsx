@@ -5,7 +5,10 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card"
-      className={cn("max-w-full min-w-0 rounded-2xl bg-card text-card-foreground shadow-sm", className)}
+      className={cn(
+        "max-w-full min-w-0 rounded-2xl bg-card text-card-foreground shadow-sm ring-1 ring-border/70",
+        className,
+      )}
       {...props}
     />
   );
@@ -16,7 +19,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardTitle({ className, ...props }: React.ComponentProps<"h3">) {
-  return <h3 className={cn("text-lg font-bold tracking-tight", className)} {...props} />;
+  return <h3 className={cn("font-display text-xl", className)} {...props} />;
 }
 
 function CardDescription({ className, ...props }: React.ComponentProps<"p">) {
