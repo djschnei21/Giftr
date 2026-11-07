@@ -8,6 +8,8 @@
 @theme inline {
   --font-sans: var(--font-manrope);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-fraunces);
+  --font-script: var(--font-christmas);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -33,6 +35,10 @@
   --color-gold-foreground: var(--gold-foreground);
   --color-success: var(--success);
   --color-pine: var(--pine);
+  --color-pine-foreground: var(--pine-foreground);
+  --color-holly: var(--holly);
+  --color-frost: var(--frost);
+  --color-night: var(--night);
 
   --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
   --default-transition-duration: 300ms;
@@ -46,64 +52,77 @@
   --shadow-2xl: 0 32px 64px -16px var(--shadow-strong);
 }
 
-/* Holiday card: warm paper, cranberry ink. One accent; pine and gold only carry status. */
+/* Christmas morning: candlelit cream paper, cranberry ink, evergreen and gold leaf.
+   Every text pairing below clears WCAG AA (4.5:1) on both background and card. */
 :root {
-  --background: #faf6ef;
-  --foreground: #1f1a17;
-  --card: #ffffff;
-  --card-foreground: #1f1a17;
-  --popover: #ffffff;
-  --popover-foreground: #1f1a17;
-  --primary: #b01e2b;
-  --primary-foreground: #fffaf5;
-  --secondary: #f2ece2;
-  --secondary-foreground: #2a231f;
-  --muted: #f2ece2;
-  --muted-foreground: #6e645b;
-  --accent: #f8e9e6;
-  --accent-foreground: #9a1b26;
+  --background: #fbf4e8;
+  --foreground: #1d1714;
+  --card: #fffdf8;
+  --card-foreground: #1d1714;
+  --popover: #fffdf8;
+  --popover-foreground: #1d1714;
+  --primary: #b3132b;
+  --primary-foreground: #fffaf2;
+  --secondary: #eaf1e9;
+  --secondary-foreground: #173d2d;
+  --muted: #f3ebdd;
+  --muted-foreground: #62574d;
+  --accent: #fbe5e2;
+  --accent-foreground: #96101f;
   --destructive: #b42318;
-  --border: #e9e1d5;
-  --input: #ddd3c5;
-  --ring: #b01e2b;
-  --gold: #c99a3b;
-  --gold-foreground: #8a5f12;
-  --success: #2a7048;
-  --pine: #1f5c45;
+  --border: #eadfcd;
+  --input: #ddd0bb;
+  --ring: #b3132b;
+  --gold: #c99a2e;
+  --gold-foreground: #7f5608;
+  --success: #1f6b44;
+  --pine: #155c3d;
+  --pine-foreground: #f4fbf6;
+  --holly: #0f4a32;
+  --frost: #e9f2f7;
+  --night: #0e2a20;
   --flake: #ffffff;
-  --flake-shadow: 0 1px 2px rgb(92 52 30 / 0.35);
-  --shadow-color: rgb(92 52 30 / 0.07);
-  --shadow-strong: rgb(92 52 30 / 0.16);
+  --flake-shadow: 0 1px 2px rgb(92 52 30 / 0.4);
+  --glow-warm: rgb(255 196 92 / 0.28);
+  --glow-cool: rgb(21 92 61 / 0.12);
+  --shadow-color: rgb(92 40 20 / 0.08);
+  --shadow-strong: rgb(92 40 20 / 0.18);
 }
 
-/* Christmas night: approved neutral darks only, a brighter cranberry for contrast. */
+/* Silent night: deep evergreen sky, starlight text, a brighter cranberry for contrast. */
 .dark {
-  --background: #181818;
-  --foreground: #f3f0eb;
-  --card: #1f1f1f;
-  --card-foreground: #f3f0eb;
-  --popover: #1f1f1f;
-  --popover-foreground: #f3f0eb;
-  --primary: #d7343c;
+  --background: #0b1b16;
+  --foreground: #f6f0e4;
+  --card: #11261f;
+  --card-foreground: #f6f0e4;
+  --popover: #11261f;
+  --popover-foreground: #f6f0e4;
+  --primary: #d22f3b;
   --primary-foreground: #ffffff;
-  --secondary: #272727;
-  --secondary-foreground: #f3f0eb;
-  --muted: #272727;
-  --muted-foreground: #a8a29a;
-  --accent: #272727;
-  --accent-foreground: #ff9c9c;
+  --secondary: #183329;
+  --secondary-foreground: #e6f1ea;
+  --muted: #183329;
+  --muted-foreground: #a9bdb2;
+  --accent: #2a1d1c;
+  --accent-foreground: #ffa3a3;
   --destructive: #f06a5f;
-  --border: #313131;
-  --input: #313131;
-  --ring: #ff9c9c;
-  --gold: #e7b65c;
-  --gold-foreground: #e7b65c;
-  --success: #5dbb86;
-  --pine: #5dbb86;
-  --flake: rgb(255 255 255 / 0.85);
-  --flake-shadow: 0 0 3px rgb(255 255 255 / 0.4);
-  --shadow-color: rgb(0 0 0 / 0.3);
-  --shadow-strong: rgb(0 0 0 / 0.5);
+  --border: #21423a;
+  --input: #2a4a40;
+  --ring: #ffa3a3;
+  --gold: #e9bb5f;
+  --gold-foreground: #f0c873;
+  --success: #6cc794;
+  --pine: #6cc794;
+  --pine-foreground: #0b1b16;
+  --holly: #2f8a5c;
+  --frost: #15302a;
+  --night: #071510;
+  --flake: rgb(255 255 255 / 0.9);
+  --flake-shadow: 0 0 4px rgb(255 255 255 / 0.5);
+  --glow-warm: rgb(255 190 90 / 0.12);
+  --glow-cool: rgb(108 199 148 / 0.08);
+  --shadow-color: rgb(0 0 0 / 0.35);
+  --shadow-strong: rgb(0 0 0 / 0.55);
 }
 
 @layer base {
@@ -119,6 +138,30 @@
     font-feature-settings: "cv11";
     font-optical-sizing: auto;
     isolation: isolate;
+    /* Candlelight from above, a hint of evergreen below. */
+    background-image:
+      radial-gradient(60rem 28rem at 50% -6rem, var(--glow-warm), transparent 70%),
+      radial-gradient(50rem 30rem at 100% 110%, var(--glow-cool), transparent 70%),
+      radial-gradient(40rem 24rem at 0% 100%, var(--glow-cool), transparent 70%);
+    background-attachment: fixed;
+  }
+  /* Starry sky for the silent night theme. */
+  .dark body {
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, rgb(255 255 255 / 0.7), transparent 60%),
+      radial-gradient(1px 1px at 38% 8%, rgb(255 255 255 / 0.55), transparent 60%),
+      radial-gradient(1.5px 1.5px at 64% 22%, rgb(255 236 190 / 0.7), transparent 60%),
+      radial-gradient(1px 1px at 82% 12%, rgb(255 255 255 / 0.6), transparent 60%),
+      radial-gradient(1px 1px at 92% 38%, rgb(255 255 255 / 0.45), transparent 60%),
+      radial-gradient(1.5px 1.5px at 24% 42%, rgb(255 255 255 / 0.4), transparent 60%),
+      radial-gradient(60rem 28rem at 50% -6rem, var(--glow-warm), transparent 70%),
+      radial-gradient(50rem 30rem at 100% 110%, var(--glow-cool), transparent 70%);
+  }
+  h1,
+  h2 {
+    font-family: var(--font-serif);
+    font-variation-settings: "SOFT" 100, "WONK" 1;
+    letter-spacing: -0.02em;
   }
   /* Paper grain behind everything. Cards stay clean because they paint over it. */
   body::before {
@@ -164,18 +207,174 @@
 }
 
 @utility font-display {
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
+  font-weight: 650;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  letter-spacing: -0.02em;
+}
+
+/* Hand-lettered greeting-card script. Decorative accents only, never body copy. */
+@utility font-script {
+  font-family: var(--font-script);
   font-weight: 700;
-  letter-spacing: -0.035em;
+  letter-spacing: 0.01em;
 }
 
 @utility text-hero {
-  background-image: linear-gradient(to right, #000000, #666666);
+  background-image: linear-gradient(100deg, #8e0f1f 10%, #b3132b 45%, #0f4a32 95%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   .dark & {
-    background-image: linear-gradient(to right, #ffffff, #9b9b9b);
+    background-image: linear-gradient(100deg, #ffffff 20%, #ffe2a8 60%, #f0c873 95%);
+  }
+}
+
+/* Gold-leaf foil for small festive words. */
+@utility text-foil {
+  background-image: linear-gradient(100deg, #8a5c08, #c99a2e 40%, #8a5c08 60%, #b07f17);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: foil 6s linear infinite;
+  .dark & {
+    background-image: linear-gradient(100deg, #f0c873, #fff1c9 40%, #e9bb5f 60%, #f0c873);
+  }
+}
+@keyframes foil {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Candy cane stripe for ribbons and edges. */
+@utility candy-stripe {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--primary) 0 10px,
+    #fffaf2 10px 20px
+  );
+}
+@utility pine-stripe {
+  background-image: repeating-linear-gradient(-45deg, var(--pine) 0 8px, var(--gold) 8px 12px, var(--pine) 12px 20px);
+}
+
+/* Wrapping paper: tiny stars and dots over a cranberry ground. */
+@utility wrapping-paper {
+  background-color: var(--primary);
+  background-image:
+    radial-gradient(circle at 25% 25%, rgb(255 236 190 / 0.55) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 75% 75%, rgb(255 255 255 / 0.35) 0 1.5px, transparent 2px);
+  background-size: 14px 14px;
+}
+
+/* A thin festive rule: gold, pine, gold. */
+@utility tinsel {
+  background-image: linear-gradient(90deg, transparent, var(--gold) 20%, var(--pine) 50%, var(--gold) 80%, transparent);
+}
+
+/* Holiday card frame: cream card with a candy cane band along the top edge. */
+@utility festive-card {
+  position: relative;
+  overflow: hidden;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 6px;
+    background-image: repeating-linear-gradient(-45deg, var(--primary) 0 10px, var(--gold) 10px 14px, var(--card) 14px 24px);
+    pointer-events: none;
+  }
+}
+
+/* Sweep of light across a button on hover, like tinsel catching the tree lights. */
+@utility shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 700ms var(--ease-fluid);
+    pointer-events: none;
+  }
+  &:hover::after {
+    transform: translateX(120%);
+  }
+}
+
+@utility twinkle {
+  animation: twinkle 2.4s ease-in-out infinite;
+  animation-delay: var(--tw, 0s);
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px var(--bulb, var(--gold)));
+  }
+  50% {
+    opacity: 0.45;
+    filter: drop-shadow(0 0 1px var(--bulb, var(--gold)));
+  }
+}
+
+/* A gentle jingle for presents waiting to be opened. */
+@utility jingle {
+  transform-origin: 50% 100%;
+  animation: jingle 3.2s var(--ease-fluid) infinite;
+}
+@keyframes jingle {
+  0%,
+  70%,
+  100% {
+    rotate: 0deg;
+  }
+  76% {
+    rotate: -5deg;
+  }
+  82% {
+    rotate: 4deg;
+  }
+  88% {
+    rotate: -2deg;
+  }
+  94% {
+    rotate: 1deg;
+  }
+}
+
+/* Warm halo that breathes, for calls to unwrap. */
+@utility glow-pulse {
+  animation: glow-pulse 2.6s ease-in-out infinite;
+}
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--gold) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in oklab, var(--gold) 0%, transparent);
+  }
+}
+
+@utility sway {
+  transform-origin: 50% 0;
+  animation: sway 6s ease-in-out infinite;
+  animation-delay: var(--tw, 0s);
+}
+@keyframes sway {
+  0%,
+  100% {
+    rotate: -3deg;
+  }
+  50% {
+    rotate: 3deg;
   }
 }
 

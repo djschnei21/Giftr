@@ -1,4 +1,4 @@
-import { GiftStack } from "@/components/festive";
+import { ChristmasTree, GiftStack, HollyDivider } from "@/components/festive";
 import { cn } from "@/lib/utils";
 
 export function EmptyState({
@@ -17,7 +17,7 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center gap-6 rounded-3xl bg-card px-6 py-16 text-center shadow-sm",
+        "flex flex-col items-center gap-6 rounded-3xl bg-card px-6 py-16 text-center shadow-sm ring-1 ring-border/70",
         className,
       )}
     >
@@ -26,10 +26,14 @@ export function EmptyState({
           {icon}
         </div>
       ) : (
-        <GiftStack />
+        <div className="flex items-end gap-2">
+          <ChristmasTree className="h-32" />
+          <GiftStack className="h-20" />
+        </div>
       )}
-      <div className="grid max-w-sm gap-2">
-        <h2 className="font-display text-2xl">{title}</h2>
+      <div className="grid max-w-sm justify-items-center gap-2">
+        <h2 className="font-display text-3xl">{title}</h2>
+        {icon ? null : <HollyDivider className="max-w-48" />}
         {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
       </div>
       {action}

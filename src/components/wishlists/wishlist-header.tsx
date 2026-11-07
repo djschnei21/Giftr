@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { CaretLeftIcon, DotsThreeIcon, PencilSimpleIcon, StarIcon, TrashIcon } from "@/components/icons";
 import { deleteWishlist, makeDefaultWishlist, renameWishlist } from "@/server/actions/wishlists";
 import { useAction } from "@/components/use-action";
+import { HollySprig } from "@/components/festive";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog, ResponsiveDialog } from "@/components/ui/dialog";
@@ -36,7 +37,10 @@ export function WishlistHeader({
       </Link>
       <div className="flex items-start justify-between gap-4">
         <div className="grid min-w-0 gap-2">
-          <h1 className="font-display text-4xl break-words sm:text-5xl">{wishlist.name}</h1>
+          <p aria-hidden className="flex items-center gap-2 font-script text-xl text-pine">
+            <HollySprig className="h-5" /> Dear Santa, I&apos;d love…
+          </p>
+          <h1 className="font-display text-4xl break-words sm:text-6xl">{wishlist.name}</h1>
           <div className="flex flex-wrap gap-2">
             {wishlist.isDefault ? (
               <Badge variant="gold">

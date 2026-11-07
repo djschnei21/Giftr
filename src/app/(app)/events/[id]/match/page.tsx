@@ -15,7 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { UserAvatar } from "@/components/ui/avatar";
 import { EventHeader } from "@/components/events/event-header";
 import { EmptyState } from "@/components/app/empty-state";
-import { Snowfall } from "@/components/festive";
+import { HollySprig, Ornament, Snowfall } from "@/components/festive";
 import { AnonymousChat } from "@/components/match/anonymous-chat";
 import { BoughtChecklist, GiftStatusPicker, GiverNotes } from "@/components/match/gift-tracker";
 import { requireEventAccess } from "@/lib/authz";
@@ -240,15 +240,21 @@ function MatchHero({
   event: { exchangeDate: string };
 }) {
   return (
-    <section className="relative isolate flex flex-wrap items-center gap-4 overflow-hidden rounded-3xl bg-card p-6 shadow-md sm:gap-6 sm:p-8">
+    <section className="festive-card relative isolate flex flex-wrap items-center gap-4 rounded-3xl border border-gold/40 bg-card p-6 pt-8 shadow-md sm:gap-6 sm:p-8 sm:pt-10">
       <Snowfall count={20} seed={5} className="-z-10" />
-      <UserAvatar
-        name={giftee.name}
-        image={giftee.image}
-        className="size-16 rounded-2xl text-xl ring-4 ring-gold/40 sm:size-20 sm:text-2xl"
-      />
+      <Ornament className="right-[8%] hidden sm:flex" length={28} style={{ animationDelay: "-1s" }} />
+      <Ornament className="right-[18%] hidden md:flex" tone="gold" length={52} style={{ animationDelay: "-2.5s" }} />
+      <Ornament className="right-[28%] hidden lg:flex" tone="pine" length={20} />
+      <span className="relative">
+        <UserAvatar
+          name={giftee.name}
+          image={giftee.image}
+          className="size-16 rounded-full text-xl ring-4 ring-gold/60 sm:size-20 sm:text-2xl"
+        />
+        <HollySprig className="absolute -right-4 -bottom-2 h-6" />
+      </span>
       <div className="grid min-w-0 flex-1 gap-1">
-        <p className="text-sm font-medium text-muted-foreground">{subtitle}</p>
+        <p className="font-script text-xl text-pine">{subtitle}</p>
         <h2 className="font-display text-3xl break-words sm:text-4xl" data-testid="match-name">
           {giftee.name}
         </h2>

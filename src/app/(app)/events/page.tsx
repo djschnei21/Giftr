@@ -8,7 +8,8 @@ import { EmptyState } from "@/components/app/empty-state";
 import { countdownLabel, eventPhase, statusBadge } from "@/components/events/status";
 import { requireUser } from "@/lib/authz";
 import { budgetLabel, dateLabel } from "@/lib/format";
-import { firstName } from "@/lib/utils";
+import { ChristmasCountdown, HollySprig, TwinkleStar } from "@/components/festive";
+import { cn, firstName } from "@/lib/utils";
 import { listMyEvents, listMyPendingInvites } from "@/server/queries/events";
 
 export const metadata: Metadata = { title: "Your exchanges" };
@@ -23,8 +24,11 @@ export default async function EventsPage() {
     <div className="grid gap-12">
       <header className="flex flex-wrap items-end justify-between gap-6">
         <div className="grid min-w-0 gap-2">
-          <p className="text-sm font-semibold text-accent-foreground">Hi {firstName(user.name)}</p>
-          <h1 className="font-display text-4xl break-words sm:text-5xl">Your exchanges</h1>
+          <ChristmasCountdown className="mb-2 w-fit" />
+          <p className="flex items-center gap-2 font-script text-2xl text-primary dark:text-accent-foreground">
+            <HollySprig className="h-6" /> Ho ho ho, {firstName(user.name)}!
+          </p>
+          <h1 className="font-display text-4xl break-words sm:text-6xl">Your exchanges</h1>
         </div>
         {events.length ? (
           <Button asChild>
@@ -37,16 +41,16 @@ export default async function EventsPage() {
 
       {invites.length ? (
         <section aria-labelledby="invites-heading" className="grid gap-3">
-          <h2 id="invites-heading" className="text-sm font-semibold text-muted-foreground">
-            Waiting for you
+          <h2 id="invites-heading" className="flex items-center gap-2 font-sans text-sm font-semibold text-muted-foreground">
+            <TwinkleStar className="size-3.5" /> Waiting for you
           </h2>
           {invites.map(({ invitation, event, organizerName }) => (
             <Link
               key={invitation.id}
               href={`/join/${event.inviteCode}`}
-              className="group flex min-w-0 items-center gap-4 rounded-2xl bg-card p-4 shadow-sm transition outline-none hover:-translate-y-0.5 hover:shadow-lg focus-visible:ring-4 focus-visible:ring-ring/30 active:scale-[0.98]"
+              className="group flex min-w-0 items-center gap-4 rounded-2xl border border-gold/40 bg-card p-4 shadow-sm transition outline-none hover:-translate-y-0.5 hover:shadow-lg focus-visible:ring-4 focus-visible:ring-ring/30 active:scale-[0.98]"
             >
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold-foreground">
+              <span className="jingle flex size-12 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold-foreground">
                 <EnvelopeSimpleOpenIcon weight="fill" className="size-6" />
               </span>
               <span className="min-w-0 flex-1">
@@ -85,7 +89,7 @@ export default async function EventsPage() {
 
       {past.length ? (
         <section aria-labelledby="past-heading" className="grid gap-4">
-          <h2 id="past-heading" className="text-sm font-semibold text-muted-foreground">
+          <h2 id="past-heading" className="font-sans text-sm font-semibold text-muted-foreground">
             Past exchanges
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
@@ -108,19 +112,48 @@ function EventCard({ event, me, isOrganizer, people }: Awaited<ReturnType<typeof
   return (
     <Link
       href={`/events/${event.id}`}
-      className="group relative flex min-w-0 flex-col gap-6 rounded-3xl bg-card p-4 shadow-sm transition outline-none hover:-translate-y-1 hover:shadow-xl focus-visible:ring-4 focus-visible:ring-ring/30 active:scale-[0.98] sm:p-6"
+      className={cn(
+        "group relative flex min-w-0 flex-col gap-6 rounded-3xl border bg-card p-4 pt-6 shadow-sm transition outline-none hover:-translate-y-1 hover:border-gold/50 hover:shadow-xl focus-visible:ring-4 focus-visible:ring-ring/30 active:scale-[0.98] sm:p-6 sm:pt-8",
+        !finished && "festive-card",
+      )}
     >
+      {!finished ? (
+        <HollySprig className="absolute top-3 right-3 h-7 transition duration-500 group-hover:rotate-12" />
+      ) : null}
       <div className="flex items-start gap-4">
         <span
           aria-hidden
           className={
             finished
               ? "flex size-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-secondary text-muted-foreground"
-              : "flex size-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-accent text-accent-foreground transition group-hover:-rotate-3"
+              : "wrapping-paper relative flex size-14 shrink-0 flex-col items-center justify-center rounded-2xl text-primary-foreground shadow-md transition group-hover:-rotate-6"
           }
         >
-          <span className="text-xs font-semibold">{dateLabel(event.exchangeDate, "MMM")}</span>
-          <span className="font-display text-2xl tabular-nums">{dateLabel(event.exchangeDate, "d")}</span>
+          {!finished ? (
+            <>
+              <span className="absolute inset-y-0 left-1/2 w-2 -translate-x-1/2 bg-gold/80" />
+              <span className="absolute -top-2 left-1/2 flex -translate-x-1/2 gap-px">
+                <span className="size-3 -rotate-45 rounded-full border-2 border-gold" />
+                <span className="size-3 rotate-45 rounded-full border-2 border-gold" />
+              </span>
+            </>
+          ) : null}
+          <span
+            className={cn(
+              "relative px-1 text-[10px] leading-tight font-bold uppercase",
+              !finished && "rounded-sm bg-card/95 text-accent-foreground",
+            )}
+          >
+            {dateLabel(event.exchangeDate, "MMM")}
+          </span>
+          <span
+            className={cn(
+              "relative font-display text-2xl leading-tight tabular-nums",
+              !finished && "rounded-md bg-card/95 px-1 text-foreground",
+            )}
+          >
+            {dateLabel(event.exchangeDate, "d")}
+          </span>
         </span>
         <div className="grid min-w-0 flex-1 gap-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -138,7 +171,7 @@ function EventCard({ event, me, isOrganizer, people }: Awaited<ReturnType<typeof
       <div className="mt-auto flex flex-wrap items-center justify-between gap-3">
         <AvatarStack people={people} />
         {needsReveal ? (
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-primary px-3 py-1 text-xs font-semibold whitespace-nowrap text-primary-foreground shadow-sm">
+          <span className="glow-pulse inline-flex shrink-0 items-center gap-1 rounded-lg bg-primary px-3 py-1 text-xs font-semibold whitespace-nowrap text-primary-foreground shadow-sm">
             <SparkleIcon weight="fill" className="size-3" /> Reveal your match
           </span>
         ) : (

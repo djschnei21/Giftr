@@ -24,7 +24,7 @@ export function MainNav() {
             aria-current={active ? "page" : undefined}
             className={cn(
               "flex h-9 items-center gap-2 rounded-full px-4 text-sm font-semibold text-muted-foreground transition outline-none hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 active:scale-[0.98]",
-              active && "bg-accent text-accent-foreground hover:bg-accent hover:text-accent-foreground",
+              active && "bg-accent text-accent-foreground ring-1 ring-gold/40 hover:bg-accent hover:text-accent-foreground",
             )}
           >
             <item.icon weight={active ? "fill" : "bold"} className="size-4" />
@@ -53,7 +53,7 @@ export function MobileNav() {
               aria-current={active ? "page" : undefined}
               className={cn(
                 "flex min-w-0 flex-col items-center gap-0.5 rounded-full py-2 text-xs font-semibold text-muted-foreground transition outline-none focus-visible:ring-2 focus-visible:ring-ring/40 active:scale-[0.98]",
-                active && "bg-accent text-accent-foreground",
+                active && "bg-accent text-accent-foreground ring-1 ring-gold/40",
               )}
             >
               <item.icon weight={active ? "fill" : "bold"} className="size-5" />

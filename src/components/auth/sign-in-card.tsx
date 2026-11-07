@@ -61,7 +61,7 @@ export function SignInCard({ next, providers, devOutbox, error, heading, subhead
   const hasSocial = providers.google || providers.facebook;
 
   return (
-    <div className="rounded-3xl bg-card p-6 shadow-xl sm:p-8">
+    <div className="festive-card rounded-3xl bg-card p-6 pt-8 shadow-xl ring-1 ring-gold/30 sm:p-8 sm:pt-10">
       <AnimatePresence mode="wait" initial={false}>
         {sentTo ? (
           <motion.div

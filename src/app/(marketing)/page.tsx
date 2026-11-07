@@ -11,7 +11,18 @@ import {
   SlidersHorizontalIcon,
   SparkleIcon,
 } from "@/components/icons";
-import { Ornament, Snowfall, StarPattern } from "@/components/festive";
+import {
+  CandyCane,
+  ChristmasCountdown,
+  ChristmasTree,
+  HollyDivider,
+  HollySprig,
+  Ornament,
+  Snowfall,
+  SnowyTreeline,
+  StarPattern,
+  TwinkleStar,
+} from "@/components/festive";
 import { Bento } from "@/components/marketing/bento";
 import { HeroMockup } from "@/components/marketing/hero-mockup";
 import { InView } from "@/components/marketing/in-view";
@@ -86,6 +97,14 @@ const faqSchema = {
   mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
 };
 
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <p aria-hidden className="-mb-3 flex items-center gap-2 font-script text-2xl text-pine">
+      <HollySprig className="h-6" /> {children}
+    </p>
+  );
+}
+
 const at = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
 
 function StartButton({ href, className }: { href: string; className?: string }) {
@@ -117,28 +136,37 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
 
       <section className="relative isolate overflow-hidden">
         <Snowfall count={60} className="-z-10" />
-        <Ornament className="left-[4%] sm:left-[8%]" length={24} />
-        <Ornament className="left-[18%] hidden lg:flex" tone="gold" length={88} style={{ animationDelay: "-2s" }} />
-        <Ornament className="right-[18%] hidden lg:flex" length={56} style={{ animationDelay: "-3s" }} />
-        <Ornament className="right-[4%] sm:right-[8%]" tone="gold" length={40} style={{ animationDelay: "-1s" }} />
+        <Ornament className="left-[4%] sm:left-[8%]" length={36} />
+        <Ornament className="left-[14%] hidden md:flex" tone="pine" length={110} style={{ animationDelay: "-4s" }} />
+        <Ornament className="left-[22%] hidden lg:flex" tone="gold" size="lg" length={70} style={{ animationDelay: "-2s" }} />
+        <Ornament className="right-[22%] hidden lg:flex" size="lg" length={96} style={{ animationDelay: "-3s" }} />
+        <Ornament className="right-[14%] hidden md:flex" tone="pine" length={52} style={{ animationDelay: "-1.5s" }} />
+        <Ornament className="right-[4%] sm:right-[8%]" tone="gold" length={44} style={{ animationDelay: "-1s" }} />
+        <TwinkleStar className="absolute top-40 left-[30%] hidden size-5 lg:block" style={{ "--tw": "-0.8s" } as CSSProperties} />
+        <TwinkleStar className="absolute top-64 right-[30%] hidden size-3 lg:block" style={{ "--tw": "-1.6s" } as CSSProperties} />
+        <TwinkleStar className="absolute top-28 right-[38%] hidden size-3 md:block" />
 
-        <div className="mx-auto grid w-full max-w-6xl justify-items-center gap-6 px-4 pt-16 text-center sm:px-6 sm:pt-24">
-          <p
-            className="rise inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-sm font-semibold shadow-xs"
-            style={at(0)}
-          >
-            <SparkleIcon className="size-4 text-gold" /> Free for every group, every year
+        <div className="mx-auto grid w-full max-w-6xl justify-items-center gap-6 px-4 pt-20 text-center sm:px-6 sm:pt-28">
+          <div className="rise flex flex-wrap justify-center gap-2" style={at(0)}>
+            <p className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-card px-3 py-1 text-sm font-semibold shadow-xs">
+              <SparkleIcon className="size-4 text-gold" /> Free for every group, every year
+            </p>
+            <ChristmasCountdown />
+          </div>
+          <p aria-hidden className="rise -mb-4 font-script text-3xl text-pine sm:text-4xl" style={at(40)}>
+            Ho ho ho!
           </p>
           <h1
-            className="rise max-w-[680px] text-5xl font-bold tracking-tight text-hero sm:text-6xl"
+            className="rise max-w-[760px] text-5xl font-semibold tracking-tight text-hero sm:text-7xl"
             style={at(80)}
           >
             <span className="block">Secret Santa,</span>
             <span className="block">simplified</span>
           </h1>
+          <HollyDivider className="rise" />
           <p className="rise max-w-[680px] text-lg text-muted-foreground" style={at(160)}>
             Send one link to your family, friends or team. Giftr draws names around your rules, shares wishlists, and
-            keeps every match a secret, even from you.
+            keeps every match a secret, even from you. Santa would approve.
           </p>
           <div className="rise grid justify-items-center gap-4" style={at(240)}>
             <StartButton href={start} />
@@ -156,14 +184,18 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
           </div>
         </div>
 
-        <div className="mx-auto w-full max-w-5xl px-4 pt-16 pb-24 sm:px-6">
+        <div className="relative mx-auto w-full max-w-5xl px-4 pt-16 pb-32 sm:px-6">
+          <ChristmasTree className="absolute bottom-20 -left-2 hidden h-40 lg:block xl:-left-16" />
+          <ChristmasTree className="absolute -right-2 bottom-20 hidden h-28 lg:block xl:-right-12" />
           <HeroMockup />
         </div>
+        <SnowyTreeline className="-z-10" />
       </section>
 
       <section aria-labelledby="features" className="mx-auto grid w-full max-w-6xl gap-12 px-4 py-24 sm:px-6">
         <InView className="reveal grid max-w-[680px] gap-4">
-          <h2 id="features" className="text-3xl font-bold tracking-tight sm:text-4xl">
+          <Eyebrow>Deck the halls</Eyebrow>
+          <h2 id="features" className="text-3xl font-semibold tracking-tight sm:text-5xl">
             Everything a gift exchange needs,
             <br className="hidden sm:block" /> and nothing it doesn&apos;t
           </h2>
@@ -189,7 +221,8 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
       <section id="how" aria-labelledby="how-title" className="scroll-mt-24">
         <div className="mx-auto grid w-full max-w-6xl gap-12 px-4 py-24 sm:px-6">
           <InView className="reveal grid max-w-[680px] gap-4">
-            <h2 id="how-title" className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <Eyebrow>Three jolly steps</Eyebrow>
+            <h2 id="how-title" className="text-3xl font-semibold tracking-tight sm:text-5xl">
               Up and running in three steps
             </h2>
             <p className="text-lg text-muted-foreground">
@@ -200,18 +233,24 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
             {steps.map((s, i) => (
               <li
                 key={s.title}
-                className="reveal grid content-start gap-4 rounded-3xl border bg-card p-6 shadow-sm"
+                className="reveal festive-card group grid content-start gap-4 rounded-3xl border bg-card p-6 pt-8 shadow-sm"
                 style={at(i * 90)}
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex size-12 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
-                    <s.icon className="size-6" />
+                  <span className="relative flex flex-col items-center transition duration-500 group-hover:-rotate-6">
+                    <span aria-hidden className="h-1.5 w-4 rounded-t-sm bg-gold" />
+                    <span
+                      className={
+                        ["bg-primary", "bg-pine", "bg-gold"][i % 3] +
+                        " flex size-12 items-center justify-center rounded-full text-white shadow-md"
+                      }
+                    >
+                      <s.icon weight="bold" className="size-6" />
+                    </span>
                   </span>
-                  <span className="flex size-8 items-center justify-center rounded-lg bg-secondary font-mono text-sm font-semibold">
-                    {i + 1}
-                  </span>
+                  <span className="font-script text-4xl leading-none text-primary dark:text-accent-foreground">{i + 1}</span>
                 </div>
-                <h3 className="text-xl font-bold tracking-tight">{s.title}</h3>
+                <h3 className="font-display text-2xl">{s.title}</h3>
                 <p className="text-muted-foreground">{s.body}</p>
               </li>
             ))}
@@ -222,7 +261,8 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
       <section id="faq" aria-labelledby="faq-title" className="scroll-mt-24">
         <div className="mx-auto grid w-full max-w-6xl gap-12 px-4 py-24 sm:px-6 lg:grid-cols-[1fr_2fr]">
           <InView className="reveal grid content-start gap-4 lg:sticky lg:top-32 lg:self-start">
-            <h2 id="faq-title" className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <Eyebrow>Fireside chat</Eyebrow>
+            <h2 id="faq-title" className="text-3xl font-semibold tracking-tight sm:text-5xl">
               Questions, answered
             </h2>
             <p className="text-lg text-muted-foreground">
@@ -233,10 +273,13 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
             {faqs.map((f, i) => (
               <div
                 key={f.q}
-                className="reveal grid content-start gap-2 rounded-3xl border bg-card p-6"
+                className="reveal grid content-start gap-2 rounded-3xl border bg-card p-6 transition hover:border-gold/50 hover:shadow-md"
                 style={at((i % 2) * 90)}
               >
-                <dt className="font-bold">{f.q}</dt>
+                <dt className="flex items-start gap-2 font-bold">
+                  <TwinkleStar className="mt-1 size-3.5 shrink-0" style={{ "--tw": `${-i * 0.3}s` } as CSSProperties} />
+                  {f.q}
+                </dt>
                 <dd className="text-muted-foreground">{f.a}</dd>
               </div>
             ))}
@@ -245,12 +288,17 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
       </section>
 
       <section aria-labelledby="cta-title" className="px-4 pt-12 pb-24 sm:px-6">
-        <InView className="reveal relative isolate mx-auto grid w-full max-w-6xl justify-items-center gap-6 overflow-hidden rounded-3xl bg-primary px-6 py-24 text-center text-primary-foreground shadow-xl">
+        <InView className="reveal candy-stripe relative mx-auto w-full max-w-6xl rounded-[2rem] p-2 shadow-xl">
+          <div className="relative isolate grid justify-items-center gap-6 overflow-hidden rounded-3xl bg-primary bg-linear-to-b from-primary to-[#7d0c1c] px-6 py-24 text-center text-primary-foreground">
           <StarPattern id="cta-stars" className="-z-10 text-gold opacity-25" />
           <Snowfall count={28} seed={19} className="-z-10 [--flake:rgb(255_255_255/0.75)]" />
           <Ornament className="left-[10%] hidden sm:flex" tone="gold" length={48} />
-          <Ornament className="right-[12%] hidden sm:flex" tone="gold" length={72} style={{ animationDelay: "-2s" }} />
-          <h2 id="cta-title" className="max-w-[680px] text-3xl font-bold tracking-tight sm:text-5xl">
+          <Ornament className="left-[20%] hidden md:flex" tone="pine" length={24} style={{ animationDelay: "-3s" }} />
+          <Ornament className="right-[12%] hidden sm:flex" tone="gold" size="lg" length={72} style={{ animationDelay: "-2s" }} />
+          <ChristmasTree className="absolute bottom-0 left-6 hidden h-36 md:block" />
+          <CandyCane className="absolute right-8 bottom-4 hidden h-24 rotate-12 md:block" />
+          <HollySprig className="h-10" />
+          <h2 id="cta-title" className="max-w-[680px] text-3xl font-semibold tracking-tight sm:text-5xl">
             This year, skip the hat
             <br className="hidden sm:block" /> full of paper scraps
           </h2>
@@ -261,6 +309,8 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
             href={start}
             className="bg-primary-foreground text-primary shadow-lg hover:bg-primary-foreground/90 hover:shadow-xl"
           />
+          <p aria-hidden className="font-script text-2xl text-[#ffe2a8]">Merry Christmas to all!</p>
+          </div>
         </InView>
       </section>
     </div>

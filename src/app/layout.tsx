@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Manrope } from "next/font/google";
+import { Fraunces, Geist_Mono, Manrope, Mountains_of_Christmas } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Snowfall, StringLights } from "@/components/festive";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { appUrl } from "@/lib/utils";
@@ -9,6 +10,8 @@ import "./globals.css";
 
 const manrope = Manrope({ variable: "--font-manrope", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], axes: ["SOFT", "WONK", "opsz"] });
+const christmas = Mountains_of_Christmas({ variable: "--font-christmas", subsets: ["latin"], weight: "700" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl()),
@@ -21,8 +24,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf6ef" },
-    { media: "(prefers-color-scheme: dark)", color: "#181818" },
+    { media: "(prefers-color-scheme: light)", color: "#fbf4e8" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b1b16" },
   ],
 };
 
@@ -31,10 +34,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${manrope.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${manrope.variable} ${geistMono.variable} ${fraunces.variable} ${christmas.variable} h-full antialiased`}
     >
       <body className="flex min-h-full min-w-0 flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <Snowfall count={44} seed={31} className="fixed! -z-10" />
+          <StringLights />
           <a
             href="#main"
             className="sr-only z-50 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
