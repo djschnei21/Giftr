@@ -31,7 +31,7 @@ export function Logo({ href = "/", className }: { href?: string; className?: str
       )}
     >
       <LogoMark className="transition duration-500 group-hover:-rotate-6" />
-      <span className="font-script text-2xl leading-none text-primary dark:text-foreground">Giftr</span>
+      <span className="logo-wordmark font-script text-2xl leading-none text-primary dark:text-foreground">Giftr</span>
     </Link>
   );
 }
