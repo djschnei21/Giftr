@@ -160,7 +160,9 @@
   h1,
   h2 {
     font-family: var(--font-serif);
-    font-variation-settings: "SOFT" 100, "WONK" 1;
+    font-variation-settings:
+      "SOFT" 100,
+      "WONK" 1;
     letter-spacing: -0.02em;
   }
   /* Paper grain behind everything. Cards stay clean because they paint over it. */
@@ -209,7 +211,9 @@
 @utility font-display {
   font-family: var(--font-serif);
   font-weight: 650;
-  font-variation-settings: "SOFT" 100, "WONK" 1;
+  font-variation-settings:
+    "SOFT" 100,
+    "WONK" 1;
   letter-spacing: -0.02em;
 }
 
@@ -250,11 +254,7 @@
 
 /* Candy cane stripe for ribbons and edges. */
 @utility candy-stripe {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--primary) 0 10px,
-    #fffaf2 10px 20px
-  );
+  background-image: repeating-linear-gradient(-45deg, var(--primary) 0 10px, #fffaf2 10px 20px);
 }
 @utility pine-stripe {
   background-image: repeating-linear-gradient(-45deg, var(--pine) 0 8px, var(--gold) 8px 12px, var(--pine) 12px 20px);
@@ -283,7 +283,12 @@
     position: absolute;
     inset: 0 0 auto 0;
     height: 6px;
-    background-image: repeating-linear-gradient(-45deg, var(--primary) 0 10px, var(--gold) 10px 14px, var(--card) 14px 24px);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--primary) 0 10px,
+      var(--gold) 10px 14px,
+      var(--card) 14px 24px
+    );
     pointer-events: none;
   }
 }
@@ -499,4 +504,64 @@
     animation: none !important;
     transform: translate3d(0, var(--y, 50cqh), 0);
   }
+}
+
+/*
+  Festivity dial. High is the default and needs no overrides.
+  These rules stay unlayered so they beat Tailwind display utilities
+  (`hidden lg:block` on trees and ornaments) without touching the card itself.
+*/
+html[data-festivity="medium"] .festive-flourish,
+html[data-festivity="low"] .festive-flourish,
+html[data-festivity="low"] .festive-motif {
+  display: none;
+}
+
+/* Looping decoration stops from Medium down. prefers-reduced-motion still applies at High. */
+html[data-festivity="medium"] .jingle,
+html[data-festivity="low"] .jingle,
+html[data-festivity="medium"] .twinkle,
+html[data-festivity="low"] .twinkle,
+html[data-festivity="medium"] .glow-pulse,
+html[data-festivity="low"] .glow-pulse,
+html[data-festivity="medium"] .sway,
+html[data-festivity="low"] .sway {
+  animation: none;
+}
+
+/* Low keeps the card and flattens the candy band on its top edge. */
+html[data-festivity="low"] .festive-card::before {
+  content: none;
+}
+
+html[data-festivity="low"] .tinsel {
+  background-image: none;
+  background-color: var(--border);
+}
+
+html[data-festivity="low"] .wrapping-paper,
+html[data-festivity="low"] .candy-stripe,
+html[data-festivity="low"] .pine-stripe {
+  background-image: none;
+}
+
+html[data-festivity="low"] .candy-stripe {
+  background-color: var(--primary);
+}
+
+html[data-festivity="low"] .pine-stripe {
+  background-color: var(--pine);
+}
+
+html[data-festivity="low"] .font-script:not(.logo-wordmark) {
+  font-family: var(--font-sans);
+  letter-spacing: normal;
+}
+
+html[data-festivity="low"] .text-hero {
+  background-image: none;
+  background-clip: border-box;
+  -webkit-background-clip: border-box;
+  color: var(--foreground);
+  -webkit-text-fill-color: currentColor;
 }

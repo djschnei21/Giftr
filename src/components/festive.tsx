@@ -1,6 +1,11 @@
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
+/** High-only atmosphere. CSS hides it from Medium down. */
+const flourish = "festive-flourish";
+/** Holiday motif that stays at Medium and drops at Low. */
+const motif = "festive-motif";
+
 /** Deterministic scatter so server and client render the same flakes. */
 function scatter(count: number, seed: number) {
   let s = seed;
@@ -27,7 +32,7 @@ const arms = [0, 60, 120, 180, 240, 300];
 
 export function Snowfall({ count = 36, seed = 7, className }: { count?: number; seed?: number; className?: string }) {
   return (
-    <div aria-hidden className={cn("snowfall", className)}>
+    <div aria-hidden className={cn("snowfall", flourish, className)}>
       {scatter(count, seed).map((f, i) => {
         const style = {
           left: `${f.x}%`,
@@ -68,10 +73,7 @@ export function GiftStack({ className }: { className?: string }) {
       <rect x="8" y="34" width="82" height="18" rx="6" className="fill-primary" />
       <rect x="8" y="48" width="82" height="4" className="fill-black/10" />
       <rect x="44" y="34" width="10" height="70" className="fill-gold" />
-      <path
-        d="M49 34c-4-10-17-15-21-8-3 6 6 10 21 8Zm0 0c4-10 17-15 21-8 3 6-6 10-21 8Z"
-        className="fill-gold"
-      />
+      <path d="M49 34c-4-10-17-15-21-8-3 6 6 10 21 8Zm0 0c4-10 17-15 21-8 3 6-6 10-21 8Z" className="fill-gold" />
       <rect x="92" y="66" width="60" height="38" rx="7" className="fill-gold" />
       <rect x="88" y="58" width="68" height="13" rx="5" className="fill-gold" />
       <rect x="88" y="68" width="68" height="3" className="fill-black/10" />
@@ -88,7 +90,7 @@ export function GiftStack({ className }: { className?: string }) {
 /** Repeating star and dot motif for flat brand panels. Inherits color from `currentColor`. */
 export function StarPattern({ className, id = "giftr-stars" }: { className?: string; id?: string }) {
   return (
-    <svg aria-hidden className={cn("pointer-events-none absolute inset-0 size-full", className)}>
+    <svg aria-hidden className={cn("pointer-events-none absolute inset-0 size-full", flourish, className)}>
       <defs>
         <pattern id={id} width="56" height="56" patternUnits="userSpaceOnUse">
           <path d="M14 8l1.6 4.4L20 14l-4.4 1.6L14 20l-1.6-4.4L8 14l4.4-1.6Z" fill="currentColor" />
@@ -122,7 +124,7 @@ export function Ornament({
   return (
     <span
       aria-hidden
-      className={cn("pointer-events-none absolute top-0 flex origin-top flex-col items-center", className)}
+      className={cn("pointer-events-none absolute top-0 flex origin-top flex-col items-center", flourish, className)}
       style={{ animation: "bob 5s var(--ease-fluid) infinite", ...style }}
     >
       <span className="w-px bg-gold/60" style={{ height: length }} />
@@ -151,6 +153,7 @@ export function StringLights({ className }: { className?: string }) {
       aria-hidden
       className={cn(
         "pointer-events-none absolute inset-x-0 top-0 z-30 flex h-12 justify-center overflow-hidden",
+        flourish,
         className,
       )}
     >
@@ -178,15 +181,9 @@ export function StringLights({ className }: { className?: string }) {
 
 export function HollySprig({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 64 40" aria-hidden className={cn("h-8 w-auto", className)}>
-      <path
-        d="M30 22C22 10 10 8 2 12c5 1 6 5 4 8 4-1 7 2 6 6 4-2 8 0 9 3 1-4 5-6 9-7Z"
-        className="fill-holly"
-      />
-      <path
-        d="M34 22c8-12 20-14 28-10-5 1-6 5-4 8-4-1-7 2-6 6-4-2-8 0-9 3-1-4-5-6-9-7Z"
-        className="fill-pine"
-      />
+    <svg viewBox="0 0 64 40" aria-hidden className={cn("h-8 w-auto", motif, className)}>
+      <path d="M30 22C22 10 10 8 2 12c5 1 6 5 4 8 4-1 7 2 6 6 4-2 8 0 9 3 1-4 5-6 9-7Z" className="fill-holly" />
+      <path d="M34 22c8-12 20-14 28-10-5 1-6 5-4 8-4-1-7 2-6 6-4-2-8 0-9 3-1-4-5-6-9-7Z" className="fill-pine" />
       <path d="M30 22C22 14 14 13 8 14M34 22c8-8 16-9 22-8" fill="none" stroke="white" strokeOpacity="0.25" />
       <circle cx="28" cy="25" r="5" className="fill-primary" />
       <circle cx="36" cy="25" r="5" className="fill-primary" />
@@ -201,17 +198,17 @@ export function HollySprig({ className }: { className?: string }) {
 /** Heading flourish: holly flanked by tinsel. */
 export function HollyDivider({ className }: { className?: string }) {
   return (
-    <div aria-hidden className={cn("flex w-full max-w-xs items-center gap-3", className)}>
-      <span className="tinsel h-px flex-1" />
+    <div aria-hidden className={cn("flex w-full max-w-xs items-center gap-3", motif, className)}>
+      <span className="h-px flex-1 tinsel" />
       <HollySprig className="h-7" />
-      <span className="tinsel h-px flex-1" />
+      <span className="h-px flex-1 tinsel" />
     </div>
   );
 }
 
 export function TwinkleStar({ className, style }: { className?: string; style?: CSSProperties }) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden className={cn("twinkle size-4 fill-gold", className)} style={style}>
+    <svg viewBox="0 0 24 24" aria-hidden className={cn("size-4 twinkle fill-gold", flourish, className)} style={style}>
       <path d="M12 1.5l2.2 7.3 7.3 2.2-7.3 2.2L12 20.5l-2.2-7.3L2.5 11l7.3-2.2Z" />
     </svg>
   );
@@ -219,7 +216,7 @@ export function TwinkleStar({ className, style }: { className?: string; style?: 
 
 export function ChristmasTree({ className, lit = true }: { className?: string; lit?: boolean }) {
   return (
-    <svg viewBox="0 0 80 110" aria-hidden className={cn("h-28 w-auto", className)}>
+    <svg viewBox="0 0 80 110" aria-hidden className={cn("h-28 w-auto", flourish, className)}>
       <rect x="34" y="92" width="12" height="14" rx="2" className="fill-gold-foreground" />
       <path d="M40 14 8 60h14L4 92h72L58 60h14Z" className="fill-pine" />
       <path d="M40 14 20 44h10L14 70h52L50 44h10Z" className="fill-holly" opacity="0.55" />
@@ -259,11 +256,13 @@ export function SnowyTreeline({ className }: { className?: string }) {
       viewBox="0 0 100 14"
       preserveAspectRatio="none"
       aria-hidden
-      className={cn("pointer-events-none absolute inset-x-0 bottom-0 h-20 w-full sm:h-28", className)}
+      className={cn("pointer-events-none absolute inset-x-0 bottom-0 h-20 w-full sm:h-28", flourish, className)}
     >
       {trees.map((x, i) => {
         const h = 5 + ((i * 7) % 5);
-        return <path key={x} d={`M${x} ${12 - h}l2.2 ${h}h-4.4Z`} className="fill-pine" opacity={0.35 + (i % 3) * 0.15} />;
+        return (
+          <path key={x} d={`M${x} ${12 - h}l2.2 ${h}h-4.4Z`} className="fill-pine" opacity={0.35 + (i % 3) * 0.15} />
+        );
       })}
       <path d="M0 11C14 8 26 12 40 10s30-3 44 0 12 1 16 0V14H0Z" fill="var(--card)" />
       <path d="M0 12.5c18-2 34 1 52-1s32-1 48 0V14H0Z" fill="var(--background)" />
@@ -273,7 +272,7 @@ export function SnowyTreeline({ className }: { className?: string }) {
 
 export function CandyCane({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 32 64" aria-hidden className={cn("h-14 w-auto", className)}>
+    <svg viewBox="0 0 32 64" aria-hidden className={cn("h-14 w-auto", flourish, className)}>
       <defs>
         <pattern id="cane-stripes" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <rect width="8" height="8" fill="#fffaf2" />
@@ -305,6 +304,7 @@ export function ChristmasCountdown({ className }: { className?: string }) {
     <p
       className={cn(
         "inline-flex items-center gap-2 rounded-full border border-gold/40 bg-card/80 px-3 py-1 text-sm font-semibold text-foreground shadow-xs",
+        motif,
         className,
       )}
     >

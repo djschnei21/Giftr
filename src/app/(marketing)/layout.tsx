@@ -3,6 +3,7 @@ import { AppHeader } from "@/components/app/app-header";
 import { MobileNav } from "@/components/app/nav";
 import { HollySprig } from "@/components/festive";
 import { Logo } from "@/components/logo";
+import { FestivityToggle } from "@/components/festivity-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SiteNav } from "@/components/marketing/site-nav";
 import { getCurrentUser } from "@/lib/authz";
@@ -31,12 +32,17 @@ export default async function MarketingLayout({ children }: LayoutProps<"/">) {
               Terms
             </Link>
           </nav>
-          <ThemeToggle />
+          <div className="flex flex-wrap items-center gap-2">
+            <ThemeToggle />
+            <FestivityToggle />
+          </div>
         </div>
-        <div aria-hidden className="tinsel mt-8 h-px w-full" />
+        <div aria-hidden className="mt-8 h-px w-full tinsel" />
         <p className="mt-6 flex flex-wrap items-baseline justify-between gap-2 text-xs text-muted-foreground">
           <span>© {new Date().getFullYear()} Giftr</span>
-          <span className="font-script text-xl text-primary dark:text-accent-foreground">Merry Christmas &amp; happy holidays</span>
+          <span className="font-script text-xl text-primary dark:text-accent-foreground">
+            Merry Christmas &amp; happy holidays
+          </span>
         </p>
       </footer>
       {user ? <MobileNav /> : null}
