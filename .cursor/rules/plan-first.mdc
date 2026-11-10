@@ -1,0 +1,8 @@
+---
+description: Post an implementation plan and wait for approval before changing code or opening a PR
+alwaysApply: true
+---
+
+When implementing work, including a Linear issue picked up via @cursor, post an implementation plan and wait for explicit user approval before changing code or opening a pull request.
+
+Questions and read-only exploration stay allowed and do not need a plan or approval.
