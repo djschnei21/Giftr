@@ -9,6 +9,8 @@ import { UserAvatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Snowfall, StringLights, TwinkleStar } from "@/components/festive";
+import { useHoliday } from "@/components/holiday-provider";
+import { holidayCopy } from "@/lib/holiday";
 import { firstName } from "@/lib/utils";
 
 const confettiColors = ["#e0303f", "#f2b632", "#2fa86a", "#fff1c9", "#ffffff"];
@@ -76,6 +78,7 @@ export function RevealCard({
   /** Wildcard gifts have no wishlist to link to, just the match page. */
   cta?: "wishlist" | "match";
 }) {
+  const holiday = useHoliday();
   const reduceMotion = useReducedMotion();
   const [revealed, setRevealed] = useState(alreadyViewed);
   const [celebrate, setCelebrate] = useState(false);
@@ -91,7 +94,7 @@ export function RevealCard({
   }
 
   return (
-    <Card className="relative overflow-hidden bg-night bg-linear-to-b from-[#0e2a20] via-[#123528] to-[#1d1230] text-[#f6f0e4] shadow-lg ring-1 ring-gold/30">
+    <Card className="relative overflow-hidden bg-night bg-linear-to-b from-[#0e2a20] via-[#123528] to-[#1d1230] text-[#f6f0e4] shadow-lg ring-1 ring-gold/30 hanukkah:from-[#0c1c38] hanukkah:via-[#122848] hanukkah:to-[#1a1840]">
       <StringLights className="-top-3 z-0" />
       <Snowfall count={28} seed={11} className="[--flake:rgb(255_255_255/0.85)]" />
       {sparkles.map((s) => (
@@ -124,17 +127,17 @@ export function RevealCard({
                 whileHover={reduceMotion ? undefined : { rotate: [0, -3, 3, -2, 0], transition: { duration: 0.5 } }}
                 whileTap={{ scale: 0.96 }}
               >
-                <span className="jingle relative block size-40">
+                <span className="relative block size-40 jingle">
                   <span className="absolute inset-x-4 bottom-0 h-3 translate-y-2 rounded-[50%] bg-black/30 blur-sm" />
-                  <span className="wrapping-paper absolute inset-x-3 top-14 bottom-0 rounded-2xl shadow-xl" />
-                  <span className="wrapping-paper absolute inset-x-0 top-9 h-9 rounded-xl shadow-lg brightness-110 transition-transform duration-500 group-hover:-translate-y-3 group-hover:-rotate-3" />
+                  <span className="absolute inset-x-3 top-14 bottom-0 rounded-2xl wrapping-paper shadow-xl" />
+                  <span className="absolute inset-x-0 top-9 h-9 rounded-xl wrapping-paper shadow-lg brightness-110 transition-transform duration-500 group-hover:-translate-y-3 group-hover:-rotate-3" />
                   <span className="absolute top-14 bottom-0 left-1/2 w-6 -translate-x-1/2 bg-linear-to-r from-gold-foreground via-gold to-gold-foreground" />
                   <span className="absolute top-9 left-1/2 h-9 w-6 -translate-x-1/2 bg-linear-to-r from-gold-foreground via-gold to-gold-foreground transition-transform duration-500 group-hover:-translate-y-3" />
                   <span className="absolute top-0 left-1/2 flex -translate-x-1/2 gap-0.5 transition-transform duration-500 group-hover:-translate-y-4">
                     <span className="size-9 -rotate-45 rounded-full border-[5px] border-gold shadow-sm" />
                     <span className="size-9 rotate-45 rounded-full border-[5px] border-gold shadow-sm" />
                   </span>
-                  <span className="sway absolute top-20 -right-6 flex origin-top-left flex-col items-start">
+                  <span className="absolute top-20 -right-6 flex sway origin-top-left flex-col items-start">
                     <span className="ml-1 h-4 w-px bg-[#ffe2a8]/70" />
                     <span className="rounded-md bg-[#fffaf2] px-2 py-1 font-script text-sm leading-none text-primary shadow-md">
                       To: You
@@ -144,7 +147,7 @@ export function RevealCard({
               </motion.button>
               <div className="grid gap-1">
                 <p aria-hidden className="font-script text-2xl text-[#ffe2a8]">
-                  Santa left something under the tree…
+                  {holidayCopy[holiday].revealScript}
                 </p>
                 <p className="font-display text-4xl">Your match is ready</p>
                 <p className="text-sm text-white/75">Tap the present to see who you&apos;re shopping for.</p>
@@ -163,14 +166,17 @@ export function RevealCard({
                 <UserAvatar
                   name={giftee.name}
                   image={giftee.image}
-                  className="size-24 rounded-full text-3xl ring-4 ring-gold shadow-[0_0_40px_-4px_var(--gold)]"
+                  className="size-24 rounded-full text-3xl shadow-[0_0_40px_-4px_var(--gold)] ring-4 ring-gold"
                 />
-                <span aria-hidden className="absolute -top-5 -left-4 -rotate-[24deg]">
+                <span aria-hidden className="absolute -top-5 -left-4 -rotate-[24deg] hanukkah:hidden!">
                   <svg viewBox="0 0 48 32" className="h-9 w-auto">
                     <path d="M4 26C8 10 22 2 38 8l-4 18Z" fill="#d22f3b" />
                     <rect x="0" y="22" width="40" height="8" rx="4" fill="#fffaf2" />
                     <circle cx="40" cy="8" r="5" fill="#fffaf2" />
                   </svg>
+                </span>
+                <span aria-hidden className="absolute -top-3 left-1/2 -translate-x-1/2 not-hanukkah:hidden!">
+                  <TwinkleStar className="size-7" />
                 </span>
               </span>
               <div className="grid gap-1">

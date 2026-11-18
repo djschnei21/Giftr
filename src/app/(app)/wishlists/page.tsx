@@ -3,6 +3,8 @@ import Link from "next/link";
 import { GiftIcon, StarIcon } from "@/components/icons";
 import { EmptyState } from "@/components/app/empty-state";
 import { CandyCane } from "@/components/festive";
+import { holidayCopy } from "@/lib/holiday";
+import { getHoliday } from "@/lib/holiday-server";
 import { Badge } from "@/components/ui/badge";
 import { NewWishlistButton } from "@/components/wishlists/new-wishlist-button";
 import { requireUser } from "@/lib/authz";
@@ -13,6 +15,7 @@ export const metadata: Metadata = { title: "Wishlists" };
 
 export default async function WishlistsPage() {
   const user = await requireUser("/wishlists");
+  const holiday = await getHoliday();
   const lists = await listMyWishlists(user.id);
   const previews = await Promise.all(lists.map((l) => getWishlistPreview(l.id, 4)));
 
@@ -20,8 +23,11 @@ export default async function WishlistsPage() {
     <div className="grid gap-12">
       <header className="flex flex-wrap items-end justify-between gap-6">
         <div className="grid min-w-0 gap-2">
-          <p aria-hidden className="flex items-center gap-2 font-script text-2xl text-primary dark:text-accent-foreground">
-            <CandyCane className="h-8" /> Dear Santa…
+          <p
+            aria-hidden
+            className="flex items-center gap-2 font-script text-2xl text-primary dark:text-accent-foreground"
+          >
+            <CandyCane className="h-8" /> {holidayCopy[holiday].wishlistsScript}
           </p>
           <h1 className="font-display text-4xl sm:text-6xl">Wishlists</h1>
           <p className="max-w-md text-muted-foreground">
@@ -45,7 +51,7 @@ export default async function WishlistsPage() {
                 href={`/wishlists/${list.id}`}
                 className="group relative flex h-full flex-col gap-6 overflow-hidden rounded-3xl rounded-tl-[3rem] border bg-card p-4 pl-12 shadow-sm transition outline-none hover:-translate-y-0.5 hover:-rotate-[0.6deg] hover:border-gold/50 hover:shadow-lg focus-visible:ring-4 focus-visible:ring-ring/30 active:scale-[0.98] sm:p-6 sm:pl-14"
               >
-                <span aria-hidden className="pine-stripe absolute inset-y-0 left-0 w-2" />
+                <span aria-hidden className="absolute inset-y-0 left-0 w-2 pine-stripe" />
                 <span
                   aria-hidden
                   className="absolute top-6 left-5 size-4 rounded-full border-2 border-gold bg-background shadow-inner sm:left-6"
@@ -78,9 +84,7 @@ export default async function WishlistsPage() {
                             className="size-full object-cover"
                           />
                         ) : item ? (
-                          <span className="line-clamp-3 px-2 text-center text-xs font-medium">
-                            {item.title}
-                          </span>
+                          <span className="line-clamp-3 px-2 text-center text-xs font-medium">{item.title}</span>
                         ) : (
                           <GiftIcon weight="duotone" className="size-5 text-pine opacity-60" />
                         )}

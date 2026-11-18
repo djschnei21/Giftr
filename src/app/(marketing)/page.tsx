@@ -13,11 +13,11 @@ import {
 } from "@/components/icons";
 import {
   CandyCane,
-  ChristmasCountdown,
-  ChristmasTree,
-  HollyDivider,
-  HollySprig,
-  Ornament,
+  HolidayAccent,
+  HolidayCountdown,
+  HolidayDivider,
+  HolidaySprig,
+  HolidayTree,
   Snowfall,
   SnowyTreeline,
   StarPattern,
@@ -29,6 +29,8 @@ import { InView } from "@/components/marketing/in-view";
 import { TaglineReveal } from "@/components/marketing/tagline-reveal";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/authz";
+import { holidayCopy } from "@/lib/holiday";
+import { getHoliday } from "@/lib/holiday-server";
 import "./landing.css";
 
 export const metadata: Metadata = {
@@ -100,7 +102,7 @@ const faqSchema = {
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <p aria-hidden className="-mb-3 flex items-center gap-2 font-script text-2xl text-pine">
-      <HollySprig className="h-6" /> {children}
+      <HolidaySprig className="h-6" /> {children}
     </p>
   );
 }
@@ -118,7 +120,8 @@ function StartButton({ href, className }: { href: string; className?: string }) 
 }
 
 export default async function LandingPage({ searchParams }: PageProps<"/">) {
-  const user = await getCurrentUser();
+  const [user, holiday] = await Promise.all([getCurrentUser(), getHoliday()]);
+  const copy = holidayCopy[holiday];
   const start = user ? "/events/new" : "/sign-in?next=/events/new";
   const deleted = (await searchParams).deleted === "1";
 
@@ -136,14 +139,36 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
 
       <section className="relative isolate overflow-hidden">
         <Snowfall count={60} className="-z-10" />
-        <Ornament className="left-[4%] sm:left-[8%]" length={36} />
-        <Ornament className="left-[14%] hidden md:flex" tone="pine" length={110} style={{ animationDelay: "-4s" }} />
-        <Ornament className="left-[22%] hidden lg:flex" tone="gold" size="lg" length={70} style={{ animationDelay: "-2s" }} />
-        <Ornament className="right-[22%] hidden lg:flex" size="lg" length={96} style={{ animationDelay: "-3s" }} />
-        <Ornament className="right-[14%] hidden md:flex" tone="pine" length={52} style={{ animationDelay: "-1.5s" }} />
-        <Ornament className="right-[4%] sm:right-[8%]" tone="gold" length={44} style={{ animationDelay: "-1s" }} />
-        <TwinkleStar className="absolute top-40 left-[30%] hidden size-5 lg:block" style={{ "--tw": "-0.8s" } as CSSProperties} />
-        <TwinkleStar className="absolute top-64 right-[30%] hidden size-3 lg:block" style={{ "--tw": "-1.6s" } as CSSProperties} />
+        <HolidayAccent className="left-[4%] sm:left-[8%]" length={36} />
+        <HolidayAccent
+          className="left-[14%] hidden md:flex"
+          tone="pine"
+          length={110}
+          style={{ animationDelay: "-4s" }}
+        />
+        <HolidayAccent
+          className="left-[22%] hidden lg:flex"
+          tone="gold"
+          size="lg"
+          length={70}
+          style={{ animationDelay: "-2s" }}
+        />
+        <HolidayAccent className="right-[22%] hidden lg:flex" size="lg" length={96} style={{ animationDelay: "-3s" }} />
+        <HolidayAccent
+          className="right-[14%] hidden md:flex"
+          tone="pine"
+          length={52}
+          style={{ animationDelay: "-1.5s" }}
+        />
+        <HolidayAccent className="right-[4%] sm:right-[8%]" tone="gold" length={44} style={{ animationDelay: "-1s" }} />
+        <TwinkleStar
+          className="absolute top-40 left-[30%] hidden size-5 lg:block"
+          style={{ "--tw": "-0.8s" } as CSSProperties}
+        />
+        <TwinkleStar
+          className="absolute top-64 right-[30%] hidden size-3 lg:block"
+          style={{ "--tw": "-1.6s" } as CSSProperties}
+        />
         <TwinkleStar className="absolute top-28 right-[38%] hidden size-3 md:block" />
 
         <div className="mx-auto grid w-full max-w-6xl justify-items-center gap-6 px-4 pt-20 text-center sm:px-6 sm:pt-28">
@@ -151,22 +176,19 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
             <p className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-card px-3 py-1 text-sm font-semibold shadow-xs">
               <SparkleIcon className="size-4 text-gold" /> Free for every group, every year
             </p>
-            <ChristmasCountdown />
+            <HolidayCountdown holiday={holiday} />
           </div>
           <p aria-hidden className="rise -mb-4 font-script text-3xl text-pine sm:text-4xl" style={at(40)}>
-            Ho ho ho!
+            {copy.heroScript}
           </p>
-          <h1
-            className="rise max-w-[760px] text-5xl font-semibold tracking-tight text-hero sm:text-7xl"
-            style={at(80)}
-          >
+          <h1 className="rise max-w-[760px] text-hero text-5xl font-semibold tracking-tight sm:text-7xl" style={at(80)}>
             <span className="block">Secret Santa,</span>
             <span className="block">simplified</span>
           </h1>
-          <HollyDivider className="rise" />
+          <HolidayDivider className="rise" />
           <p className="rise max-w-[680px] text-lg text-muted-foreground" style={at(160)}>
             Send one link to your family, friends or team. Giftr draws names around your rules, shares wishlists, and
-            keeps every match a secret, even from you. Santa would approve.
+            keeps every match a secret, even from you.{copy.heroApprove}
           </p>
           <div className="rise grid justify-items-center gap-4" style={at(240)}>
             <StartButton href={start} />
@@ -185,8 +207,8 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
         </div>
 
         <div className="relative mx-auto w-full max-w-5xl px-4 pt-16 pb-32 sm:px-6">
-          <ChristmasTree className="absolute bottom-20 -left-2 hidden h-40 lg:block xl:-left-16" />
-          <ChristmasTree className="absolute -right-2 bottom-20 hidden h-28 lg:block xl:-right-12" />
+          <HolidayTree className="absolute bottom-20 -left-2 hidden h-40 lg:block xl:-left-16" />
+          <HolidayTree className="absolute -right-2 bottom-20 hidden h-28 lg:block xl:-right-12" />
           <HeroMockup />
         </div>
         <SnowyTreeline className="-z-10" />
@@ -194,7 +216,7 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
 
       <section aria-labelledby="features" className="mx-auto grid w-full max-w-6xl gap-12 px-4 py-24 sm:px-6">
         <InView className="reveal grid max-w-[680px] gap-4">
-          <Eyebrow>Deck the halls</Eyebrow>
+          <Eyebrow>{copy.featuresEyebrow}</Eyebrow>
           <h2 id="features" className="text-3xl font-semibold tracking-tight sm:text-5xl">
             Everything a gift exchange needs,
             <br className="hidden sm:block" /> and nothing it doesn&apos;t
@@ -221,7 +243,7 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
       <section id="how" aria-labelledby="how-title" className="scroll-mt-24">
         <div className="mx-auto grid w-full max-w-6xl gap-12 px-4 py-24 sm:px-6">
           <InView className="reveal grid max-w-[680px] gap-4">
-            <Eyebrow>Three jolly steps</Eyebrow>
+            <Eyebrow>{copy.stepsEyebrow}</Eyebrow>
             <h2 id="how-title" className="text-3xl font-semibold tracking-tight sm:text-5xl">
               Up and running in three steps
             </h2>
@@ -233,7 +255,7 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
             {steps.map((s, i) => (
               <li
                 key={s.title}
-                className="reveal festive-card group grid content-start gap-4 rounded-3xl border bg-card p-6 pt-8 shadow-sm"
+                className="reveal group festive-card grid content-start gap-4 rounded-3xl border bg-card p-6 pt-8 shadow-sm"
                 style={at(i * 90)}
               >
                 <div className="flex items-center justify-between">
@@ -248,7 +270,9 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
                       <s.icon weight="bold" className="size-6" />
                     </span>
                   </span>
-                  <span className="font-script text-4xl leading-none text-primary dark:text-accent-foreground">{i + 1}</span>
+                  <span className="font-script text-4xl leading-none text-primary dark:text-accent-foreground">
+                    {i + 1}
+                  </span>
                 </div>
                 <h3 className="font-display text-2xl">{s.title}</h3>
                 <p className="text-muted-foreground">{s.body}</p>
@@ -265,9 +289,7 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
             <h2 id="faq-title" className="text-3xl font-semibold tracking-tight sm:text-5xl">
               Questions, answered
             </h2>
-            <p className="text-lg text-muted-foreground">
-              The things organizers ask before they send the link.
-            </p>
+            <p className="text-lg text-muted-foreground">The things organizers ask before they send the link.</p>
           </InView>
           <InView as="dl" className="grid gap-4 sm:grid-cols-2">
             {faqs.map((f, i) => (
@@ -288,28 +310,42 @@ export default async function LandingPage({ searchParams }: PageProps<"/">) {
       </section>
 
       <section aria-labelledby="cta-title" className="px-4 pt-12 pb-24 sm:px-6">
-        <InView className="reveal candy-stripe relative mx-auto w-full max-w-6xl rounded-[2rem] p-2 shadow-xl">
-          <div className="relative isolate grid justify-items-center gap-6 overflow-hidden rounded-3xl bg-primary bg-linear-to-b from-primary to-[#7d0c1c] px-6 py-24 text-center text-primary-foreground">
-          <StarPattern id="cta-stars" className="-z-10 text-gold opacity-25" />
-          <Snowfall count={28} seed={19} className="-z-10 [--flake:rgb(255_255_255/0.75)]" />
-          <Ornament className="left-[10%] hidden sm:flex" tone="gold" length={48} />
-          <Ornament className="left-[20%] hidden md:flex" tone="pine" length={24} style={{ animationDelay: "-3s" }} />
-          <Ornament className="right-[12%] hidden sm:flex" tone="gold" size="lg" length={72} style={{ animationDelay: "-2s" }} />
-          <ChristmasTree className="absolute bottom-0 left-6 hidden h-36 md:block" />
-          <CandyCane className="absolute right-8 bottom-4 hidden h-24 rotate-12 md:block" />
-          <HollySprig className="h-10" />
-          <h2 id="cta-title" className="max-w-[680px] text-3xl font-semibold tracking-tight sm:text-5xl">
-            This year, skip the hat
-            <br className="hidden sm:block" /> full of paper scraps
-          </h2>
-          <p className="max-w-lg text-lg opacity-85">
-            Set up your exchange in about a minute. It&apos;s free for every group, with no ads and nothing to install.
-          </p>
-          <StartButton
-            href={start}
-            className="bg-primary-foreground text-primary shadow-lg hover:bg-primary-foreground/90 hover:shadow-xl"
-          />
-          <p aria-hidden className="font-script text-2xl text-[#ffe2a8]">Merry Christmas to all!</p>
+        <InView className="reveal relative mx-auto w-full max-w-6xl rounded-[2rem] candy-stripe p-2 shadow-xl">
+          <div className="relative isolate grid justify-items-center gap-6 overflow-hidden rounded-3xl bg-primary bg-linear-to-b from-primary to-[#7d0c1c] px-6 py-24 text-center text-primary-foreground hanukkah:to-[#0c2340]">
+            <StarPattern id="cta-stars" className="-z-10 text-gold opacity-25" />
+            <Snowfall count={28} seed={19} className="-z-10 [--flake:rgb(255_255_255/0.75)]" />
+            <HolidayAccent className="left-[10%] hidden sm:flex" tone="gold" length={48} />
+            <HolidayAccent
+              className="left-[20%] hidden md:flex"
+              tone="pine"
+              length={24}
+              style={{ animationDelay: "-3s" }}
+            />
+            <HolidayAccent
+              className="right-[12%] hidden sm:flex"
+              tone="gold"
+              size="lg"
+              length={72}
+              style={{ animationDelay: "-2s" }}
+            />
+            <HolidayTree className="absolute bottom-0 left-6 hidden h-36 md:block" />
+            <CandyCane className="absolute right-8 bottom-4 hidden h-24 rotate-12 md:block" />
+            <HolidaySprig className="h-10" />
+            <h2 id="cta-title" className="max-w-[680px] text-3xl font-semibold tracking-tight sm:text-5xl">
+              This year, skip the hat
+              <br className="hidden sm:block" /> full of paper scraps
+            </h2>
+            <p className="max-w-lg text-lg opacity-85">
+              Set up your exchange in about a minute. It&apos;s free for every group, with no ads and nothing to
+              install.
+            </p>
+            <StartButton
+              href={start}
+              className="bg-primary-foreground text-primary shadow-lg hover:bg-primary-foreground/90 hover:shadow-xl"
+            />
+            <p aria-hidden className="font-script text-2xl text-[#ffe2a8]">
+              {copy.ctaScript}
+            </p>
           </div>
         </InView>
       </section>

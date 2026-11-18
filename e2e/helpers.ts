@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, type Browser, type BrowserContext, type Page } from "@playwright/test";
 import { Pool } from "pg";
 
@@ -34,6 +35,22 @@ export async function latestEmailLink(email: string, match: RegExp, after?: Date
     await new Promise((r) => setTimeout(r, 250));
   }
   throw new Error(`No email matching ${match} for ${email}`);
+}
+
+export async function expectAccessible(page: Page) {
+  await expect(page).toHaveTitle(/Giftr/);
+  // Entrance animations read as low contrast while they fade in, so let the one-shot ones finish.
+  await page.waitForFunction(() =>
+    document
+      .getAnimations()
+      .every((a) => a.playState !== "running" || a.effect?.getComputedTiming().iterations === Infinity),
+  );
+  // Toasts are scanned mid-animation, where their partial opacity reads as low contrast.
+  const { violations } = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa"])
+    .exclude("[data-sonner-toaster]")
+    .analyze();
+  expect(violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
 }
 
 /** Signs in through the real email-link flow and finishes onboarding if needed. */

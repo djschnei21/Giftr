@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { SignOutIcon, UserIcon } from "@/components/icons";
 import { authClient } from "@/lib/auth-client";
 import { UserAvatar } from "@/components/ui/avatar";
+import { HolidayToggle } from "@/components/holiday-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
   DropdownMenu,
@@ -41,6 +42,7 @@ export function UserMenu({ user }: { user: { name: string; email: string; image:
         <div className="grid gap-2 px-3 py-2">
           <span className="text-xs font-semibold text-muted-foreground">Appearance</span>
           <ThemeToggle className="w-full" />
+          <HolidayToggle className="w-full" />
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem

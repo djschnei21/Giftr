@@ -1,6 +1,5 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { closeDb, latestEmailLink, newUserContext, testDb } from "./helpers";
+import { closeDb, expectAccessible, latestEmailLink, newUserContext, testDb } from "./helpers";
 
 const run = Date.now().toString(36);
 const person = (first: string) => ({
@@ -12,19 +11,6 @@ const alice = person("Alice");
 const ben = person("Ben");
 const carol = person("Carol");
 const dan = person("Dan");
-
-async function expectAccessible(page: Page) {
-  await expect(page).toHaveTitle(/Giftr/);
-  // Entrance animations read as low contrast while they fade in, so let the one-shot ones finish.
-  await page.waitForFunction(() =>
-    document
-      .getAnimations()
-      .every((a) => a.playState !== "running" || a.effect?.getComputedTiming().iterations === Infinity),
-  );
-  // Toasts are scanned mid-animation, where their partial opacity reads as low contrast.
-  const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).exclude("[data-sonner-toaster]").analyze();
-  expect(violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
-}
 
 async function addWishlistIdea(page: Page, eventId: string, title: string) {
   await page.goto(`/events/${eventId}`);
@@ -122,7 +108,9 @@ test("four friends run a Secret Santa from invite to anonymous chat", async ({ b
     [carol, ben],
     [dan, alice],
   ]) {
-    expect(managedHtml).not.toContain(`${giver.name}</span><span class="text-muted-foreground">→</span><span>${recipient.name}`);
+    expect(managedHtml).not.toContain(
+      `${giver.name}</span><span class="text-muted-foreground">→</span><span>${recipient.name}`,
+    );
   }
 
   // Each person unwraps their own match.

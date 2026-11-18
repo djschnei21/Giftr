@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CaretLeftIcon, SlidersHorizontalIcon } from "@/components/icons";
 import type { Event } from "@/db/schema";
-import { HollySprig } from "@/components/festive";
+import { HolidaySprig } from "@/components/festive";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { longDateLabel } from "@/lib/format";
@@ -37,7 +37,7 @@ export function EventHeader({
             {event.name.replaceAll("/", "/\u200b")}
           </h1>
           <p className="flex items-center gap-2 font-medium text-muted-foreground">
-            <HollySprig className="h-5 shrink-0" />
+            <HolidaySprig className="h-5 shrink-0" />
             {longDateLabel(event.exchangeDate)}
           </p>
         </div>

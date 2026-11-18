@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { holidayCopy, daysUntilChristmas, hanukkahStatus, type Holiday } from "@/lib/holiday";
 import { cn } from "@/lib/utils";
 
 /** Deterministic scatter so server and client render the same flakes. */
@@ -68,10 +69,7 @@ export function GiftStack({ className }: { className?: string }) {
       <rect x="8" y="34" width="82" height="18" rx="6" className="fill-primary" />
       <rect x="8" y="48" width="82" height="4" className="fill-black/10" />
       <rect x="44" y="34" width="10" height="70" className="fill-gold" />
-      <path
-        d="M49 34c-4-10-17-15-21-8-3 6 6 10 21 8Zm0 0c4-10 17-15 21-8 3 6-6 10-21 8Z"
-        className="fill-gold"
-      />
+      <path d="M49 34c-4-10-17-15-21-8-3 6 6 10 21 8Zm0 0c4-10 17-15 21-8 3 6-6 10-21 8Z" className="fill-gold" />
       <rect x="92" y="66" width="60" height="38" rx="7" className="fill-gold" />
       <rect x="88" y="58" width="68" height="13" rx="5" className="fill-gold" />
       <rect x="88" y="68" width="68" height="3" className="fill-black/10" />
@@ -106,7 +104,13 @@ const ornamentTones = {
   pine: "bg-pine",
 };
 
-export function Ornament({
+const starTones = {
+  primary: "fill-primary",
+  gold: "fill-gold",
+  pine: "fill-pine",
+};
+
+export function HolidayAccent({
   className,
   tone = "primary",
   length = 48,
@@ -119,6 +123,7 @@ export function Ornament({
   size?: "md" | "lg";
   style?: CSSProperties;
 }) {
+  const box = size === "lg" ? "size-11" : "size-8";
   return (
     <span
       aria-hidden
@@ -126,23 +131,23 @@ export function Ornament({
       style={{ animation: "bob 5s var(--ease-fluid) infinite", ...style }}
     >
       <span className="w-px bg-gold/60" style={{ height: length }} />
-      <span className="h-1.5 w-3 rounded-t-sm bg-gradient-to-b from-gold to-gold-foreground" />
+      <span className="h-1.5 w-3 rounded-t-sm bg-gradient-to-b from-gold to-gold-foreground hanukkah:hidden!" />
       <span
-        className={cn(
-          "relative overflow-hidden rounded-full shadow-lg",
-          size === "lg" ? "size-11" : "size-8",
-          ornamentTones[tone],
-        )}
+        className={cn("relative overflow-hidden rounded-full shadow-lg hanukkah:hidden!", box, ornamentTones[tone])}
       >
         <span className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 bg-white/25" />
         <span className="absolute inset-x-0 top-1/2 mt-1.5 h-px bg-white/30" />
         <span className="absolute top-1 left-1.5 size-2.5 rounded-full bg-white/50 blur-[1px]" />
       </span>
+      <svg viewBox="0 0 36 36" className={cn("not-hanukkah:hidden!", box)}>
+        <path d="M18 1.5 31.5 26.5H4.5Z" className={starTones[tone]} />
+        <path d="M18 34.5 4.5 9.5h27Z" className={starTones[tone]} />
+      </svg>
     </span>
   );
 }
 
-const bulbColors = ["#e0303f", "#f2b632", "#2fa86a", "#4aa3e8", "#fff1c9"];
+const bulbVars = ["var(--bulb-1)", "var(--bulb-2)", "var(--bulb-3)", "var(--bulb-4)", "var(--bulb-5)"];
 
 /** A string of fairy lights draped along the top of the page. Purely decorative. */
 export function StringLights({ className }: { className?: string }) {
@@ -155,7 +160,7 @@ export function StringLights({ className }: { className?: string }) {
       )}
     >
       {Array.from({ length: 32 }, (_, i) => {
-        const color = bulbColors[i % bulbColors.length];
+        const color = bulbVars[i % bulbVars.length];
         return (
           <svg key={i} viewBox="0 0 80 48" className="h-12 w-20 flex-none">
             <path d="M0 4Q40 26 80 4" fill="none" className="stroke-holly" strokeWidth="1.5" />
@@ -176,17 +181,11 @@ export function StringLights({ className }: { className?: string }) {
   );
 }
 
-export function HollySprig({ className }: { className?: string }) {
+function HollySprig({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 64 40" aria-hidden className={cn("h-8 w-auto", className)}>
-      <path
-        d="M30 22C22 10 10 8 2 12c5 1 6 5 4 8 4-1 7 2 6 6 4-2 8 0 9 3 1-4 5-6 9-7Z"
-        className="fill-holly"
-      />
-      <path
-        d="M34 22c8-12 20-14 28-10-5 1-6 5-4 8-4-1-7 2-6 6-4-2-8 0-9 3-1-4-5-6-9-7Z"
-        className="fill-pine"
-      />
+    <svg viewBox="0 0 64 40" aria-hidden className={cn("h-8 w-auto hanukkah:hidden!", className)}>
+      <path d="M30 22C22 10 10 8 2 12c5 1 6 5 4 8 4-1 7 2 6 6 4-2 8 0 9 3 1-4 5-6 9-7Z" className="fill-holly" />
+      <path d="M34 22c8-12 20-14 28-10-5 1-6 5-4 8-4-1-7 2-6 6-4-2-8 0-9 3-1-4-5-6-9-7Z" className="fill-pine" />
       <path d="M30 22C22 14 14 13 8 14M34 22c8-8 16-9 22-8" fill="none" stroke="white" strokeOpacity="0.25" />
       <circle cx="28" cy="25" r="5" className="fill-primary" />
       <circle cx="36" cy="25" r="5" className="fill-primary" />
@@ -198,28 +197,50 @@ export function HollySprig({ className }: { className?: string }) {
   );
 }
 
-/** Heading flourish: holly flanked by tinsel. */
-export function HollyDivider({ className }: { className?: string }) {
+/** Olive leaves and a Star of David, in the same slot as the holly sprig. */
+function OliveSprig({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 64 40" aria-hidden className={cn("h-8 w-auto not-hanukkah:hidden!", className)}>
+      <path d="M28 20C20 10 10 8 2 13c5 1 7 5 5 8 4-1 7 1 7 5 3-2 7-1 8 2 1-4 4-6 6-8Z" className="fill-pine" />
+      <path d="M36 20c8-10 18-12 26-7-5 1-7 5-5 8-4-1-7 1-7 5-3-2-7-1-8 2-1-4-4-6-6-8Z" className="fill-holly" />
+      <path d="M28 20C20 14 12 13 6 14M36 20c8-6 16-7 22-6" fill="none" stroke="white" strokeOpacity="0.35" />
+      <path d="M32 7.5 37.2 17.5H26.8Z" className="fill-gold" />
+      <path d="M32 23.5 26.8 13.5h10.4Z" className="fill-gold" />
+    </svg>
+  );
+}
+
+export function HolidaySprig({ className }: { className?: string }) {
+  return (
+    <>
+      <HollySprig className={className} />
+      <OliveSprig className={className} />
+    </>
+  );
+}
+
+/** Heading flourish: a sprig flanked by tinsel. */
+export function HolidayDivider({ className }: { className?: string }) {
   return (
     <div aria-hidden className={cn("flex w-full max-w-xs items-center gap-3", className)}>
-      <span className="tinsel h-px flex-1" />
-      <HollySprig className="h-7" />
-      <span className="tinsel h-px flex-1" />
+      <span className="h-px flex-1 tinsel" />
+      <HolidaySprig className="h-7" />
+      <span className="h-px flex-1 tinsel" />
     </div>
   );
 }
 
 export function TwinkleStar({ className, style }: { className?: string; style?: CSSProperties }) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden className={cn("twinkle size-4 fill-gold", className)} style={style}>
+    <svg viewBox="0 0 24 24" aria-hidden className={cn("size-4 twinkle fill-gold", className)} style={style}>
       <path d="M12 1.5l2.2 7.3 7.3 2.2-7.3 2.2L12 20.5l-2.2-7.3L2.5 11l7.3-2.2Z" />
     </svg>
   );
 }
 
-export function ChristmasTree({ className, lit = true }: { className?: string; lit?: boolean }) {
+function ChristmasTree({ className, lit = true }: { className?: string; lit?: boolean }) {
   return (
-    <svg viewBox="0 0 80 110" aria-hidden className={cn("h-28 w-auto", className)}>
+    <svg viewBox="0 0 80 110" aria-hidden className={cn("h-28 w-auto hanukkah:hidden!", className)}>
       <rect x="34" y="92" width="12" height="14" rx="2" className="fill-gold-foreground" />
       <path d="M40 14 8 60h14L4 92h72L58 60h14Z" className="fill-pine" />
       <path d="M40 14 20 44h10L14 70h52L50 44h10Z" className="fill-holly" opacity="0.55" />
@@ -251,6 +272,43 @@ export function ChristmasTree({ className, lit = true }: { className?: string; l
   );
 }
 
+function Menorah({ className }: { className?: string }) {
+  const candles = [10, 22, 34, 46, 62, 74, 86, 98];
+  return (
+    <svg viewBox="0 0 112 110" aria-hidden className={cn("h-28 w-auto not-hanukkah:hidden!", className)}>
+      <rect x="36" y="100" width="40" height="7" rx="2" className="fill-gold" />
+      <path d="M44 100h24l-3-8H47Z" className="fill-gold" />
+      <rect x="53" y="30" width="6" height="70" rx="1" className="fill-gold" />
+      <rect x="6" y="72" width="100" height="5" rx="2" className="fill-gold" />
+      {candles.map((x, i) => (
+        <g key={x}>
+          <rect x={x} y="52" width="4" height="20" rx="1" fill="#fffaf2" />
+          <path
+            d={`M${x + 2} 46c1.7 2.6 2.6 4.2 2.6 5.6a2.6 2.6 0 0 1-5.2 0c0-1.4.9-3 2.6-5.6Z`}
+            className="twinkle fill-gold"
+            style={{ "--bulb": "#e9bb5f", "--tw": `${-i * 0.28}s` } as CSSProperties}
+          />
+        </g>
+      ))}
+      <rect x="54" y="16" width="4" height="18" rx="1" fill="#fffaf2" />
+      <path
+        d="M56 8c2 3 3 4.8 3 6.6a3 3 0 0 1-6 0c0-1.8 1-3.6 3-6.6Z"
+        className="twinkle fill-gold"
+        style={{ "--bulb": "#e9bb5f", "--tw": "-1.4s" } as CSSProperties}
+      />
+    </svg>
+  );
+}
+
+export function HolidayTree({ className, lit = true }: { className?: string; lit?: boolean }) {
+  return (
+    <>
+      <ChristmasTree className={className} lit={lit} />
+      <Menorah className={className} />
+    </>
+  );
+}
+
 /** Snowy hills with a little pine forest. Sits along the bottom edge of a section. */
 export function SnowyTreeline({ className }: { className?: string }) {
   const trees = [6, 12, 17, 31, 36, 58, 64, 70, 83, 89, 95];
@@ -263,7 +321,9 @@ export function SnowyTreeline({ className }: { className?: string }) {
     >
       {trees.map((x, i) => {
         const h = 5 + ((i * 7) % 5);
-        return <path key={x} d={`M${x} ${12 - h}l2.2 ${h}h-4.4Z`} className="fill-pine" opacity={0.35 + (i % 3) * 0.15} />;
+        return (
+          <path key={x} d={`M${x} ${12 - h}l2.2 ${h}h-4.4Z`} className="fill-pine" opacity={0.35 + (i % 3) * 0.15} />
+        );
       })}
       <path d="M0 11C14 8 26 12 40 10s30-3 44 0 12 1 16 0V14H0Z" fill="var(--card)" />
       <path d="M0 12.5c18-2 34 1 52-1s32-1 48 0V14H0Z" fill="var(--background)" />
@@ -271,9 +331,9 @@ export function SnowyTreeline({ className }: { className?: string }) {
   );
 }
 
-export function CandyCane({ className }: { className?: string }) {
+function CandyCaneShape({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 32 64" aria-hidden className={cn("h-14 w-auto", className)}>
+    <svg viewBox="0 0 32 64" aria-hidden className={cn("h-14 w-auto hanukkah:hidden!", className)}>
       <defs>
         <pattern id="cane-stripes" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <rect width="8" height="8" fill="#fffaf2" />
@@ -291,31 +351,68 @@ export function CandyCane({ className }: { className?: string }) {
   );
 }
 
-function daysUntilChristmas(now = new Date()) {
-  const year = now.getMonth() === 11 && now.getDate() > 25 ? now.getFullYear() + 1 : now.getFullYear();
-  const christmas = Date.UTC(year, 11, 25);
-  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-  return Math.round((christmas - today) / 86_400_000);
+function Dreidel({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 36 64" aria-hidden className={cn("h-14 w-auto not-hanukkah:hidden!", className)}>
+      <rect x="15" y="2" width="6" height="12" rx="1.5" className="fill-gold" />
+      <path d="M18 14 33 30 18 60 3 30Z" className="fill-primary" />
+      <path d="M18 24 26 31 18 48 10 31Z" className="fill-gold" />
+      <path
+        d="M20.5 29.5h-5.2c-1.3 0-2.1.8-2.1 2s.8 2 2.1 2H19"
+        fill="none"
+        stroke="#fffaf2"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+      <path d="M15.4 33.5v3.6" fill="none" stroke="#fffaf2" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
 }
 
-/** "N sleeps until Christmas" chip. Server-rendered so it matches on hydration. */
-export function ChristmasCountdown({ className }: { className?: string }) {
-  const days = daysUntilChristmas();
+export function CandyCane({ className }: { className?: string }) {
+  return (
+    <>
+      <CandyCaneShape className={className} />
+      <Dreidel className={className} />
+    </>
+  );
+}
+
+/** "N sleeps until Christmas" or the Hanukkah equivalent. Server-rendered so it matches on hydration. */
+export function HolidayCountdown({ holiday, className }: { holiday: Holiday; className?: string }) {
+  const copy = holidayCopy[holiday];
+  let label: React.ReactNode = copy.countdownToday;
+  if (holiday === "hanukkah") {
+    const status = hanukkahStatus();
+    if ("night" in status && copy.countdownNight) label = copy.countdownNight(status.night);
+    else if ("daysUntil" in status && status.daysUntil > 0) {
+      label = (
+        <span>
+          <span className="tabular-nums">{status.daysUntil}</span>{" "}
+          {status.daysUntil === 1 ? copy.countdownOne : copy.countdownMany}
+        </span>
+      );
+    }
+  } else {
+    const days = daysUntilChristmas();
+    if (days > 0) {
+      label = (
+        <span>
+          <span className="tabular-nums">{days}</span> {days === 1 ? copy.countdownOne : copy.countdownMany}
+        </span>
+      );
+    }
+  }
   return (
     <p
+      data-testid="holiday-countdown"
       className={cn(
         "inline-flex items-center gap-2 rounded-full border border-gold/40 bg-card/80 px-3 py-1 text-sm font-semibold text-foreground shadow-xs",
         className,
       )}
     >
       <TwinkleStar className="size-3.5" />
-      {days === 0 ? (
-        "Merry Christmas!"
-      ) : (
-        <span>
-          <span className="tabular-nums">{days}</span> {days === 1 ? "sleep" : "sleeps"} until Christmas
-        </span>
-      )}
+      {label}
     </p>
   );
 }

@@ -11,7 +11,7 @@ export function LogoMark({ className }: { className?: string }) {
         d="M16 9c-1.5-3.6-6.2-5-7.4-2.6-1 2 1.8 3.4 7.4 2.6Zm0 0c1.5-3.6 6.2-5 7.4-2.6 1 2-1.8 3.4-7.4 2.6Z"
         className="fill-gold"
       />
-      <g transform="translate(1 -1) rotate(-18 6 8)">
+      <g className="hanukkah:hidden" transform="translate(1 -1) rotate(-18 6 8)">
         <path d="M1 10c1-6 5-9 10-8l-1 8Z" className="fill-primary" />
         <path d="M11 2c2 1 3 3 3 5" fill="none" className="stroke-primary" strokeWidth="2" strokeLinecap="round" />
         <circle cx="14" cy="7.5" r="1.8" fill="#fffaf2" />
