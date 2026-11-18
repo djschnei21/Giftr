@@ -10,12 +10,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Snowfall, StringLights, TwinkleStar } from "@/components/festive";
 import { useHoliday } from "@/components/holiday-provider";
-import { holidayCopy } from "@/lib/holiday";
+import { holidayCopy, type Holiday } from "@/lib/holiday";
 import { firstName } from "@/lib/utils";
 
-const confettiColors = ["#e0303f", "#f2b632", "#2fa86a", "#fff1c9", "#ffffff"];
+/** Bright pieces for the dark reveal card. Hanukkah uses the sapphire, indigo, and gold tokens. */
+const confettiColors: Record<Holiday, readonly string[]> = {
+  christmas: ["#e0303f", "#f2b632", "#2fa86a", "#fff1c9", "#ffffff"],
+  hanukkah: ["#165a9e", "#e9bb5f", "#8fb4dd", "#c5d4f0", "#f7fbff"],
+};
 
-function Confetti() {
+function Confetti({ holiday }: { holiday: Holiday }) {
+  const colors = confettiColors[holiday];
   const pieces = useMemo(
     () =>
       Array.from({ length: 48 }, (_, i) => {
@@ -25,12 +30,12 @@ function Confetti() {
           x: Math.cos(angle) * distance,
           y: Math.sin(angle) * distance - 40,
           rotate: (i * 47) % 360,
-          color: confettiColors[i % confettiColors.length],
+          color: colors[i % colors.length],
           delay: (i % 6) * 0.015,
           shape: (["star", "dot", "ribbon", "ribbon"] as const)[i % 4],
         };
       }),
-    [],
+    [colors],
   );
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -161,7 +166,7 @@ export function RevealCard({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 260, damping: 20, delay: alreadyViewed ? 0 : 0.1 }}
             >
-              {celebrate ? <Confetti /> : null}
+              {celebrate ? <Confetti holiday={holiday} /> : null}
               <span className="relative">
                 <UserAvatar
                   name={giftee.name}
