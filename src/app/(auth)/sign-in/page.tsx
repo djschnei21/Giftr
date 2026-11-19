@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Logo } from "@/components/logo";
-import { ChristmasTree, Ornament, Snowfall, SnowyTreeline } from "@/components/festive";
+import { HolidayAccent, HolidayTree, Snowfall, SnowyTreeline } from "@/components/festive";
 import { SignInCard } from "@/components/auth/sign-in-card";
 import { enabledSocialProviders } from "@/lib/auth";
 import { getCurrentUser } from "@/lib/authz";
@@ -18,25 +18,31 @@ export default async function SignInPage({ searchParams }: PageProps<"/sign-in">
   return (
     <main id="main" className="relative isolate flex flex-1 flex-col items-center justify-center px-4 py-12">
       <Snowfall count={60} seed={23} className="-z-10" />
-      <Ornament className="left-[12%] hidden sm:flex" length={64} />
-      <Ornament className="left-[22%] hidden sm:flex" tone="gold" size="lg" length={112} style={{ animationDelay: "-2s" }} />
-      <Ornament className="right-[24%] hidden md:flex" tone="pine" length={40} style={{ animationDelay: "-3s" }} />
-      <Ornament className="right-[16%] hidden sm:flex" length={88} style={{ animationDelay: "-1s" }} />
-      <ChristmasTree className="absolute bottom-6 left-[6%] hidden h-44 lg:block" />
-      <ChristmasTree className="absolute right-[8%] bottom-6 hidden h-32 lg:block" />
+      <HolidayAccent className="left-[12%] hidden sm:flex" length={64} />
+      <HolidayAccent
+        className="left-[22%] hidden sm:flex"
+        tone="gold"
+        size="lg"
+        length={112}
+        style={{ animationDelay: "-2s" }}
+      />
+      <HolidayAccent className="right-[24%] hidden md:flex" tone="pine" length={40} style={{ animationDelay: "-3s" }} />
+      <HolidayAccent className="right-[16%] hidden sm:flex" length={88} style={{ animationDelay: "-1s" }} />
+      <HolidayTree className="absolute bottom-6 left-[6%] hidden h-44 lg:block" />
+      <HolidayTree className="absolute right-[8%] bottom-6 hidden h-32 lg:block" />
       <SnowyTreeline className="-z-10" />
-      <div className="page-enter w-full max-w-sm">
+      <div className="w-full max-w-sm page-enter">
         <div>
-        <Logo className="mb-4 justify-center" />
-        <p aria-hidden className="mb-8 text-center font-script text-2xl text-pine">
-          Come in from the cold!
-        </p>
-        <SignInCard
-          next={next}
-          providers={enabledSocialProviders}
-          devOutbox={devOutboxEnabled()}
-          error={typeof params.error === "string" ? params.error : undefined}
-        />
+          <Logo className="mb-4 justify-center" />
+          <p aria-hidden className="mb-8 text-center font-script text-2xl text-pine">
+            Come in from the cold!
+          </p>
+          <SignInCard
+            next={next}
+            providers={enabledSocialProviders}
+            devOutbox={devOutboxEnabled()}
+            error={typeof params.error === "string" ? params.error : undefined}
+          />
         </div>
       </div>
     </main>

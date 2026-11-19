@@ -1,15 +1,18 @@
 import Link from "next/link";
 import { AppHeader } from "@/components/app/app-header";
 import { MobileNav } from "@/components/app/nav";
-import { HollySprig } from "@/components/festive";
+import { HolidaySprig } from "@/components/festive";
+import { HolidayToggle } from "@/components/holiday-toggle";
 import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SiteNav } from "@/components/marketing/site-nav";
 import { getCurrentUser } from "@/lib/authz";
+import { holidayCopy } from "@/lib/holiday";
+import { getHoliday } from "@/lib/holiday-server";
 import { cn } from "@/lib/utils";
 
 export default async function MarketingLayout({ children }: LayoutProps<"/">) {
-  const user = await getCurrentUser();
+  const [user, holiday] = await Promise.all([getCurrentUser(), getHoliday()]);
   return (
     <div className="flex min-h-dvh min-w-0 flex-col">
       {user ? <AppHeader user={user} /> : <SiteNav />}
@@ -20,7 +23,7 @@ export default async function MarketingLayout({ children }: LayoutProps<"/">) {
         <div className="flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-muted-foreground">
           <Logo />
           <span className="flex items-center gap-2 text-balance">
-            <HollySprig className="h-6 shrink-0" />
+            <HolidaySprig className="h-6 shrink-0" />
             Made for families, friends and offices that love the holidays.
           </span>
           <nav aria-label="Legal" className="flex items-center gap-6 sm:ml-auto">
@@ -32,11 +35,14 @@ export default async function MarketingLayout({ children }: LayoutProps<"/">) {
             </Link>
           </nav>
           <ThemeToggle />
+          <HolidayToggle />
         </div>
-        <div aria-hidden className="tinsel mt-8 h-px w-full" />
+        <div aria-hidden className="mt-8 h-px w-full tinsel" />
         <p className="mt-6 flex flex-wrap items-baseline justify-between gap-2 text-xs text-muted-foreground">
           <span>© {new Date().getFullYear()} Giftr</span>
-          <span className="font-script text-xl text-primary dark:text-accent-foreground">Merry Christmas &amp; happy holidays</span>
+          <span className="font-script text-xl text-primary dark:text-accent-foreground">
+            {holidayCopy[holiday].footerScript}
+          </span>
         </p>
       </footer>
       {user ? <MobileNav /> : null}

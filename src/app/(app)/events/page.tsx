@@ -8,7 +8,9 @@ import { EmptyState } from "@/components/app/empty-state";
 import { countdownLabel, eventPhase, statusBadge } from "@/components/events/status";
 import { requireUser } from "@/lib/authz";
 import { budgetLabel, dateLabel } from "@/lib/format";
-import { ChristmasCountdown, HollySprig, TwinkleStar } from "@/components/festive";
+import { HolidayCountdown, HolidaySprig, TwinkleStar } from "@/components/festive";
+import { holidayCopy } from "@/lib/holiday";
+import { getHoliday } from "@/lib/holiday-server";
 import { cn, firstName } from "@/lib/utils";
 import { listMyEvents, listMyPendingInvites } from "@/server/queries/events";
 
@@ -16,6 +18,7 @@ export const metadata: Metadata = { title: "Your exchanges" };
 
 export default async function EventsPage() {
   const user = await requireUser();
+  const holiday = await getHoliday();
   const [events, invites] = await Promise.all([listMyEvents(user.id), listMyPendingInvites(user.email, user.id)]);
   const active = events.filter((e) => !["done", "cancelled"].includes(eventPhase(e.event)));
   const past = events.filter((e) => ["done", "cancelled"].includes(eventPhase(e.event))).reverse();
@@ -24,9 +27,9 @@ export default async function EventsPage() {
     <div className="grid gap-12">
       <header className="flex flex-wrap items-end justify-between gap-6">
         <div className="grid min-w-0 gap-2">
-          <ChristmasCountdown className="mb-2 w-fit" />
+          <HolidayCountdown holiday={holiday} className="mb-2 w-fit" />
           <p className="flex items-center gap-2 font-script text-2xl text-primary dark:text-accent-foreground">
-            <HollySprig className="h-6" /> Ho ho ho, {firstName(user.name)}!
+            <HolidaySprig className="h-6" /> {holidayCopy[holiday].greeting(firstName(user.name))}
           </p>
           <h1 className="font-display text-4xl break-words sm:text-6xl">Your exchanges</h1>
         </div>
@@ -41,7 +44,10 @@ export default async function EventsPage() {
 
       {invites.length ? (
         <section aria-labelledby="invites-heading" className="grid gap-3">
-          <h2 id="invites-heading" className="flex items-center gap-2 font-sans text-sm font-semibold text-muted-foreground">
+          <h2
+            id="invites-heading"
+            className="flex items-center gap-2 font-sans text-sm font-semibold text-muted-foreground"
+          >
             <TwinkleStar className="size-3.5" /> Waiting for you
           </h2>
           {invites.map(({ invitation, event, organizerName }) => (
@@ -50,7 +56,7 @@ export default async function EventsPage() {
               href={`/join/${event.inviteCode}`}
               className="group flex min-w-0 items-center gap-4 rounded-2xl border border-gold/40 bg-card p-4 shadow-sm transition outline-none hover:-translate-y-0.5 hover:shadow-lg focus-visible:ring-4 focus-visible:ring-ring/30 active:scale-[0.98]"
             >
-              <span className="jingle flex size-12 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold-foreground">
+              <span className="flex size-12 shrink-0 jingle items-center justify-center rounded-xl bg-gold/15 text-gold-foreground">
                 <EnvelopeSimpleOpenIcon weight="fill" className="size-6" />
               </span>
               <span className="min-w-0 flex-1">
@@ -118,7 +124,7 @@ function EventCard({ event, me, isOrganizer, people }: Awaited<ReturnType<typeof
       )}
     >
       {!finished ? (
-        <HollySprig className="absolute top-3 right-3 h-7 transition duration-500 group-hover:rotate-12" />
+        <HolidaySprig className="absolute top-3 right-3 h-7 transition duration-500 group-hover:rotate-12" />
       ) : null}
       <div className="flex items-start gap-4">
         <span
@@ -126,7 +132,7 @@ function EventCard({ event, me, isOrganizer, people }: Awaited<ReturnType<typeof
           className={
             finished
               ? "flex size-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-secondary text-muted-foreground"
-              : "wrapping-paper relative flex size-14 shrink-0 flex-col items-center justify-center rounded-2xl text-primary-foreground shadow-md transition group-hover:-rotate-6"
+              : "relative flex size-14 shrink-0 flex-col items-center justify-center rounded-2xl wrapping-paper text-primary-foreground shadow-md transition group-hover:-rotate-6"
           }
         >
           {!finished ? (
@@ -171,7 +177,7 @@ function EventCard({ event, me, isOrganizer, people }: Awaited<ReturnType<typeof
       <div className="mt-auto flex flex-wrap items-center justify-between gap-3">
         <AvatarStack people={people} />
         {needsReveal ? (
-          <span className="glow-pulse inline-flex shrink-0 items-center gap-1 rounded-lg bg-primary px-3 py-1 text-xs font-semibold whitespace-nowrap text-primary-foreground shadow-sm">
+          <span className="inline-flex shrink-0 glow-pulse items-center gap-1 rounded-lg bg-primary px-3 py-1 text-xs font-semibold whitespace-nowrap text-primary-foreground shadow-sm">
             <SparkleIcon weight="fill" className="size-3" /> Reveal your match
           </span>
         ) : (

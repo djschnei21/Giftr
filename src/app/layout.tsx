@@ -3,8 +3,10 @@ import { Fraunces, Geist_Mono, Manrope, Mountains_of_Christmas } from "next/font
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Snowfall, StringLights } from "@/components/festive";
+import { HolidayProvider } from "@/components/holiday-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { getHoliday } from "@/lib/holiday-server";
 import { appUrl } from "@/lib/utils";
 import "./globals.css";
 
@@ -29,26 +31,30 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const holiday = await getHoliday();
   return (
     <html
       lang="en"
+      data-holiday={holiday}
       suppressHydrationWarning
       className={`${manrope.variable} ${geistMono.variable} ${fraunces.variable} ${christmas.variable} h-full antialiased`}
     >
       <body className="flex min-h-full min-w-0 flex-col">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <Snowfall count={44} seed={31} className="fixed! -z-10" />
-          <StringLights />
-          <a
-            href="#main"
-            className="sr-only z-50 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
-          >
-            Skip to content
-          </a>
-          {children}
-          <Toaster />
-        </ThemeProvider>
+        <HolidayProvider value={holiday}>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <Snowfall count={44} seed={31} className="fixed! -z-10" />
+            <StringLights />
+            <a
+              href="#main"
+              className="sr-only z-50 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
+            >
+              Skip to content
+            </a>
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </HolidayProvider>
         <Analytics />
         <SpeedInsights />
       </body>

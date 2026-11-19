@@ -4,6 +4,7 @@
 @source not "../../.cursor";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant hanukkah (&:where([data-holiday="hanukkah"], [data-holiday="hanukkah"] *));
 
 @theme inline {
   --font-sans: var(--font-manrope);
@@ -87,6 +88,11 @@
   --glow-cool: rgb(21 92 61 / 0.12);
   --shadow-color: rgb(92 40 20 / 0.08);
   --shadow-strong: rgb(92 40 20 / 0.18);
+  --bulb-1: #e0303f;
+  --bulb-2: #f2b632;
+  --bulb-3: #2fa86a;
+  --bulb-4: #4aa3e8;
+  --bulb-5: #fff1c9;
 }
 
 /* Silent night: deep evergreen sky, starlight text, a brighter cranberry for contrast. */
@@ -125,6 +131,50 @@
   --shadow-strong: rgb(0 0 0 / 0.55);
 }
 
+/* Hanukkah: sapphire, indigo, and candle gold on the same cream paper.
+   Text pairings clear WCAG AA (4.5:1) on both background and card. */
+[data-holiday="hanukkah"] {
+  --primary: #0e4a86;
+  --accent: #e4eef8;
+  --accent-foreground: #0e3f73;
+  --pine: #1c2f5c;
+  --holly: #152448;
+  --secondary: #e7eef6;
+  --secondary-foreground: #163056;
+  --frost: #e8f0f8;
+  --night: #0c1c38;
+  --glow-warm: rgb(255 196 92 / 0.28);
+  --glow-cool: rgb(14 74 134 / 0.14);
+  --ring: #0e4a86;
+  --bulb-1: #1d4e89;
+  --bulb-2: #f7fbff;
+  --bulb-3: #c5d0dc;
+  --bulb-4: #0e4a86;
+  --bulb-5: #e8eef4;
+}
+
+[data-holiday="hanukkah"] .dark,
+.dark[data-holiday="hanukkah"] {
+  --primary: #165a9e;
+  --accent: #163044;
+  --accent-foreground: #d6e6ff;
+  --pine: #c5d4f0;
+  --pine-foreground: #0b1b16;
+  --holly: #8fb4dd;
+  --secondary: #163044;
+  --secondary-foreground: #d6e6ff;
+  --frost: #12283a;
+  --night: #071422;
+  --glow-warm: rgb(255 190 90 / 0.14);
+  --glow-cool: rgb(120 170 230 / 0.1);
+  --ring: #d6e6ff;
+  --bulb-1: #7eb0e8;
+  --bulb-2: #f7fbff;
+  --bulb-3: #c5d0dc;
+  --bulb-4: #9ec4ef;
+  --bulb-5: #e8eef4;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -160,7 +210,9 @@
   h1,
   h2 {
     font-family: var(--font-serif);
-    font-variation-settings: "SOFT" 100, "WONK" 1;
+    font-variation-settings:
+      "SOFT" 100,
+      "WONK" 1;
     letter-spacing: -0.02em;
   }
   /* Paper grain behind everything. Cards stay clean because they paint over it. */
@@ -209,7 +261,9 @@
 @utility font-display {
   font-family: var(--font-serif);
   font-weight: 650;
-  font-variation-settings: "SOFT" 100, "WONK" 1;
+  font-variation-settings:
+    "SOFT" 100,
+    "WONK" 1;
   letter-spacing: -0.02em;
 }
 
@@ -225,8 +279,14 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  &:where([data-holiday="hanukkah"] *) {
+    background-image: linear-gradient(100deg, #0b3a6e 10%, #0e4a86 48%, #1c2f5c 95%);
+  }
   .dark & {
     background-image: linear-gradient(100deg, #ffffff 20%, #ffe2a8 60%, #f0c873 95%);
+  }
+  .dark &:where([data-holiday="hanukkah"] *) {
+    background-image: linear-gradient(100deg, #ffffff 10%, #d6e6ff 55%, #c5d0dc 95%);
   }
 }
 
@@ -238,8 +298,14 @@
   background-clip: text;
   color: transparent;
   animation: foil 6s linear infinite;
+  &:where([data-holiday="hanukkah"] *) {
+    background-image: linear-gradient(100deg, #5c6b7c, #e8eef5 40%, #8a97a6 60%, #c5d0dc);
+  }
   .dark & {
     background-image: linear-gradient(100deg, #f0c873, #fff1c9 40%, #e9bb5f 60%, #f0c873);
+  }
+  .dark &:where([data-holiday="hanukkah"] *) {
+    background-image: linear-gradient(100deg, #c5d0dc, #f7fbff 40%, #9aa8b8 60%, #d6e6ff);
   }
 }
 @keyframes foil {
@@ -250,11 +316,10 @@
 
 /* Candy cane stripe for ribbons and edges. */
 @utility candy-stripe {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--primary) 0 10px,
-    #fffaf2 10px 20px
-  );
+  background-image: repeating-linear-gradient(-45deg, var(--primary) 0 10px, #fffaf2 10px 20px);
+  &:where([data-holiday="hanukkah"] *) {
+    background-image: repeating-linear-gradient(-45deg, var(--primary) 0 10px, #f7fbff 10px 20px);
+  }
 }
 @utility pine-stripe {
   background-image: repeating-linear-gradient(-45deg, var(--pine) 0 8px, var(--gold) 8px 12px, var(--pine) 12px 20px);
@@ -267,6 +332,11 @@
     radial-gradient(circle at 25% 25%, rgb(255 236 190 / 0.55) 0 1.5px, transparent 2px),
     radial-gradient(circle at 75% 75%, rgb(255 255 255 / 0.35) 0 1.5px, transparent 2px);
   background-size: 14px 14px;
+  &:where([data-holiday="hanukkah"] *) {
+    background-image:
+      radial-gradient(circle at 25% 25%, rgb(255 255 255 / 0.7) 0 1.5px, transparent 2px),
+      radial-gradient(circle at 75% 75%, rgb(197 208 220 / 0.9) 0 1.5px, transparent 2px);
+  }
 }
 
 /* A thin festive rule: gold, pine, gold. */
@@ -283,8 +353,21 @@
     position: absolute;
     inset: 0 0 auto 0;
     height: 6px;
-    background-image: repeating-linear-gradient(-45deg, var(--primary) 0 10px, var(--gold) 10px 14px, var(--card) 14px 24px);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--primary) 0 10px,
+      var(--gold) 10px 14px,
+      var(--card) 14px 24px
+    );
     pointer-events: none;
+  }
+  &:where([data-holiday="hanukkah"] *)::before {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--primary) 0 10px,
+      #f7fbff 10px 14px,
+      var(--primary) 14px 24px
+    );
   }
 }
 
