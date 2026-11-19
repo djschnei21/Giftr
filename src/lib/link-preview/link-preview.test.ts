@@ -82,6 +82,12 @@ describe("parseHtml", () => {
     expect(parseHtml(html, "https://example.com").imageUrl).toBeNull();
   });
 
+  it("returns no title when the page has nothing usable", () => {
+    const url = "https://www.anntaylor.com/clothing/coats/cat2820007/long-chesterfield-coat/855462.html";
+    const html = `<html><head><meta property="og:site_name" content="Ann Taylor"></head><body>Please enable JavaScript</body></html>`;
+    expect(parseHtml(html, url)).toMatchObject({ url, title: null, imageUrl: null, siteName: "Ann Taylor" });
+  });
+
   it("skips Amazon's placeholder title and uses the product name", () => {
     const html = `<html><head>
       <meta property="og:title" content="Amazon">
