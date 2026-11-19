@@ -69,7 +69,10 @@ export function ItemForm({
   const lastFetched = useRef<string | null>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const stateRef = useRef(state);
-  const set = (p: Partial<ItemFormState>) => setState((s) => ({ ...s, ...p }));
+  const set = (p: Partial<ItemFormState>) => {
+    stateRef.current = { ...stateRef.current, ...p };
+    setState((s) => ({ ...s, ...p }));
+  };
 
   useEffect(() => {
     stateRef.current = state;
@@ -85,25 +88,34 @@ export function ItemForm({
   }
 
   function fetchPreview(url: string) {
-    if (!looksLikeUrl(url) || (lastFetched.current === url && !isPlaceholderTitle(state.title))) return;
-    lastFetched.current = url;
+    const requested = url.trim();
+    if (!looksLikeUrl(requested) || (lastFetched.current === requested && !isPlaceholderTitle(state.title))) return;
+    lastFetched.current = requested;
     startFetch(async () => {
-      const res = await previewLink(url.trim());
+      const res = await previewLink(requested);
+      // The field may already hold a different link. lastFetched only tracks retries.
+      if (stateRef.current.url.trim() !== requested) return;
       if (!res.ok || !res.data) {
-        if (lastFetched.current === url) lastFetched.current = null;
+        if (lastFetched.current === requested) lastFetched.current = null;
+        if (stateRef.current.url.trim() !== requested) return;
         noteUnread(stateRef.current.title);
         return;
       }
       const p = res.data;
-      if (p.title && isPlaceholderTitle(p.title) && lastFetched.current === url) lastFetched.current = null;
+      if (stateRef.current.url.trim() !== requested) return;
+      if (p.title && isPlaceholderTitle(p.title) && lastFetched.current === requested) lastFetched.current = null;
       const nextTitle = isPlaceholderTitle(stateRef.current.title)
         ? p.title || stateRef.current.title
         : stateRef.current.title || p.title || "";
-      setState((s) => ({
-        ...s,
-        title: isPlaceholderTitle(s.title) ? p.title || s.title : s.title || p.title || "",
-        imageUrl: s.imageUrl || p.imageUrl || "",
-      }));
+      setState((s) => {
+        if (s.url.trim() !== requested) return s;
+        return {
+          ...s,
+          title: isPlaceholderTitle(s.title) ? p.title || s.title : s.title || p.title || "",
+          imageUrl: s.imageUrl || p.imageUrl || "",
+        };
+      });
+      if (stateRef.current.url.trim() !== requested) return;
       noteUnread(nextTitle);
     });
   }
@@ -114,7 +126,9 @@ export function ItemForm({
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(state, () => {
-          setState(emptyItem());
+          const cleared = emptyItem();
+          stateRef.current = cleared;
+          setState(cleared);
           lastFetched.current = null;
           setPreviewNote(null);
         });
