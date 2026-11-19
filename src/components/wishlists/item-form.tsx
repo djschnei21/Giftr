@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { CircleNotchIcon, LinkSimpleIcon, StarIcon } from "@/components/icons";
 import { previewLink } from "@/server/actions/wishlists";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,8 @@ export function toInput(s: ItemFormState) {
   };
 }
 
+const UNREAD_PAGE = "We couldn't read that page. Type a name to add it.";
+
 function looksLikeUrl(v: string) {
   return /^https?:\/\/\S+\.\S+/i.test(v.trim());
 }
@@ -62,26 +64,59 @@ export function ItemForm({
   idPrefix: string;
 }) {
   const [state, setState] = useState(initial);
+  const [previewNote, setPreviewNote] = useState<string | null>(null);
   const [fetching, startFetch] = useTransition();
   const lastFetched = useRef<string | null>(null);
-  const set = (p: Partial<ItemFormState>) => setState((s) => ({ ...s, ...p }));
+  const titleRef = useRef<HTMLInputElement>(null);
+  const stateRef = useRef(state);
+  const set = (p: Partial<ItemFormState>) => {
+    stateRef.current = { ...stateRef.current, ...p };
+    setState((s) => ({ ...s, ...p }));
+  };
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+
+  function noteUnread(title: string) {
+    if (title.trim()) {
+      if (!isPlaceholderTitle(title)) setPreviewNote(null);
+      return;
+    }
+    setPreviewNote(UNREAD_PAGE);
+    titleRef.current?.focus();
+  }
 
   function fetchPreview(url: string) {
-    if (!looksLikeUrl(url) || (lastFetched.current === url && !isPlaceholderTitle(state.title))) return;
-    lastFetched.current = url;
+    const requested = url.trim();
+    if (!looksLikeUrl(requested) || (lastFetched.current === requested && !isPlaceholderTitle(state.title))) return;
+    lastFetched.current = requested;
     startFetch(async () => {
-      const res = await previewLink(url.trim());
+      const res = await previewLink(requested);
+      // The field may already hold a different link. lastFetched only tracks retries.
+      if (stateRef.current.url.trim() !== requested) return;
       if (!res.ok || !res.data) {
-        if (lastFetched.current === url) lastFetched.current = null;
+        if (lastFetched.current === requested) lastFetched.current = null;
+        if (stateRef.current.url.trim() !== requested) return;
+        noteUnread(stateRef.current.title);
         return;
       }
       const p = res.data;
-      if (p.title && isPlaceholderTitle(p.title) && lastFetched.current === url) lastFetched.current = null;
-      setState((s) => ({
-        ...s,
-        title: isPlaceholderTitle(s.title) ? p.title || s.title : s.title || p.title || "",
-        imageUrl: s.imageUrl || p.imageUrl || "",
-      }));
+      if (stateRef.current.url.trim() !== requested) return;
+      if (p.title && isPlaceholderTitle(p.title) && lastFetched.current === requested) lastFetched.current = null;
+      const nextTitle = isPlaceholderTitle(stateRef.current.title)
+        ? p.title || stateRef.current.title
+        : stateRef.current.title || p.title || "";
+      setState((s) => {
+        if (s.url.trim() !== requested) return s;
+        return {
+          ...s,
+          title: isPlaceholderTitle(s.title) ? p.title || s.title : s.title || p.title || "",
+          imageUrl: s.imageUrl || p.imageUrl || "",
+        };
+      });
+      if (stateRef.current.url.trim() !== requested) return;
+      noteUnread(nextTitle);
     });
   }
 
@@ -91,8 +126,11 @@ export function ItemForm({
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(state, () => {
-          setState(emptyItem());
+          const cleared = emptyItem();
+          stateRef.current = cleared;
+          setState(cleared);
           lastFetched.current = null;
+          setPreviewNote(null);
         });
       }}
     >
@@ -123,7 +161,12 @@ export function ItemForm({
         </div>
       </Field>
 
-      <Field label="What is it?" htmlFor={`${idPrefix}-title`} error={errors.title}>
+      <Field
+        label="What is it?"
+        htmlFor={`${idPrefix}-title`}
+        error={errors.title}
+        hint={previewNote ? <span role="status">{previewNote}</span> : undefined}
+      >
         <div className="flex gap-3">
           {state.imageUrl ? (
             <img
@@ -134,6 +177,7 @@ export function ItemForm({
             />
           ) : null}
           <Input
+            ref={titleRef}
             id={`${idPrefix}-title`}
             placeholder="Hand thrown ceramic mug"
             value={state.title}
@@ -161,10 +205,16 @@ export function ItemForm({
           onClick={() => set({ mostWanted: !state.mostWanted })}
           className={cn(
             "inline-flex h-10 cursor-pointer items-center gap-2 rounded-xl border px-3 text-sm font-semibold transition focus-visible:ring-4 focus-visible:ring-ring/30 focus-visible:outline-none active:scale-[0.98]",
-            state.mostWanted ? "border-gold bg-gold/15 text-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+            state.mostWanted
+              ? "border-gold bg-gold/15 text-foreground"
+              : "text-muted-foreground hover:bg-secondary hover:text-foreground",
           )}
         >
-          <StarIcon weight={state.mostWanted ? "fill" : "bold"} className={cn("size-4", state.mostWanted && "text-gold")} /> Most wanted
+          <StarIcon
+            weight={state.mostWanted ? "fill" : "bold"}
+            className={cn("size-4", state.mostWanted && "text-gold")}
+          />{" "}
+          Most wanted
         </button>
         <Button type="submit" disabled={pending || !state.title.trim()}>
           {pending ? <CircleNotchIcon className="animate-spin" /> : null}
